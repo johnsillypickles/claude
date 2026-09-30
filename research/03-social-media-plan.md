@@ -1,12 +1,13 @@
-# Silly Pickles: Social Media Plan (Oct to Dec 2026)
+# Silly Pickles: Social Media Plan (Oct 2026 to Jan 2027)
 
-Prepared 2026-09-30. Inputs: `01-competitor-research.md` (Volo Sports, Honcho Pickleball) and `02-social-media-audit.md` (our audit, 2025-10-01 to 2026-09-29).
+Prepared 2026-09-30. Revised 2026-09-30 with owner input: winter signups open in January; Tommy is the founder and may be over-exposed; creators get a free league plus $500 for 2 videos; about 160 leagues today, 190 to 200 expected in winter. [Owner] tags mark these. Inputs: `01-competitor-research.md` (Volo Sports, Honcho Pickleball) and `02-social-media-audit.md` (our audit, 2025-10-01 to 2026-09-29).
 
 ## How to read this plan
 
 - Every recommendation carries a source tag:
   - **[Comp: ...]** = from the competitor research (Volo or Honcho).
   - **[Audit: ...]** = from our own audit.
+  - **[Owner]** = confirmed by the business owner.
   - **[Inference]** = our reasoning, not measured data. Test before trusting.
 - **The audit is paid-only.** Instagram, Facebook Organic and TikTok Organic were not connected, so we have zero organic numbers (followers, reach, saves, posting cadence). Everything we "know works" comes from ads. Organic recommendations apply paid learnings to organic and are therefore partly inference.
 - **Competitor follower counts are unverified** (search snippets with unknown capture dates). Do not quote them externally until re-checked.
@@ -19,7 +20,7 @@ Prepared 2026-09-30. Inputs: `01-competitor-research.md` (Volo Sports, Honcho Pi
 1. **Lead with the identity nobody else owns.** Volo's LGBTQ+ content is seasonal and Honcho's brand is about scale and prizes, yet our own top 100 Meta ads never mention that we are LGBTQ-owned. Make "queer-owned, all-levels, come solo" the center of every channel and test it in paid. [Comp: Volo Pride events seasonal] [Comp: Honcho generic identity] [Audit: LGBTQ-owned absent from top 100 copy]
 2. **Judge content by signups, not likes or clicks.** Our highest-CTR hook ("psst... 20 minutes away", CTR 2.43%) had one of the worst CACs ($92.51), while "Less scrolling, more serving" (CTR 0.68%) returned ROAS up to 4.26. [Audit: CTR and ROAS decoupled]
 3. **Scale what converts, cut what does not.** Scale "starting soon / All Levels Welcome" (ROAS 3.12), "Fall/Winter signups are open" (ROAS 3.08), the ladder explainer, and homepage or all-collections landing pages. Stop broad discount codes (SUMMERBALL20 ROAS 0.56), "Learn More" CTAs, single-league landing pages and the current volleyball creative. [Audit: What did work / What did not work]
-4. **Win short-form video with a recurring host and local creators.** Tommy talking-head videos carry 65% of TikTok spend and the seasonal "Boo" version had the best cost per conversion ($39.27). Honcho has no TikTok found. Add a Volo-style creator code program and a Honcho-style ambassador ("Head Pickle") program per city. [Audit: Tommy 65% of TikTok spend] [Comp: Volo creator codes] [Comp: Honcho ambassadors] [Comp: Honcho no TikTok]
+4. **Win short-form video by adding creators next to Tommy, not replacing him.** Tommy (founder) videos carry 65% of TikTok spend and the Fall 2026 "Boo" version had the best cost per conversion ($39.27), so the data does not yet show fatigue. The owner senses fatigue, so shift the mix toward paid local creators ($500 for 2 videos plus a free league) and test Tommy vs creators head to head on cost per signup. Honcho has no TikTok found. Add a Head Pickle ambassador program per city. [Owner] [Audit: Tommy 65% of TikTok spend] [Comp: Volo creator codes] [Comp: Honcho ambassadors] [Comp: Honcho no TikTok]
 5. **Fix the plumbing in week 1.** Connect organic IG/FB/TikTok in Windsor.ai, fix the @sillypickles vs @sillysports split, set a Facebook vanity URL, and consolidate two affiliate apps before launching creator codes. [Audit: Gaps] [Audit: UpPromote and BixGrow both installed]
 
 ---
@@ -137,7 +138,7 @@ Steps:
 **City accounts:** Do not launch city Instagram accounts yet. Volo runs them [Comp: Volo city accounts], but we have no data on our main account's health or team capacity. Instead, use city Story highlights and Head Pickle collab posts. Revisit in Q1 2027. [Inference]
 
 **Bio and link-in-bio (all platforms):**
-- Bio line (proposed): "The world's funnest pickleball league. LGBTQ-owned. All levels. Join solo. 50+ cities." (Verify the "50+" count first; it is not independently verified.) [Comp: Section 0]
+- Bio line (proposed): "The world's funnest pickleball league. LGBTQ-owned. All levels. Join solo. 160+ leagues." Update to "190+ leagues" once winter leagues are live. Drop the unverified "50+ locations" line. [Owner: ~160 leagues now, 190 to 200 in winter]
 - Link to the homepage or /collections, not a single league. [Audit: landing page table]
 
 ---
@@ -249,7 +250,7 @@ Choose and scale on **CAC and platform ROAS**, never on CTR or ER alone. [Audit:
 
 - Dynamic ads (image and video) as the default. [Audit: format table]
 - Carousels only for retargeting or info, not cold prospecting. [Audit: carousel CTR 0.70%]
-- TikTok: build 3 new Tommy seasonal cuts per season (Halloween, holiday, winter launch), plus 2 new skill-level explainer variants. Cut each into 2 to 3 opening hooks. [Audit: Boo-v2 $39.27] [Audit: DiffSkillLevels $41.09] [Audit: only 7 TikTok ads]
+- TikTok: cap Tommy at about half of new creative (proposed; basis: owner-reported fatigue, not measured). Build 2 Tommy seasonal cuts (Halloween, January winter launch) and fill the rest with creator videos and 2 skill-level explainer variants. Watch Tommy ad frequency and cost per conversion by week; rising cost at flat creative is the fatigue signal to act on. Cut each into 2 to 3 opening hooks. [Audit: Boo-v2 $39.27] [Audit: DiffSkillLevels $41.09] [Audit: only 7 TikTok ads]
 - TikTok: write captions for every ad so they can be analyzed. [Audit: captions empty]
 - Standardize capitalization in all headlines. [Audit: capitalization]
 
@@ -277,10 +278,13 @@ What Volo does: local lifestyle and food creators, often non-athletes, post "I t
 Our version:
 - **Who:** local LGBTQ+ and lifestyle creators in 3 pilot cities. Prefer self-described non-athletes. [Comp: @andrewtourssf, @thesnacksensei] Pick pilot cities where we already have community calendar presence (for example Las Vegas, Colorado) and Chicago. [Comp: Section 0] [Inference: existing presence lowers risk]
 - **Brief:** "I'm not an athlete but I tried Silly Pickles." Film arrival solo, the ladder rotation, the social after. End on the code.
-- **Code:** creator name plus amount, e.g. "NAME15." Fixed dollar, first league only, new players only, expires in 30 days. [Comp: SENSEI15 structure] Amount is a proposed figure mirroring Volo's $15; confirm margin.
+- **Code for followers:** creator name plus amount, e.g. "NAME15." Fixed dollar, first league only, new players only, expires in 30 days. [Comp: SENSEI15 structure] Amount is a proposed figure mirroring Volo's $15; confirm margin. Do not make the follower code 100% off: free leagues attract no-shows and repeat the SUMMERBALL20 problem at a larger scale. [Audit: SUMMERBALL20 ROAS 0.56] [Inference]
 - **Disclosure:** #sillypartner and platform paid-partnership labels. [Comp: #volopartner]
 - **Tracking:** pick one of UpPromote or BixGrow before launch. [Audit: two affiliate apps]
-- **Pay:** free league entry plus a Silly Paddle plus a per-signup fee (amount to be set by finance). [Inference]
+- **Pay:** free league for the creator (100% off) plus $500 for 2 videos. [Owner] Optional: a Silly Paddle.
+- **Cost per creator:** $500 + one comped league at $118 to $165 = $618 to $665 (comped league valued at list price; true cost is lower if the slot would otherwise be empty). [Comp: price range] [Inference]
+- **Break-even:** at the $50.89 target CAC, one creator must drive $618 / $50.89 = 12.1 to $665 / $50.89 = 13.1, so about 12 to 13 new signups from their 2 videos, before the follower-code discount. Budget for boosting the best video is separate.
+- **Pilot budget:** 3 cities x 2 creators = 6 creators x $618 to $665 = $3,708 to $3,990 (proposed).
 - **Boost:** put the best-performing creator video behind paid spend as Spark Ads (TikTok) or partnership ads (Meta). [Inference]
 - **Pass/fail (proposed):** CAC via code at or below $50.89, the "starting soon" hook CAC. If code CAC trends toward SUMMERBALL20 levels, stop. [Audit: $50.89 and $262.46]
 
@@ -292,7 +296,7 @@ Our twist: the Head Pickle is host plus content capture plus community connector
 - **Duties:** welcome solo players by name, shoot 3 short clips per league night (fun moment, first-timer, group shot), and connect with local queer bars, Pride orgs and sports clubs. [Comp: Volo on-site capture] [Comp: takeaway 6]
 - **Rewards:** free league, merch, first pick on new paddles. [Comp: takeaway 4]
 - **Tools:** a one-page Head Pickle handbook (Honcho uses a Notion Player Handbook) with a shot list, consent rules (ask before filming, especially players who are not out publicly), brand voice sheet and upload folder. [Comp: Honcho Player Handbook] [Inference: consent matters more for an LGBTQ+ community]
-- **Pilot:** same 3 cities as creators in Oct; add cities in Nov to Dec if the content flow works.
+- **Pilot:** same 3 cities as creators in Oct; add cities in Nov to Dec so hosts are in place for the January winter launch. Head Pickles are also the bench of new on-camera faces to ease Tommy fatigue. [Owner]
 
 ### 7.3 Community loops
 
@@ -304,9 +308,9 @@ Our twist: the Head Pickle is host plus content capture plus community connector
 
 ---
 
-## 8. 90-day rollout (Oct 1 to Dec 31, 2026)
+## 8. Rollout (Oct 1, 2026 to Jan 31, 2027)
 
-Assumption to confirm: winter season signups open in November or December. The season calendar was not in either input. [Open question]
+Winter signups open in January. [Owner] So Oct to Dec is fall play, testing and building a waitlist; January is the conversion push. With 190 to 200 winter leagues vs about 160 now, January needs roughly 30 to 40 more leagues' worth of new players. [Owner]
 
 ### October: Fix, baseline, pilot
 
@@ -314,23 +318,32 @@ Assumption to confirm: winter season signups open in November or December. The s
 |---|---|---|
 | Oct 1 to 4 | Connect IG, FB Organic, TikTok Organic in Windsor.ai. Decide the handle. Set FB vanity URL. Pick one affiliate app. Turn off retired paid angles and "Learn More." Move prospecting to homepage or /collections. | [Audit: Gaps, next steps 1, 2, 3, 5] |
 | Oct 5 to 11 | Re-verify competitor follower counts and Honcho TikTok status. Check Meta Ad Library for Volo and Honcho. Launch LGBTQ-owned A/B and See Details test. Recruit 3 pilot Head Pickles. | [Comp: takeaway 10] [Audit: next steps 4, 8] |
-| Oct 12 to 18 | Recruit 3 to 6 pilot creators. Film Tommy holiday and winter cuts. Start YouTube Shorts. | [Comp: Volo creator codes] [Audit: next step 7] |
+| Oct 12 to 18 | Recruit 6 pilot creators (2 per city, $500 for 2 videos plus free league). Film the Tommy Halloween cut only. Start YouTube Shorts. | [Comp: Volo creator codes] [Audit: next step 7] |
 | Oct 19 to 31 | Halloween push with Boo-style host video and costume nights. First creator videos live. | [Audit: Boo-v2] |
 
 ### November: Learn and extend
 
 - Read 30-day organic baseline and set organic targets (Section 9).
 - Read LGBTQ-owned and See Details tests; scale winners.
-- Launch "Winter signups are open!" and "starting soon" for winter leagues. [Audit: top hooks]
+- Winter waitlist: "Winter is coming to [City]. Get first dibs." Lead magnet to homepage or /collections with an email or SMS capture, so January launches to a warm list. [Owner: January signups] [Inference]
+- Read creator pilot results against the 12 to 13 signup break-even; brief round 2 creators for January videos.
 - Relaunch Chicago volleyball test with rebuilt creative. [Audit: volleyball]
 - Expand Head Pickles to more cities if the pilot delivers weekly clips.
 - Black Friday to Cyber Monday (Nov 27 to 30): Silly Paddle gift content, organic first. [Inference]
 
 ### December: Scale and plan 2027
 
-- Holiday Tommy video, paddle gifting, season finale socials. [Audit: seasonal host videos]
-- Winter "starting soon" push. Avoid "resolution" framing. [Audit: New Year ROAS 2.04]
+- Holiday video fronted by a creator or Head Pickle, not Tommy (fatigue test). Paddle gifting, season finale socials. [Owner]
+- Film January launch creative: 1 Tommy "Winter signups are open!" cut, 4 to 6 creator videos, city new-league announcements.
 - Creator program review: keep, expand or stop based on code CAC.
+
+### January 2027: Winter launch
+
+- Launch "Winter signups are open!" and "[City], your league is starting soon! All Levels Welcome!" [Audit: top hooks, ROAS 3.08 and 3.12]
+- Announce new leagues by city (the 30 to 40 added). [Owner]
+- Email/SMS the waitlist first, then paid.
+- Avoid "resolution" framing even though it is January. [Audit: New Year ROAS 2.04]
+- Tommy vs creator head-to-head on cost per signup decides the Q2 creative mix.
 - Q1 2027 plan: city accounts decision, Silly Cup concept, LinkedIn corporate test, loyalty perk.
 
 ### Sample 4-week posting calendar (Oct 5 to Nov 1, 2026)
@@ -339,7 +352,7 @@ Organic posts. TT = TikTok, IG = Instagram Reel (also to FB and YouTube Shorts u
 
 | Week | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
 |---|---|---|---|---|---|---|---|
-| **1 (Oct 5)** | TT+IG: "How the Dynamic Ladder works in 30s" (B) | IG Stories: poll "Ever played pickleball?" | TT+IG: "Never tried pickleball? This is your sign!" first-timer (A) | TT: game-night blooper (D) | TT+IG: Tommy "Fall leagues are on, winter is next" (E) | IG Stories: league night takeover | NCOD Oct 11: player stories, "Why I play with a queer-owned league" (C) |
+| **1 (Oct 5)** | TT+IG: "How the Dynamic Ladder works in 30s" (B) | IG Stories: poll "Ever played pickleball?" | TT+IG: "Never tried pickleball? This is your sign!" first-timer (A) | TT: game-night blooper (D) | TT+IG: creator or Head Pickle "Fall leagues are on, winter is next" (E) | IG Stories: league night takeover | NCOD Oct 11: player stories, "Why I play with a queer-owned league" (C) |
 | **2 (Oct 12)** | TT+IG: "Different skill levels, same fun night" (B) | FB Event: Halloween costume night per city (D) | TT+IG: Meet your Head Pickle, city 1 (C) | Spirit Day Oct 15: purple team photo (C) | TT: trend or meme format (D) | IG Stories: "Which Silly Paddle are you?" quiz (D) | TT+IG: "I showed up alone. Week 8 I had a group chat." (A) |
 | **3 (Oct 19)** | TT+IG: Tommy "Boo" Halloween video, organic cut (D) | IG: collab post with pilot venue (E) | TT+IG: first creator "I'm not an athlete" video, reshared (A) | TT: costume teaser (D) | TT+IG: "Less scrolling, more serving" (B) | IG Stories: costume voting | TT+IG: Meet your Head Pickle, city 2 (C) |
 | **4 (Oct 26)** | TT+IG: "Athletic? Debatable. Fun? Guaranteed." montage (B) | TT: second creator video (A) | TT+IG: costume night recap (D) | FB+IG: Winter "starting soon" teaser with value checklist (E) | TT+IG: Halloween Eve bloopers (D) | Oct 31: costume night Stories live (D) | TT+IG: "Pickle of the Week" UGC repost (A) |
@@ -399,7 +412,8 @@ Measure organic on **shares, saves and link clicks** more than likes, because li
 | Hostile comments on LGBTQ-owned ads | Moderation plan, keyword filters, response guidelines, staff support. [Inference] |
 | Filming players who are not out publicly | Consent-first filming rules in the Head Pickle handbook; no faces without permission. [Inference] |
 | TikTok rename loses links and search | Decide before creator launch; update all links in one day. [Audit: handle mismatch] |
-| Over-reliance on one host (Tommy is 65% of TikTok spend) | Develop 1 to 2 additional on-camera hosts from Head Pickles. [Audit: Tommy 65%] [Inference] |
+| Over-reliance on one host (Tommy, the founder, is 65% of TikTok spend; owner senses fatigue) | Paid creators plus 1 to 2 Head Pickle hosts; cap Tommy near half of new creative; head-to-head test decides. Note the data so far shows his newest video converting best, so do not cut him outright. [Audit: Tommy 65%, Boo-v2 $39.27] [Owner] |
+| Creators miss the 12 to 13 signup break-even | Pilot only 6; boost only the winning video; stop if code CAC trends above target. [Inference] |
 | Competitor numbers stale | Re-verify before any external use. [Comp: Method and limitations] |
 | Only top 100 of 2,433 Meta creatives analyzed | Pull the remaining creatives in the next audit before retiring anything with low spend. [Audit: Section 6 scope] |
 | "See Details" result is from 5 ads | Test, do not switch all ads. [Audit: small sample] |
@@ -407,12 +421,12 @@ Measure organic on **shares, saves and link clicks** more than likes, because li
 ### Open questions
 
 1. Is @sillypickles available on TikTok, and does leadership want one brand (Silly Pickles) or a move to Silly Sports?
-2. When do winter leagues open for signup in each city?
-3. Who is Tommy, and what is his capacity for monthly video shoots?
+2. ~~When do winter signups open?~~ January. [Owner] Exact date per city still needed.
+3. ~~Who is Tommy?~~ The founder; can film a lot; owner senses audience fatigue. [Owner] Is there comment or view-drop evidence of fatigue? (Check once organic is connected.)
 4. What does each league include (tee, socials, prizes) so we can publish the value checklist accurately? [Comp: Honcho value stack]
 5. Which affiliate app, UpPromote or BixGrow, do we keep?
-6. What margin allows a fixed-dollar creator code, and what is the creator pay budget?
-7. Is the "50+ locations" claim current and verifiable?
+6. ~~Creator pay?~~ Free league plus $500 for 2 videos. [Owner] Still open: follower-code amount and total creator budget.
+7. ~~"50+ locations"?~~ About 160 leagues now, 190 to 200 in winter. [Owner] How many cities is that?
 8. What are current organic follower counts and posting cadence? (Answered once Windsor.ai is connected.)
 9. Is volleyball staying Chicago-only, and does it justify continued paid tests?
 10. Is there appetite for DUPR-tracked divisions later for competitive players, without changing the beginner-first message? [Comp: takeaway 9]
