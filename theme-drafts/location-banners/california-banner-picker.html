@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>California Banner Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one column of location rows; each row = live banner preview (desktop + phone crop) over a strip of candidate photos. */
+:root{
+  --navy:#201747; --scrim:20,15,50; --mint:#8fd6bd; --mint-soft:#dff3ec; --sun:#ffcb4d; --coral:#f25f66;
+  --bg:#f6f8f7; --surface:#ffffff; --fg:#201747; --muted:#55728f; --line:#d6e7e0; --chip:#eaf8f4;
+  --display:"Poppins",system-ui,sans-serif; --body:"DM Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f0c24; --surface:#1a1538; --fg:#eef1fb; --muted:#9fb3c8; --line:#2f2858; --chip:#241e4a; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f0c24; --surface:#1a1538; --fg:#eef1fb; --muted:#9fb3c8; --line:#2f2858; --chip:#241e4a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+header.top{display:grid;gap:10px;margin-bottom:24px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,38px);line-height:1.05;margin:0;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:10px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.toolbar .count{font-weight:700;font-family:var(--display)}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--sun);color:#201747;border:0;border-radius:100px;padding:9px 18px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-size:12px}
+.btn.ghost{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
+.btn:focus-visible,.thumb:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.loc{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:14px;margin-bottom:22px}
+.loc-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;align-items:baseline}
+.loc-head h2{font-family:var(--display);font-size:20px;margin:0}
+.loc-head .meta{font-size:13px;color:var(--muted)}
+.previews{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:14px;align-items:start}
+@media (max-width:700px){.previews{grid-template-columns:minmax(0,1fr)}}
+.frame-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+/* Desktop banner: theme renders ~1440 x 340. Keep the same 1440:340 ratio. */
+.banner{position:relative;overflow:hidden;background:var(--navy);border-radius:10px;width:100%}
+.banner.desk{aspect-ratio:1440/340}
+.banner.phone{aspect-ratio:390/260}
+.banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.banner::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(var(--scrim),.65) 0%,rgba(var(--scrim),.41) 40%,rgba(var(--scrim),0) 72%)}
+.copy{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:0 3.3%;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+.copy .t{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:1.02;max-width:39%;font-size:clamp(13px,3vw,44px)}
+.copy .g{color:var(--mint);font-weight:600;margin-top:.5em;font-size:clamp(8px,1.25vw,18px)}
+.copy .c{display:inline-block;margin-top:.9em;background:#f7f9fd;color:#201747;border-radius:100px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.7em 1.3em;font-size:clamp(7px,.9vw,13px);align-self:flex-start;text-shadow:none}
+.phone .copy{padding:0 16px}
+.phone .copy .t{max-width:100%;font-size:17px}
+.phone .copy .g{font-size:9px}
+.phone .copy .c{font-size:7px}
+.banner .fail{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:13px;z-index:3;background:rgba(32,23,71,.85)}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.thumb{flex:0 0 auto;width:112px;border:2px solid transparent;border-radius:10px;padding:0;background:var(--chip);color:var(--fg);text-align:left;overflow:hidden}
+.thumb[aria-pressed="true"]{border-color:var(--coral)}
+.thumb img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:var(--line)}
+.thumb .cap{display:flex;justify-content:space-between;gap:4px;padding:4px 6px;font-size:11px;font-variant-numeric:tabular-nums}
+.res{font-weight:700}
+.ok{color:#2f9e77}.warn{color:#c98a00}.bad{color:var(--coral)}
+.pickrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:13px}
+.pickrow label{display:inline-flex;gap:6px;align-items:center}
+.picked{font-weight:700}
+.pos{display:inline-flex;gap:4px}
+.pos button{border:1.5px solid var(--line);background:transparent;color:var(--fg);border-radius:8px;padding:4px 8px;font-size:12px}
+.pos button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+pre.out{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto;font-size:12px;white-space:pre}
+.note{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.banner img{transition:opacity .2s}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <h1>California banner picker</h1>
+    <p class="lede">Every photo already attached to your active California league listings, shown in the real banner crop (1440 × 340 desktop, 390 × 260 phone) with the live scrim and copy. Click a photo to try it, pick one per location, then copy your picks and send them back to me.</p>
+    <div class="legend">
+      <span><i class="dot" style="background:#2f9e77"></i>1500px+ wide: sharp on desktop</span>
+      <span><i class="dot" style="background:#c98a00"></i>1000 to 1499px: OK on phone, soft on big screens</span>
+      <span><i class="dot" style="background:var(--coral)"></i>under 1000px: will look blurry</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <span class="count" id="count">0 of 13 picked</span>
+    <button class="btn" id="copy" type="button">Copy picks</button>
+    <button class="btn ghost" id="reset" type="button">Clear picks</button>
+    <span class="note" id="copied" role="status"></span>
+  </div>
+
+  <div id="list"></div>
+
+  <h2 style="font-family:var(--display);font-size:20px">Your picks</h2>
+  <pre class="out" id="out">Nothing picked yet.</pre>
+</div>
+
+<script>
+const DATA = [{"city": "Calabasas", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Courts_1.webp?v=1754420146&width=1600", "w": 1668, "h": 1667, "alt": "", "venue": "Calabasas Pickleball Club", "file": "Courts_1.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Picnic_Area.webp?v=1754420179&width=1600", "w": 1668, "h": 1667, "alt": "", "venue": "Calabasas Pickleball Club", "file": "Picnic_Area.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/The_shoppe.webp?v=1779154880&width=1600", "w": 1667, "h": 1667, "alt": "", "venue": "Calabasas Pickleball Club", "file": "The_shoppe.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "Calabasas Pickleball Club", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Calabasas Pickleball Club", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Calabasas Pickleball Club", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "Calabasas Pickleball Club", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Calabasas Pickleball Club", "file": "DiLL_GATES_4.png"}]}, {"city": "Carson", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/powerplay_carson_ca.jpg?v=1755121109&width=1600", "w": 348, "h": 348, "alt": "", "venue": "PowerPlay Pickleball", "file": "powerplay_carson_ca.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "PowerPlay Pickleball", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "PowerPlay Pickleball", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "PowerPlay Pickleball", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "PowerPlay Pickleball", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "PowerPlay Pickleball", "file": "DiLL_GATES_4.png"}]}, {"city": "Concord", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Indoor_Pickleball_X_2.jpg?v=1775521620&width=1600", "w": 768, "h": 768, "alt": "", "venue": "Indoor Pickleball X", "file": "Indoor_Pickleball_X_2.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Indoor_Pickleball_X_1.jpg?v=1775521620&width=1600", "w": 665, "h": 665, "alt": "", "venue": "Indoor Pickleball X", "file": "Indoor_Pickleball_X_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DSC_4717.jpg?v=1775521620&width=1600", "w": 2848, "h": 2848, "alt": "", "venue": "Indoor Pickleball X", "file": "DSC_4717.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/B3A0705.jpg?v=1775521620&width=1600", "w": 2668, "h": 2668, "alt": "", "venue": "Indoor Pickleball X", "file": "B3A0705.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Indoor_Pickleball_X_3.png?v=1775521620&width=1600", "w": 1359, "h": 1235, "alt": "", "venue": "Indoor Pickleball X", "file": "Indoor_Pickleball_X_3.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Indoor Pickleball X", "file": "DiLL_GATES_4.png"}]}, {"city": "Corona", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/eagle_glen_4.png?v=1770832096&width=1600", "w": 378, "h": 379, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "eagle_glen_4.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/eagle_glen_3.png?v=1770832096&width=1600", "w": 379, "h": 379, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "eagle_glen_3.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/eagle_glen_1.png?v=1770832096&width=1600", "w": 508, "h": 508, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "eagle_glen_1.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/eagle_glen_2.png?v=1770832096&width=1600", "w": 502, "h": 502, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "eagle_glen_2.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/a3f27ca0-c265-47dd-86e4-4f657e6fbf68.jpg?v=1770832670&width=1600", "w": 912, "h": 912, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "a3f27ca0-c265-47dd-86e4-4f657e6fbf68.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4_44d71d32-dde0-4be1-9af1-a3cb0743a900.png?v=1774451167&width=1600", "w": 1080, "h": 1080, "alt": "", "venue": "Eagle Glen Pickleball Club", "file": "DiLL_GATES_4_44d71d32-dde0-4be1-9af1-a3cb0743a900.png"}]}, {"city": "El Segundo", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/img_2501-1-AMqDaV16GrUw8zjM.jpg?v=1790094332&width=1600", "w": 1956, "h": 1955, "alt": "", "venue": "California SMASH", "file": "img_2501-1-AMqDaV16GrUw8zjM.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Copy_of__C2A8055_1.jpg?v=1784655075&width=1600", "w": 1920, "h": 1921, "alt": "", "venue": "California SMASH", "file": "Copy_of__C2A8055_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/img_2204-1-AQEe8Qxw68h2M6Nr.jpg?v=1790094352&width=1600", "w": 1822, "h": 1822, "alt": "", "venue": "California SMASH", "file": "img_2204-1-AQEe8Qxw68h2M6Nr.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Generic_10.heic?v=1786378684&width=1600", "w": 2132, "h": 2132, "alt": "", "venue": "California SMASH", "file": "Generic_10.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/img_2378-1-m7VD8q3x4xfkV43x.jpg?v=1790094394&width=1600", "w": 1818, "h": 1818, "alt": "", "venue": "California SMASH", "file": "img_2378-1-m7VD8q3x4xfkV43x.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/B3A4786_1.jpg?v=1773087600&width=1600", "w": 2669, "h": 2668, "alt": "", "venue": "California SMASH", "file": "B3A4786_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/1i7a0377-VXJfIG3Vn0FIXR3A.jpg?v=1790094432&width=1600", "w": 1024, "h": 1024, "alt": "", "venue": "California SMASH", "file": "1i7a0377-VXJfIG3Vn0FIXR3A.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "California SMASH", "file": "DiLL_GATES_4.png"}]}, {"city": "Fountain Valley", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/20241004_183736.jpg?v=1776995834&width=1600", "w": 3000, "h": 3000, "alt": "", "venue": "Los Cab Pickleball Club", "file": "20241004_183736.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/20240905_193804.jpg?v=1776995675&width=1600", "w": 3000, "h": 3000, "alt": "", "venue": "Los Cab Pickleball Club", "file": "20240905_193804.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/20241004_183311.jpg?v=1776995794&width=1600", "w": 3000, "h": 3000, "alt": "", "venue": "Los Cab Pickleball Club", "file": "20241004_183311.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/20241004_184314.jpg?v=1776995853&width=1600", "w": 3000, "h": 3000, "alt": "", "venue": "Los Cab Pickleball Club", "file": "20241004_184314.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_1.jpg?v=1776787557&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Los Cab Pickleball Club", "file": "generic_PB_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Los Cab Pickleball Club", "file": "DiLL_GATES_4.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Los_cab_theme_night.jpg?v=1783994931&width=1600", "w": 4284, "h": 4284, "alt": "", "venue": "Los Cab Sports Club", "file": "Los_cab_theme_night.jpg"}]}, {"city": "Fresno", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/0f0d4743-a595-4bf5-853d-d2380c651a15-NEWPICKLEBALLCOURTSDRONEPICTURE2.webp?v=1778263103&width=1600", "w": 743, "h": 743, "alt": "", "venue": "Rotary East Park", "file": "0f0d4743-a595-4bf5-853d-d2380c651a15-NEWPICKLEBALLCOURTSDRONEPICTURE2.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/cc8b437d-56c7-4156-a2c5-b966ce8f9479-BYRON9.webp?v=1778263152&width=1600", "w": 555, "h": 555, "alt": "", "venue": "Rotary East Park", "file": "cc8b437d-56c7-4156-a2c5-b966ce8f9479-BYRON9.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_1.jpg?v=1776787557&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Rotary East Park", "file": "generic_PB_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "Rotary East Park", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Rotary East Park", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Rotary East Park", "file": "DiLL_GATES_4.png"}]}, {"city": "Los Angeles", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/1_3.jpg?v=1764945601&width=1600", "w": 600, "h": 600, "alt": "", "venue": "PIKL LA", "file": "1_3.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_4.jpg?v=1773087600&width=1600", "w": 1440, "h": 1440, "alt": "", "venue": "PIKL LA", "file": "generic_PB_4.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DSCF5837.jpg?v=1773087600&width=1600", "w": 1000, "h": 1000, "alt": "", "venue": "PIKL LA", "file": "DSCF5837.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DSCF5755.jpg?v=1773087600&width=1600", "w": 400, "h": 400, "alt": "", "venue": "PIKL LA", "file": "DSCF5755.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/piklla.jpg?v=1773087600&width=1600", "w": 1080, "h": 1080, "alt": "", "venue": "PIKL LA", "file": "piklla.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/cabana.png?v=1773087600&width=1600", "w": 400, "h": 400, "alt": "", "venue": "PIKL LA", "file": "cabana.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/B3A4786_1.jpg?v=1773087600&width=1600", "w": 2669, "h": 2668, "alt": "", "venue": "PIKL LA", "file": "B3A4786_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "PIKL LA", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "PIKL LA", "file": "DiLL_GATES_4.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/image_15.png?v=1779809685&width=1600", "w": 1440, "h": 1440, "alt": "", "venue": "PICKLETOWN LA", "file": "image_15.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "PICKLETOWN LA", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Pickletown_2.jpg?v=1779808598&width=1600", "w": 485, "h": 485, "alt": "", "venue": "PICKLETOWN LA", "file": "Pickletown_2.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "PICKLETOWN LA", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "PICKLETOWN LA", "file": "IMG_2375_1.heic"}]}, {"city": "San Diego", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_1.jpg?v=1776787557&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "generic_PB_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "The HUB San Diego", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "The HUB San Diego", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "The HUB San Diego", "file": "DiLL_GATES_4.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/The_Hub_SD_1.jpg?v=1782836081&width=1600", "w": 348, "h": 348, "alt": "", "venue": "The HUB San Diego", "file": "The_Hub_SD_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/The_Hub_SD_4.jpg?v=1782836189&width=1600", "w": 665, "h": 665, "alt": "", "venue": "The HUB San Diego", "file": "The_Hub_SD_4.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/The_Hub_SD_3.jpg?v=1782836081&width=1600", "w": 447, "h": 447, "alt": "", "venue": "The HUB San Diego", "file": "The_Hub_SD_3.jpg"}]}, {"city": "San Francisco", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/Bay_Padel_Courts.jpg?v=1763663396&width=1600", "w": 1536, "h": 1536, "alt": "", "venue": "Bay Padel", "file": "Bay_Padel_Courts.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/unnamed_9.jpg?v=1761837023&width=1600", "w": 3469, "h": 3469, "alt": "", "venue": "Bay Padel", "file": "unnamed_9.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/unnamed_8.jpg?v=1761837023&width=1600", "w": 1152, "h": 1152, "alt": "", "venue": "Bay Padel", "file": "unnamed_8.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/2023-10-25.webp?v=1761837023&width=1600", "w": 1020, "h": 1020, "alt": "", "venue": "Bay Padel", "file": "2023-10-25.webp"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "Bay Padel", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Bay Padel", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Bay Padel", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "Bay Padel", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Bay Padel", "file": "DiLL_GATES_4.png"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_5.jpg?v=1775156381&width=1600", "w": 2160, "h": 2160, "alt": "", "venue": "Bay Padel - Dogpatch", "file": "generic_PB_5.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/dogpatch.jpg?v=1788360933&width=1600", "w": 1440, "h": 1440, "alt": "", "venue": "Bay Padel - Dogpatch", "file": "dogpatch.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_1.jpg?v=1776787557&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Bay Padel - Dogpatch", "file": "generic_PB_1.jpg"}]}, {"city": "Santa Monica", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "Pickle Pop & On 4th", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Pickle Pop & On 4th", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "Pickle Pop & On 4th", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "Pickle Pop & On 4th", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "Pickle Pop & On 4th", "file": "DiLL_GATES_4.png"}]}, {"city": "Spring Valley", "images": [{"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/generic_PB_1.jpg?v=1776787557&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "generic_PB_1.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1400.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "IMG_1400.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_1461.jpg?v=1776803788&width=1600", "w": 860, "h": 860, "alt": "", "venue": "The HUB San Diego", "file": "IMG_1461.jpg"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_3801.heic?v=1776803788&width=1600", "w": 3024, "h": 3024, "alt": "", "venue": "The HUB San Diego", "file": "IMG_3801.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/IMG_2375_1.heic?v=1776803788&width=1600", "w": 2316, "h": 2316, "alt": "Four young, fun people posing for a selfie with a pickleball court in the background. Four, young cute men posing together on a pickleball court with equipment. Young man playing pickleball on an outdoor court with palm trees in the background, Man playing pickleball on an outdoor court with a fence and trees in the background. Playing in Young woman holding a pickleball paddle on a court with a blurred background. From Silly Pickles pickleball ladder league (the world's funnest pickleball league)", "venue": "The HUB San Diego", "file": "IMG_2375_1.heic"}, {"url": "https://cdn.shopify.com/s/files/1/0695/7616/3586/files/DiLL_GATES_4.png?v=1776803788&width=1600", "w": 1080, "h": 1080, "alt": "Silly Pickles pickleball characters (iconic pickle graphics) from the world's funnest pickleball leagues! ", "venue": "The HUB San Diego", "file": "DiLL_GATES_4.png"}]}];
+const POS = [["left center","Left"],["center center","Center"],["right center","Right"]];
+// State page gets every unique photo across its cities.
+const allImgs = [];
+const seen = new Set();
+DATA.forEach(c => c.images.forEach(i => { if(!seen.has(i.file)){ seen.add(i.file); allImgs.push({...i, venue: c.city}); } }));
+const LOCS = [{city:"California", state:true, images: allImgs.sort((a,b)=>b.w-a.w)}].concat(DATA.map(c=>({...c, images:c.images.slice().sort((a,b)=>b.w-a.w)})));
+
+let picks = {};
+try { picks = JSON.parse(localStorage.getItem("sp-banner-picks")||"{}"); } catch(e) { picks = {}; }
+const save = () => { try { localStorage.setItem("sp-banner-picks", JSON.stringify(picks)); } catch(e){} };
+
+const resClass = w => w>=1500 ? "ok" : w>=1000 ? "warn" : "bad";
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+
+function bannerHTML(loc, kind){
+  const title = loc.state ? "Pickleball Leagues in California" : "Pickleball Leagues in " + loc.city + ", California";
+  return `<div class="banner ${kind}"><img alt="" decoding="async"><div class="copy"><div class="t">${esc(title)}</div><div class="g">Come for the games. Stay for the people 🤪</div><span class="c">Find your next league ↓</span></div></div>`;
+}
+
+function render(){
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  LOCS.forEach((loc, li) => {
+    const sec = document.createElement("section");
+    sec.className = "loc";
+    const sharp = loc.images.filter(i=>i.w>=1500).length;
+    sec.innerHTML = `
+      <div class="loc-head"><h2>${esc(loc.city)}${loc.state?" (state page)":""}</h2>
+        <span class="meta">${loc.images.length} photos, ${sharp} sharp enough for desktop</span></div>
+      <div class="previews">
+        <div><div class="frame-label">Desktop</div>${bannerHTML(loc,"desk")}</div>
+        <div><div class="frame-label">Phone</div>${bannerHTML(loc,"phone")}</div>
+      </div>
+      <div class="strip" role="group" aria-label="Photos for ${esc(loc.city)}"></div>
+      <div class="pickrow">
+        <span>Picked: <span class="picked">none</span></span>
+        <span class="pos" role="group" aria-label="Image position"></span>
+      </div>`;
+    const strip = sec.querySelector(".strip");
+    const imgs = sec.querySelectorAll(".banner img");
+    const pickedEl = sec.querySelector(".picked");
+    const posEl = sec.querySelector(".pos");
+    const pick = picks[loc.city] || {};
+    let current = loc.images.find(i=>i.file===pick.file) || loc.images[0];
+    let pos = pick.pos || "center center";
+
+    const show = (img) => {
+      current = img;
+      imgs.forEach(el => {
+        el.parentElement.querySelector(".fail")?.remove();
+        el.src = img.url; el.style.objectPosition = pos;
+        el.onerror = () => { const f=document.createElement("div"); f.className="fail"; f.textContent="Browser can't display this file (likely HEIC)"; el.parentElement.appendChild(f); };
+      });
+      strip.querySelectorAll(".thumb").forEach(t => t.setAttribute("aria-pressed", t.dataset.file===img.file && picks[loc.city]?.file===img.file ? "true":"false"));
+    };
+    loc.images.forEach(img => {
+      const b = document.createElement("button");
+      b.type="button"; b.className="thumb"; b.dataset.file = img.file;
+      b.title = img.file + (img.alt? " | alt: "+img.alt : "") + (loc.state? " | from "+img.venue : "");
+      b.innerHTML = `<img loading="lazy" alt="" src="${esc(img.url.replace("width=1600","width=240"))}"><span class="cap"><span class="res ${resClass(img.w)}">${img.w}px</span><span>${loc.state?esc(img.venue):""}</span></span>`;
+      b.addEventListener("mouseenter", () => show(img));
+      b.addEventListener("focus", () => show(img));
+      b.addEventListener("click", () => {
+        if (picks[loc.city]?.file === img.file) { delete picks[loc.city]; }
+        else { picks[loc.city] = {file: img.file, url: img.url.replace(/[?&]width=1600/,""), w: img.w, pos}; }
+        save(); show(img); updatePicked(); summary();
+      });
+      strip.appendChild(b);
+    });
+    strip.addEventListener("mouseleave", () => { const p = loc.images.find(i=>i.file===picks[loc.city]?.file); if(p) show(p); });
+    POS.forEach(([v,l]) => {
+      const b = document.createElement("button"); b.type="button"; b.textContent=l;
+      b.setAttribute("aria-pressed", v===pos?"true":"false");
+      b.addEventListener("click", () => {
+        pos = v; posEl.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+        imgs.forEach(el=>el.style.objectPosition=v);
+        if(picks[loc.city]){ picks[loc.city].pos = v; save(); summary(); }
+      });
+      posEl.appendChild(b);
+    });
+    function updatePicked(){ const p=picks[loc.city]; pickedEl.textContent = p ? `${p.file} (${p.w}px)` : "none"; }
+    updatePicked();
+    show(current);
+    list.appendChild(sec);
+  });
+  summary();
+}
+
+function summary(){
+  const keys = LOCS.map(l=>l.city).filter(c=>picks[c]);
+  document.getElementById("count").textContent = `${keys.length} of ${LOCS.length} picked`;
+  document.getElementById("out").textContent = keys.length
+    ? keys.map(c => `${c}: ${picks[c].file} | position: ${picks[c].pos} | ${picks[c].url}`).join("\n")
+    : "Nothing picked yet.";
+}
+
+document.getElementById("copy").addEventListener("click", () => {
+  const txt = document.getElementById("out").textContent;
+  const msg = document.getElementById("copied");
+  navigator.clipboard.writeText(txt).then(()=>{ msg.textContent="Copied"; }).catch(()=>{
+    const r=document.createRange(); r.selectNodeContents(document.getElementById("out"));
+    const s=getSelection(); s.removeAllRanges(); s.addRange(r); msg.textContent="Selected. Press Ctrl/Cmd+C to copy.";
+  });
+});
+document.getElementById("reset").addEventListener("click", () => { picks={}; save(); render(); });
+render();
+</script>
+
+</body>
+</html>
