@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fall '26 Creative Performance</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f4;--card:#fff;--ink:#1a2b1a;--muted:#6b7a6b;--line:#e4e9e4;--green:#2f9e44;--amber:#f08c00;--orange:#e8590c;--red:#e03131;--gray:#adb5ad;--brand:#3aa655;--brand-d:#237a3d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.45}
+h1,h2,h3{font-family:'Poppins',sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 16px 80px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:3px solid var(--brand);padding-bottom:14px;margin-bottom:22px}
+header h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpi h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+.kpi.p0 h3{color:var(--brand-d)} .kpi.p1 h3{color:var(--orange)}
+.kpi .roas{font-family:'Poppins';font-size:34px;font-weight:800;line-height:1}
+.kpi .roas small{font-size:14px;color:var(--muted);font-weight:600}
+.kpi .lpx{font-size:15px;font-weight:700;color:var(--muted);margin-top:3px}
+.kpi .lpx span{font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.kpi .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:12px;font-size:13px}
+.kpi .grid span{color:var(--muted)} .kpi .grid b{font-family:'Poppins'}
+h2.sec{font-size:16px;font-weight:800;margin:30px 0 12px}
+.take{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;padding:12px 18px}
+.take li{margin:6px 0}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+table.sum{border-collapse:collapse;width:100%;font-size:13px;min-width:920px}
+table.sum th,table.sum td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.sum th{background:#eef2ee;font-weight:700;cursor:pointer;user-select:none;position:sticky;top:0}
+table.sum th.grp{text-align:center;background:#e3ebe3;border-left:2px solid var(--line);cursor:default}
+table.sum td.name,table.sum th.name{text-align:left;white-space:normal;min-width:210px;position:sticky;left:0;background:var(--card)}
+table.sum th.name{background:#eef2ee}
+table.sum td.b0,table.sum th.b0{border-left:2px solid var(--line)}
+table.sum tr.tot td{font-weight:800;background:#eef6ee;border-top:2px solid var(--brand)}
+table.sum tr.low td{color:var(--gray);font-style:italic}
+table.sum tr.themehdr td{background:#e7efe7;font-weight:800}
+table.sum tr.adrow td.name{padding-left:24px;font-size:12.5px}
+td.lp,th.lp{color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px;align-items:center}
+.filters button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--muted)}
+.filters button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card.low{opacity:.68;background:#fafbfa}
+.thumb{position:relative;background:#0d140d;aspect-ratio:16/7;display:flex;align-items:center;justify-content:center}
+.thumb .ph{color:#7a8b7a;font-size:12px;text-align:center;padding:16px}
+.badge{position:absolute;top:8px;right:8px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:12px;background:#fff}
+.vid{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;padding:2px 8px;border-radius:12px;font-weight:700}
+.g-top{color:var(--green)} .g-mixed{color:var(--amber)} .g-weak{color:var(--orange)} .g-bad{color:var(--red)} .g-phase1{color:#5b7c9d} .g-lowspend,.g-testlow{color:var(--gray)} .g-inactive{color:#a12a2a} .g-rotate{color:var(--green);font-weight:700} .g-hold{color:var(--amber)} .g-cut{color:var(--red)}
+.card .body{padding:12px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card .nm{font-family:'Poppins';font-weight:700;font-size:13.5px;word-break:break-word}
+.dates{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11px;color:var(--muted);border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);padding:6px 0}
+.dates .run{color:var(--green);font-weight:700}
+table.m{border-collapse:collapse;width:100%;font-size:12px}
+table.m th,table.m td{padding:4px 6px;text-align:right;border-bottom:1px solid var(--line)}
+table.m th{color:var(--muted);font-weight:700;font-size:11px}
+table.m .k{text-align:left;color:var(--muted)}
+.note{font-size:12px;background:#f6f9f6;border-radius:10px;padding:10px}
+.note .st{font-weight:800;font-family:'Poppins';display:block;margin-bottom:4px}
+.note ul{margin:4px 0 8px;padding-left:16px} .note li{margin:2px 0}
+.note .rec{font-weight:700}
+.intro{color:var(--muted);font-size:12.5px;margin:0 0 12px;max-width:840px}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.6}
+.pos{color:var(--green)} .neg{color:var(--red)}
+@media(max-width:720px){.kpis{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<header><div><h1>Fall '26 Creative Performance</h1><div class="sub" id="sub"></div></div>
+<div class="sub" style="text-align:right">Source: Meta via Lebesgue, TikTok via Windsor<br>Generated __GEN__</div></header>
+<div class="kpis" id="kpis"></div>
+<h2 class="sec">Key takeaways</h2><div class="take"><ul>__TAKE__</ul></div>
+<h2 class="sec">📊 Creative Summary</h2>
+<div class="tablewrap"><table class="sum" id="sumtab"></table></div>
+<h2 class="sec">🎨 Creative Detail</h2>
+<div class="filters" id="filters"></div>
+<div class="cards" id="cards"></div>
+<div id="testsec"></div><div id="ttsec"></div>
+<div class="foot" id="foot"></div>
+</div>
+<script>
+const D=__DATA__;
+const fmtM=x=>x==null?'n/a':'$'+Math.round(x).toLocaleString();
+const fmtR=x=>x==null?'n/a':x.toFixed(2)+'x';
+const fmtP=x=>x==null?'n/a':(x*100).toFixed(1)+'%';
+const fmtN=x=>x==null?'n/a':Math.round(x).toLocaleString();
+const roasColor=x=>x==null?'':x>=3.5?'pos':x<2?'neg':'';
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const dfmt=s=>new Date(s+'T00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const [ws,we]=D.window;
+document.getElementById('sub').textContent=`Reporting window: ${dfmt(ws)} to ${dfmt(we)}, 2026 · ${D.creatives.length} creatives · Phase 0 = National · Phase 1 = Problem Children`;
+const P=D.portfolio;
+document.getElementById('kpis').innerHTML=[['overall','Overall','kpi'],['p0','Phase 0 · National','kpi p0'],['p1','Phase 1 · Problem Children','kpi p1']].map(([k,l,c])=>{const v=P[k];return `<div class="${c}"><h3>${l}</h3><div class="roas ${roasColor(v.roas)}">${fmtR(v.roas)}<small> ROAS · Meta</small></div><div class="lpx">${fmtR(v.pixel_roas)} <span>Le Pixel</span></div><div class="grid"><span>Spend</span><b>${fmtM(v.spend)}</b><span>Revenue</span><b>${fmtM(v.rev)}</b><span>Purchases</span><b>${fmtN(v.purch)}</b><span>CPP</span><b>${fmtM(v.cpp)}</b></div></div>`}).join('');
+const C=[...D.creatives];let sortKey='spend',sortDir=-1;
+const tval=(r,k)=>k==='name'?r.name.toLowerCase():(r.total[k]==null?-1:r.total[k]);
+function renderTable(){
+ C.sort((a,b)=>{const x=tval(a,sortKey),y=tval(b,sortKey);return (x<y?-1:x>y?1:0)*sortDir;});
+ const cols=[['spend','Spend',fmtM],['rev','Revenue',fmtM],['roas','ROAS',fmtR],['pixel_roas','LP ROAS',fmtR],['cpp','CPP',fmtM],['cvr','CVR',fmtP],['purch','Purch',fmtN]];
+ let h=`<thead><tr><th class="name" data-k="name">Creative</th><th class="grp" colspan="7">Overall</th><th class="grp" colspan="3">Phase 0 (graded)</th><th class="grp" colspan="3">Phase 1</th><th class="grp">Grade</th></tr><tr><th class="name" data-k="name">sort ▲▼</th>`;
+ cols.forEach(c=>h+=`<th data-k="${c[0]}"${c[0]==='pixel_roas'?' class="lp"':''}>${c[1]}</th>`);
+ h+=`<th class="b0">Spend</th><th>ROAS</th><th class="lp">LP</th><th class="b0">Spend</th><th>ROAS</th><th class="lp">LP</th><th></th></tr></thead><tbody>`;
+ C.forEach(r=>{const sk=r.note.status_key;const low=sk==='lowspend'||sk==='inactive';
+  h+=`<tr class="${low?'low':''}"><td class="name">${esc(r.name)}</td>`+cols.map(c=>`<td class="${c[0]==='pixel_roas'?'lp':''}">${c[2](r.total[c[0]])}</td>`).join('');
+  h+=`<td class="b0">${fmtM(r.p0.spend)}</td><td class="${low?'':'g-'+sk}">${r.p0.spend?fmtR(r.p0.roas):'n/a'}</td><td class="lp">${r.p0.spend?fmtR(r.p0.pixel_roas):'n/a'}</td><td class="b0">${fmtM(r.p1.spend)}</td><td>${r.p1.spend?fmtR(r.p1.roas):'n/a'}</td><td class="lp">${r.p1.spend?fmtR(r.p1.pixel_roas):'n/a'}</td><td class="g-${sk}" style="text-align:left">${r.note.status_label}</td></tr>`;});
+ const g=P.overall;
+ h+=`<tr class="tot"><td class="name">Grand Total (${C.length})</td><td>${fmtM(g.spend)}</td><td>${fmtM(g.rev)}</td><td>${fmtR(g.roas)}</td><td class="lp">${fmtR(g.pixel_roas)}</td><td>${fmtM(g.cpp)}</td><td>${fmtP(g.cvr)}</td><td>${fmtN(g.purch)}</td><td class="b0">${fmtM(P.p0.spend)}</td><td>${fmtR(P.p0.roas)}</td><td class="lp">${fmtR(P.p0.pixel_roas)}</td><td class="b0">${fmtM(P.p1.spend)}</td><td>${fmtR(P.p1.roas)}</td><td class="lp">${fmtR(P.p1.pixel_roas)}</td><td></td></tr></tbody>`;
+ const t=document.getElementById('sumtab');t.innerHTML=h;
+ t.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=k==='name'?1:-1;}renderTable();});
+}
+let filt='all';
+const fl=[['all','All'],['top','🟢 Above avg'],['mixed','🟡 At avg'],['weak','🟠 Below avg'],['bad','🔴 Well below'],['phase1','◻️ Phase 1'],['lowspend','⚪ Under $1k']];
+document.getElementById('filters').innerHTML=fl.map(f=>`<button data-f="${f[0]}"${f[0]==='all'?' class="on"':''}>${f[1]}</button>`).join('')+'<span class="sub" style="margin-left:auto">sorted by spend</span>';
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filt=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));renderCards();});
+const mrows=[['spend','Spend',fmtM],['rev','Revenue',fmtM],['roas','ROAS (Meta)',fmtR],['pixel_roas','ROAS (Le Pixel)',fmtR],['cpp','CPP',fmtM],['cvr','CVR',fmtP],['ctr','CTR',fmtP],['purch','Purchases',fmtN],['clicks','Clicks',fmtN]];
+function card(r,rows){const n=r.note,low=n.status_key==='lowspend'||n.status_key==='inactive';const isv=/video/i.test(r.name);
+ const mt=rows.map(m=>`<tr><td class="k">${m[1]}</td><td>${m[2](r.total[m[0]])}</td><td>${r.p0.spend?m[2](r.p0[m[0]]):'n/a'}</td><td>${r.p1.spend?m[2](r.p1[m[0]]):'n/a'}</td></tr>`).join('');
+ const d=r.dates;const ds=d?`<div class="dates"><span>🚀 ${d.launch}</span><span>${d.running?'<b class="run">running</b>':'stopped '+d.stopped}</span></div>`:'';
+ return `<div class="card${low?' low':''}"><div class="thumb"><div class="ph">no preview<br>(thumbnails not available from this data source)</div>${isv?'<span class="vid">▶ video</span>':''}<span class="badge g-${n.status_key}">${n.status_label}</span></div><div class="body"><div class="nm">${esc(r.name)}</div>${ds}<table class="m"><thead><tr><th class="k">Metric</th><th>Total</th><th>P0</th><th>P1</th></tr></thead><tbody>${mt}</tbody></table><div class="note"><span class="st g-${n.status_key}">${n.status_label}</span><ul>${n.bullets.map(b=>'<li>'+esc(b)+'</li>').join('')}</ul>${n.rec?`<div class="rec">→ ${esc(n.rec)}</div>`:''}</div></div></div>`;}
+function renderCards(){let list=[...D.creatives].sort((a,b)=>b.total.spend-a.total.spend);if(filt!=='all')list=list.filter(r=>r.note.status_key===filt);document.getElementById('cards').innerHTML=list.map(r=>card(r,mrows)).join('');}
+renderTable();renderCards();
+if(D.test&&D.test.themes.length){const T=D.test;
+ let h=`<h2 class="sec" style="margin-top:36px">🧪 Creative Test: New Customer (individual ads)</h2><p class="intro">The New Customer creative-test campaign, grouped by ad set theme with each ad shown individually. It is <b>excluded from the Phase 0 grading benchmark</b>. Ads at or above the ${fmtR(T.benchmark)} Meta Phase 0 average are flagged <b>✅ Rotate in</b>; under $200 spend is low-signal.</p><div class="tablewrap"><table class="sum"><thead><tr><th class="name">Ad / Theme</th><th>Spend</th><th>ROAS Meta</th><th class="lp">ROAS LP</th><th>CPP</th><th>CVR</th><th>Purch</th><th style="text-align:left">Rec</th></tr></thead><tbody>`;
+ T.themes.forEach(g=>{const t=g.total;h+=`<tr class="themehdr"><td class="name">▸ ${esc(g.theme)}</td><td>${fmtM(t.spend)}</td><td>${fmtR(t.roas)}</td><td class="lp">${fmtR(t.pixel_roas)}</td><td>${fmtM(t.cpp)}</td><td>${fmtP(t.cvr)}</td><td>${fmtN(t.purch)}</td><td></td></tr>`;
+  g.ads.forEach(a=>{h+=`<tr class="adrow"><td class="name">${esc(a.name)}</td><td>${fmtM(a.spend)}</td><td class="g-${a.status_key}">${fmtR(a.roas)}</td><td class="lp">${fmtR(a.pixel_roas)}</td><td>${fmtM(a.cpp)}</td><td>${fmtP(a.cvr)}</td><td>${fmtN(a.purch)}</td><td class="g-${a.status_key}" style="text-align:left">${a.status_label}</td></tr>`;});});
+ const gr=T.grand;h+=`<tr class="tot"><td class="name">Test Total</td><td>${fmtM(gr.spend)}</td><td>${fmtR(gr.roas)}</td><td class="lp">${fmtR(gr.pixel_roas)}</td><td>${fmtM(gr.cpp)}</td><td>${fmtP(gr.cvr)}</td><td>${fmtN(gr.purch)}</td><td></td></tr></tbody></table></div>`;
+ document.getElementById('testsec').innerHTML=h;}
+if(D.tiktok&&D.tiktok.creatives.length){const TT=D.tiktok,TP=TT.portfolio;
+ let h=`<h2 class="sec" style="margin-top:44px;border-top:3px solid var(--brand);padding-top:26px">📱 TikTok Creative Performance</h2><p class="intro">Same structure as Meta, graded against TikTok's <b>own</b> Phase 0 average (${fmtR(TP.p0.roas)}). One ROAS figure only: TikTok is reported on its platform attribution (no Le Pixel read). Source: TikTok Ads via Windsor.</p><div class="kpis">`+[['overall','Overall','kpi'],['p0','Phase 0 · National','kpi p0'],['p1','Phase 1 · Problem Children','kpi p1']].map(([k,l,c])=>{const v=TP[k];return `<div class="${c}"><h3>${l}</h3><div class="roas ${roasColor(v.roas)}">${fmtR(v.roas)}<small> ROAS</small></div><div class="grid"><span>Spend</span><b>${fmtM(v.spend)}</b><span>Revenue</span><b>${fmtM(v.rev)}</b><span>Purchases</span><b>${fmtN(v.purch)}</b><span>CPP</span><b>${fmtM(v.cpp)}</b></div></div>`}).join('')+`</div><div class="cards">`;
+ const tr=[['spend','Spend',fmtM],['rev','Revenue',fmtM],['roas','ROAS',fmtR],['cpp','CPP',fmtM],['cvr','CVR',fmtP],['ctr','CTR',fmtP],['purch','Purchases',fmtN],['clicks','Clicks',fmtN]];
+ [...TT.creatives].sort((a,b)=>b.total.spend-a.total.spend).forEach(r=>h+=card(r,tr));
+ document.getElementById('ttsec').innerHTML=h+'</div>';}
+document.getElementById('foot').innerHTML=`<b>Notes.</b> Meta data via Lebesgue for the window above. <b>Two ROAS figures per creative:</b> <b>Meta</b> = Meta-reported (revenue / spend) and <b>Le Pixel</b> = Lebesgue's independent cross-channel attribution; steer by one lens consistently. CPP = cost per purchase, CVR = purchases / clicks, CTR = clicks / impressions. "Clicks" stand in for landing page views (Lebesgue doesn't expose LP views). Phase comes from the campaign name. <b>Grading is relative to the Phase 0 average for this period (${fmtR(D.p0_bench)} Meta, excluding the New Customer test campaign):</b> each creative's Phase 0 ROAS vs that average: 🟢 15%+ above · 🟡 within 15% · 🟠 15 to 40% below · 🔴 more than 40% below. ◻️ Phase 1 focus = under $1k Phase 0 spend, so not graded on Phase 0. Creatives under $1,000 total spend are greyed out. <b>Launch / running</b> dates are delivery-based and bucketed (first period with spend since Aug 3; "running" = spend in Oct 2 to 4). Thumbnails aren't included because creative previews aren't available from Lebesgue or Windsor.`;
+</script></body></html>
