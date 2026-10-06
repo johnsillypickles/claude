@@ -5,6 +5,11 @@ description: Build the Silly Pickles Weekly Marketing Update (blended and paid p
 
 # Silly Pickles: Weekly Marketing Update
 
+The weekly update has **two deliverables**, emailed together to the team ("Marketing Update M/D/YY", see John's sent mail):
+
+1. **The weekly update**: the email body / Google Doc described below.
+2. **The creative report**: a standalone HTML file attached to the email, named `fall26_creative_report_MM.DD.html`. See "Creative report (HTML attachment)" at the end. Never substitute a Google Doc or Sheets-style table for it.
+
 The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday the week ends), saved in the Drive folder `1-oSBwoY2493HW7I4aGaXFyucyyR1iOrm`. Start from the previous week's doc in that folder: copy its structure and narrative, then swap in new numbers. Reference build: `Weekly Update 9.27.26` (`1YX3NuI0ifKvZaPledHIYkEoMSDRhfxCUHdFwEPwWRSo`).
 
 ## Periods
@@ -37,7 +42,10 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 
 ## Targets
 
-Q3 2026: Net revenue $1,800,000, Ad spend $566,000, Blended ROAS 3.18x, Spend-to-revenue 31.5%. For any other quarter, ask John for targets. Never invent them.
+- Q3 2026: Net revenue $1,800,000, Ad spend $566,000, Blended ROAS 3.18x, Spend-to-revenue 31.5%. Final: $1,966,440 net, $635,893 spend, 3.09x.
+- Q4 2026: net revenue up 30% vs Q3 actual = $1,966,440 x 1.30 = **$2,556,372**. Ad spend at about 30% of revenue = **$766,912** budget, which implies **3.33x** blended ROAS (1 / 0.30). "Vs Q3" is read as Q3 actual, not the Q3 target; confirm with John if unsure.
+- For pacing, compare QTD against the target prorated by days elapsed (Q4 has 92 days).
+- For any other quarter, ask John for targets. Never invent them.
 
 ## Section order
 
@@ -103,3 +111,24 @@ Then add a weekly trend table (Week Ending, Orders, Net Revenue) for the quarter
 - Bullets lead with the number and the reason. Mark inferences as such.
 - Put missing data in brackets, like `[pending]`. Never estimate it.
 - Before sharing, check that the Lebesgue QTD net revenue matches the doc and that the weekly rows add up to the QTD totals.
+
+## Creative report (HTML attachment)
+
+Template: `assets/creative_report_template.html` (a cleaned copy of John's `template.html` from Drive). Fill `__DATA__` with JSON, `__GEN__` with the generated date and `__TAKE__` with 4 to 6 `<li>` takeaways.
+
+**Window:** last 14 days ending on the report Sunday.
+
+**Data:**
+- Meta ads: Lebesgue `get_advertising_data_table`, source `facebook`, level `ad`, `period_type=all` for the window (the result is saved to a file; parse it with Python). Ad-level day or week granularity is too large for the tool, so pull delivery history as several `all` calls over short ranges (about 10 to 15 days each) back to early August, plus one call for the last 3 days to decide "running".
+- Meta ad sets: same tool at level `adset`, to name the New Customer test themes.
+- TikTok ads: Windsor `get_data`, connector `tiktok`, fields `ad_name, campaign_name, spend, clicks, impressions, complete_payment, total_complete_payment_rate` (purchase value), `ad_status`.
+
+**Structure and rules (from the template):**
+- Group by creative (ad name) across ad IDs. Phase 1 = campaign `Fall26_Phase1_ProblemChildren`; everything else with purchases is Phase 0. Exclude the lead form campaign.
+- KPI cards: Overall, Phase 0, Phase 1, each with Meta ROAS, Le Pixel ROAS, spend, revenue, purchases, CPP.
+- Sortable summary table, then one card per creative with Total / P0 / P1 metrics, launch and running dates, a grade badge, bullets and a → recommendation.
+- Grade each creative's Phase 0 ROAS against the Phase 0 average **excluding the New Customer test campaign**: 🟢 15%+ above, 🟡 within 15%, 🟠 15 to 40% below, 🔴 more than 40% below. Under $1k Phase 0 spend = ◻️ Phase 1 focus. Under $1k total spend = greyed out. Flag under 25 Phase 0 purchases as a small sample.
+- Creative test section: New Customer campaign, by ad set theme, each ad listed; ✅ Rotate in if at or above the Phase 0 average; under $200 is low signal.
+- TikTok section: same layout, graded against TikTok's own Phase 0 average, one ROAS figure (no Le Pixel).
+- Clicks stand in for landing page views. Thumbnails aren't available from Lebesgue or Windsor; say so instead of leaving broken images.
+- Render it in Chromium before sending and check there are no script errors.
