@@ -130,5 +130,10 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
 - Grade each creative's Phase 0 ROAS against the Phase 0 average **excluding the New Customer test campaign**: 🟢 15%+ above, 🟡 within 15%, 🟠 15 to 40% below, 🔴 more than 40% below. Under $1k Phase 0 spend = ◻️ Phase 1 focus. Under $1k total spend = greyed out. Flag under 25 Phase 0 purchases as a small sample.
 - Creative test section: New Customer campaign, by ad set theme, each ad listed; ✅ Rotate in if at or above the Phase 0 average; under $200 is low signal.
 - TikTok section: same layout, graded against TikTok's own Phase 0 average, one ROAS figure (no Le Pixel).
-- Clicks stand in for landing page views. Thumbnails aren't available from Lebesgue or Windsor; say so instead of leaving broken images.
+- Clicks stand in for landing page views.
+- **Thumbnails are required and come from Google Drive.** Never ship the report without them or claim they're unavailable. Steps:
+  1. For every creative with $1k+ spend (Meta and TikTok), find its file in Drive. The Creative Roadmap sheet (`1IA3GZIJTg6spOsa7YZdVDZvY4s37IjLzdohs-of4tAU`) maps "Meta Ads Name" (column C) to "G-Drive (image link/s)" (column P), which is a folder or file link. When that cell is empty, Drive search `title contains '<ad name>'` (exclude shortcuts) usually finds it, e.g. in the "Fall26 Ad Creatives" and "National + Problem Children Campaigns" folders.
+  2. Download with Drive `download_file_content`. Results are saved to a tool-results file as JSON with base64 `content`; decode it with Python. Prefer the smallest image (1x1 or 4x5 jpg). The download limit is 10MB, so for big videos look for a smaller cut or the source file; if none is under 10MB, the card says "video file is over the 10MB Drive download limit".
+  3. For videos, grab a frame at 1s with ffmpeg (`pip install pillow imageio-ffmpeg` gives both). Resize to 480px max with Pillow, save as JPEG quality ~72, and embed as a `data:image/jpeg;base64,...` URI in the creative's `dimg` field so the HTML stays a single attachable file.
+  4. Creatives under $1k spend get a "not looked up" placeholder.
 - Render it in Chromium before sending and check there are no script errors.
