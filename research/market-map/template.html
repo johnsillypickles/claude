@@ -194,6 +194,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
       <li><b>City-named ad sets mostly go to under-filled leagues</b>, so local CAC skews high and the best markets (Atlanta, DC, Raleigh) barely appear in it.</li>
       <li><b>Population and income are 2010-era</b> (bundled ZIP database), so fast-growing Sunbelt metros are understated. Fix: allow <span class="num">api.census.gov</span> in the environment's network settings.</li>
       <li><b>Google Trends is blocked.</b> Fix: allow <span class="num">trends.google.com</span>. Then the Trends weight turns on.</li>
+      <li><b>Meta-tagged orders</b> = league orders whose Shopify UTM source is facebook, meta_ads, ig or similar, ÷ all orders for that metro's leagues (Q1 to Q3, all orders, not just new). UTMs catch about a third of the purchases Meta reports, so read it as a relative measure across metros, not a true paid share.</li>
       <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
     </ul>
   </div>
@@ -228,12 +229,14 @@ document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
   const share = ["q1","q2","q3"].map(q => t[q].local_spend / t[q].spend);
   const ratio = ["q1","q2","q3"].map((q,i) => DATA.medians[q] / acct[i]);
   const cons = M.filter(m => m.tier==="consistent").sort((a,b)=>b.spend-a.spend);
-  const organic = M.filter(m => !m.intl && m.new>=200 && (m.spendPerNew||0) < 12).sort((a,b)=>b.new-a.new);
+  const net = DATA.netUtm.metaShare;
+  const organic = M.filter(m => !m.intl && m.new>=200 && (m.spendPerNew||0) < 12 && m.metaShare < net*0.8).sort((a,b)=>b.new-a.new);
+  const nationalFed = M.filter(m => !m.intl && m.new>=150 && (m.spendPerNew||0) < 12 && m.metaShare > net*1.2).sort((a,b)=>b.metaShare-a.metaShare);
   const outside = DATA.cands.map(c => ({...c, d: c.req*3+c.host*2+c.notify})).sort((a,b)=>b.d-a.d).slice(0,3);
   const f = [
     {k:`${cons.length} metros`, p:`are consistently cheap on local Meta ads: ${cons.map(m=>m.metro.split(",")[0]+" ("+fmt$(m.cac)+")").join(", ")}. Chicago is the only one at real scale (${fmt$(cons.find(m=>m.metro.startsWith("Chicago"))?.spend)} spend).`},
     {k:`${Math.min(...ratio).toFixed(1)}x to ${Math.max(...ratio).toFixed(1)}x`, p:`Median local CAC vs the whole Meta account (${acct.map(fmt$).join(" / ")} by quarter). City ad sets are ${Math.round(Math.min(...share)*100)} to ${Math.round(Math.max(...share)*100)}% of spend and mostly back under-filled leagues.`},
-    {k:organic.slice(0,4).map(m=>m.metro.split(",")[0]).join(", "), p:`fill on national, organic and referral traffic, with under $12 of local spend per new signup. These are likely your strongest markets, and the paid view can't see them.`},
+    {k:organic.slice(0,4).map(m=>m.metro.split(",")[0]).join(", "), p:`fill mostly without ads: under $12 of local spend per new signup and only ${organic.slice(0,4).map(m=>Math.round(m.metaShare*100)+"%").join(" / ")} of orders Meta-tagged (network ${Math.round(net*100)}%). By contrast ${nationalFed.slice(0,3).map(m=>m.metro.split(",")[0]+" ("+Math.round(m.metaShare*100)+"%)").join(", ")} get little local spend but lean on national Meta campaigns.`},
     {k:outside.map(c=>c.city).join(", "), p:`have the most owned demand outside the footprint (location requests, host applicants, notify-me). Volume is small: ${DATA.signals.reduce((a,s)=>a+s.location_request,0)} requests and ${DATA.signals.reduce((a,s)=>a+s.host_applicant,0)} host applicants since August, most inside current metros.`}
   ];
   document.getElementById("findings").innerHTML = f.map(x=>`<div class="finding"><div class="k">${x.k}</div><p>${x.p}</p></div>`).join("");
@@ -270,7 +273,7 @@ gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join("circle")
   .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rNew(m.new)))
   .attr("fill",m=>m.tier==="efficient"?"var(--surface)":TIER[m.tier].color).attr("fill-opacity",m=>m.tier==="efficient"?1:.85)
   .attr("stroke",m=>m.tier==="efficient"?"var(--good)":"var(--surface)").attr("stroke-width",m=>m.tier==="efficient"?2.5:2)
-  .on("mousemove",(ev,m)=>showTip(ev,`<b>${m.metro}</b><br>${TIER[m.tier].label}`+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))))
+  .on("mousemove",(ev,m)=>showTip(ev,`<b>${m.metro}</b><br>${TIER[m.tier].label}`+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%")))
   .on("mouseleave",hideTip);
 
 const sig = DATA.signals.filter(s => proj([s.lng,s.lat]));
@@ -322,13 +325,14 @@ const curCols = [
   {k:"cac",h:"3-qtr CAC",v:m=>m.cac,f:m=>fmt$(m.cac),asc:true},
   {k:"spend",h:"Local spend",v:m=>m.spend,f:m=>fmt$(m.spend)},
   {k:"new",h:"New signups",v:m=>m.new,f:m=>fmtN(m.new)},
-  {k:"spn",h:"Spend / new signup",v:m=>m.spendPerNew,f:m=>fmt$(m.spendPerNew),asc:true}
+  {k:"spn",h:"Spend / new signup",v:m=>m.spendPerNew,f:m=>fmt$(m.spendPerNew),asc:true},
+  {k:"meta",h:"Meta-tagged orders",v:m=>m.utmOrders?m.metaShare:null,f:m=>m.utmOrders?`${Math.round(m.metaShare*100)}%<span class="muted"> of ${fmtN(m.utmOrders)}</span>`:"–",asc:true}
 ];
 const curT = makeTable(document.getElementById("curTable"), curCols, M.filter(m=>m.nq>=2), "tier", "asc");
 const subs = {
   tested:"Metros with at least $1,500 of city-named ad spend in two or more quarters. Each quarter shows CAC and its index against that quarter's median metro.",
   all:"Every metro with league signups or local ad spend this year. A dash means less than $1,500 of local spend that quarter.",
-  no_local:"Metros with no tested quarter of local ads. Sorted by new signups: these fill on national campaigns, organic and referrals."
+  no_local:"Metros with no tested quarter of local ads. Sorted by new signups: these fill on national campaigns, organic and referrals. A high Meta-tagged share means national campaigns are doing the work."
 };
 const curSub = document.getElementById("cur-sub"); curSub.textContent = subs.tested;
 document.getElementById("tierFilter").addEventListener("change",e=>{

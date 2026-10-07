@@ -15,7 +15,9 @@ Inputs (saved next to the scripts, not committed):
 - `zip.sqlite`: uszipcode simple_db (github.com/MacHu-GWU/uszipcode-project releases, 1.0.1.db).
 - `states-albers-10m.json`: npm us-atlas@3.0.1.
 
-Run: `python3 analyze.py && python3 expand.py && python3 build_data.py`, then substitute `__DATA__` and `__TOPO__` in `template.html`.
+- `utm_q1.json` ... `utm_q3.json`: ShopifyQL `FROM sales SHOW orders GROUP BY product_title, order_utm_source`, one per quarter.
+
+Run: `python3 analyze.py && python3 utm.py && python3 expand.py && python3 build_data.py`, then substitute `__DATA__` and `__TOPO__` in `template.html`.
 
 New league cities need an entry in `metros.py` (`M`).
 

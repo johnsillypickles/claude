@@ -30,7 +30,18 @@ for s in e['signals']:
     k=(s['city'],s['st'],round(s['lat'],2),round(s['lng'],2)); agg[k][s['type']]+=1
 sig=[{'city':k[0],'st':k[1],'lat':k[2],'lng':k[3],**v} for k,v in agg.items()]
 tot={q:{k:round(v) for k,v in d['tot'][q].items()} for q in Q}
-out={'medians':{q:round(med[q],2) for q in Q},'tot':tot,'metros':metros,'cands':cands,'signals':sig,'minSpend':MIN}
+U=json.load(open('utm_metro.json'))
+net=collections.Counter()
+for m,qq in U.items():
+    for v in qq.values(): net.update(v)
+def shares(c):
+    s=sum(c.values()) or 1
+    return {'utmOrders':sum(c.values()),'metaShare':round(c['meta']/s,4),'paidShare':round((c['meta']+c['google']+c['tiktok'])/s,4),'noneShare':round(c['none']/s,4),'emailShare':round(c['email']/s,4)}
+for mm in metros:
+    c=collections.Counter()
+    for v in U.get(mm['metro'],{}).values(): c.update(v)
+    mm.update(shares(c))
+out={'netUtm':shares(net),'medians':{q:round(med[q],2) for q in Q},'tot':tot,'metros':metros,'cands':cands,'signals':sig,'minSpend':MIN}
 json.dump(out,open('data.json','w'),separators=(',',':'))
 print(len(metros),len(cands),len(sig),collections.Counter(m['tier'] for m in metros))
 print(out['medians'])
