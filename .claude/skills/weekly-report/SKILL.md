@@ -121,7 +121,7 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
 **Data:**
 - Meta ads: Lebesgue `get_advertising_data_table`, source `facebook`, level `ad`, `period_type=all` for the window (the result is saved to a file; parse it with Python). Ad-level day or week granularity is too large for the tool, so pull delivery history as several `all` calls over short ranges (about 10 to 15 days each) back to early August, plus one call for the last 3 days to decide "running".
 - Meta ad sets: same tool at level `adset`, to name the New Customer test themes.
-- TikTok ads: Windsor `get_data`, connector `tiktok`, fields `ad_name, campaign_name, spend, clicks, impressions, complete_payment, total_complete_payment_rate` (purchase value), `ad_status`.
+- TikTok ads: channel and phase totals come from Lebesgue (campaign/adset level). Creative-level TikTok rows come from Windsor `get_data`, connector `tiktok`, fields `ad_name, campaign_name, spend, clicks, impressions, complete_payment, total_complete_payment_rate` (purchase value), `ad_status`, because Lebesgue's TikTok ad-level table is too large for the tool even for a single day. Check the Windsor total spend matches Lebesgue's TikTok spend for the window.
 
 **Structure and rules (from the template):**
 - Group by creative (ad name) across ad IDs. Phase 1 = campaign `Fall26_Phase1_ProblemChildren`; everything else with purchases is Phase 0. Exclude the lead form campaign.
@@ -132,7 +132,7 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
 - TikTok section: same layout, graded against TikTok's own Phase 0 average, one ROAS figure (no Le Pixel).
 - Clicks stand in for landing page views.
 - **Thumbnails are required and come from Google Drive.** Never ship the report without them or claim they're unavailable. Steps:
-  1. For every creative with $1k+ spend (Meta and TikTok), find its file in Drive. The Creative Roadmap sheet (`1IA3GZIJTg6spOsa7YZdVDZvY4s37IjLzdohs-of4tAU`) maps "Meta Ads Name" (column C) to "G-Drive (image link/s)" (column P), which is a folder or file link. When that cell is empty, Drive search `title contains '<ad name>'` (exclude shortcuts) usually finds it, e.g. in the "Fall26 Ad Creatives" and "National + Problem Children Campaigns" folders.
+  1. For every creative with $1k+ spend (Meta and TikTok), find its file with Drive search `title contains '<ad name>'` (exclude shortcuts). Files usually live in the "Fall26 Ad Creatives" and "National + Problem Children Campaigns" folders. Do not use the Creative Roadmap sheet.
   2. Download with Drive `download_file_content`. Results are saved to a tool-results file as JSON with base64 `content`; decode it with Python. Prefer the smallest image (1x1 or 4x5 jpg). Drive refuses files over 10MB, and files over about 7MB can crash the connector, so for big videos go to the fallbacks below.
   - **Fallback A (Meta):** Lebesgue `get_facebook_creatives` for the window (use `limit` around 100; the result is saved to a file). Map `ad_id` to ad name with the ad-level table. `preview_url`s on `nikolas-bucket.s3.amazonaws.com` download with curl; `www.facebook.com/ads/image` links need that host allowed in the environment's network settings.
   - **Fallback B (TikTok):** Windsor `get_data`, connector `tiktok`, fields `ad_name, video_thumbnail_url`. Needs `*.tiktokcdn.com` allowed in the environment's network settings.
