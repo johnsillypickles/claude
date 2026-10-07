@@ -1,0 +1,399 @@
+cbsa_code,name,principal_city,state,pop,income,median_age,share_25_44,share_ba_plus,pop_growth_5y,vintage
+35620,"New York-Newark-Jersey City, NY-NJ Metro Area",New York,NY-NJ,19798537,99155,39.5,0.2775,0.4415,0.0261,2024
+31080,"Los Angeles-Long Beach-Anaheim, CA Metro Area",Los Angeles,CA,12974487,95958,38.5,0.2928,0.3797,-0.0208,2024
+16980,"Chicago-Naperville-Elgin, IL-IN Metro Area",Chicago,IL-IN,9371595,90887,38.6,0.2784,0.416,-0.0144,2024
+19100,"Dallas-Fort Worth-Arlington, TX Metro Area",Dallas,TX,7985590,90275,35.6,0.2938,0.3939,0.0908,2024
+26420,"Houston-Pasadena-The Woodlands, TX Metro Area",Houston,TX,7442788,82168,35.4,0.2899,0.3602,0.0812,2024
+47900,"Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area",Washington,DC-VA-MD-WV,6318377,126684,38.0,0.2899,0.5437,0.0197,2024
+37980,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area",Philadelphia,PA-NJ-DE-MD,6272014,91289,39.3,0.2725,0.4219,0.0317,2024
+12060,"Atlanta-Sandy Springs-Roswell, GA Metro Area",Atlanta,GA,6256377,89724,37.2,0.2814,0.4217,0.0672,2024
+33100,"Miami-Fort Lauderdale-West Palm Beach, FL Metro Area",Miami,FL,6249291,76527,41.8,0.2625,0.3666,0.026,2024
+38060,"Phoenix-Mesa-Chandler, AZ Metro Area",Phoenix,AZ,5028754,88301,37.9,0.2788,0.3531,0.0561,2024
+14460,"Boston-Cambridge-Newton, MA-NH Metro Area",Boston,MA-NH,4953354,115863,39.3,0.2816,0.5195,0.025,2024
+40140,"Riverside-San Bernardino-Ontario, CA Metro Area",Riverside,CA,4675704,89662,35.9,0.2805,0.2452,0.0253,2024
+41860,"San Francisco-Oakland-Fremont, CA Metro Area",San Francisco,CA,4645029,136027,40.3,0.3011,0.5286,-0.012,2024
+19820,"Detroit-Warren-Dearborn, MI Metro Area",Detroit,MI,4376828,76664,40.3,0.2608,0.3478,0.0137,2024
+42660,"Seattle-Tacoma-Bellevue, WA Metro Area",Seattle,WA,4061920,115177,37.5,0.3254,0.4723,0.0492,2024
+33460,"Minneapolis-St. Paul-Bloomington, MN-WI Metro Area",Minneapolis,MN-WI,3713668,99833,38.0,0.2827,0.4539,0.0392,2024
+45300,"Tampa-St. Petersburg-Clearwater, FL Metro Area",Tampa,FL,3304691,74392,42.2,0.2633,0.3494,0.0668,2024
+41740,"San Diego-Chula Vista-Carlsbad, CA Metro Area",San Diego,CA,3288774,106268,37.3,0.3021,0.4316,-0.0082,2024
+19740,"Denver-Aurora-Centennial, CO Metro Area",Denver,CO,3002721,105762,37.3,0.3261,0.494,0.0383,2024
+12580,"Baltimore-Columbia-Towson, MD Metro Area",Baltimore,MD,2849436,99470,39.0,0.275,0.4399,0.0188,2024
+41180,"St. Louis, MO-IL Metro Area",St. Louis,MO-IL,2810850,80196,39.9,0.2657,0.3817,0.002,2024
+36740,"Orlando-Kissimmee-Sanford, FL Metro Area",Orlando,FL,2793746,78533,38.5,0.2913,0.367,0.1135,2024
+16740,"Charlotte-Concord-Gastonia, NC-SC Metro Area",Charlotte,NC-SC,2768407,83304,37.9,0.2819,0.3988,0.0875,2024
+41700,"San Antonio-New Braunfels, TX Metro Area",San Antonio,TX,2662733,76213,35.9,0.2894,0.3234,0.0788,2024
+38900,"Portland-Vancouver-Hillsboro, OR-WA Metro Area",Portland,OR-WA,2520987,97436,39.3,0.3048,0.4255,0.0308,2024
+38300,"Pittsburgh, PA Metro Area",Pittsburgh,PA,2439940,75762,42.8,0.2561,0.3818,0.0465,2024
+12420,"Austin-Round Rock-San Marcos, TX Metro Area",Austin,TX,2426592,100431,36.0,0.3355,0.5094,0.1476,2024
+40900,"Sacramento-Roseville-Folsom, CA Metro Area",Sacramento,CA,2426388,97188,38.5,0.2782,0.3709,0.0477,2024
+29820,"Las Vegas-Henderson-North Las Vegas, NV Metro Area",Las Vegas,NV,2329548,76472,38.5,0.2886,0.2781,0.0676,2024
+17140,"Cincinnati, OH-KY-IN Metro Area",Cincinnati,OH-KY-IN,2270706,81120,38.2,0.263,0.3711,0.0313,2024
+28140,"Kansas City, MO-KS Metro Area",Kansas City,MO-KS,2218142,83460,38.0,0.2777,0.3977,0.0441,2024
+18140,"Columbus, OH Metro Area",Columbus,OH,2175788,81945,36.7,0.294,0.398,0.0472,2024
+17410,"Cleveland, OH Metro Area",Cleveland,OH,2171526,70678,41.6,0.2531,0.341,,2024
+26900,"Indianapolis-Carmel-Greenwood, IN Metro Area",Indianapolis,IN,2130055,79852,36.9,0.2806,0.3854,0.0496,2024
+34980,"Nashville-Davidson--Murfreesboro--Franklin, TN Metro Area",Nashville,TN,2079596,85447,36.9,0.2956,0.4092,0.111,2024
+41980,"San Juan-Bayamón-Caguas, PR Metro Area",San Juan,PR,2052186,29276,44.5,0.257,0.3226,-0.0229,2024
+41940,"San Jose-Sunnyvale-Santa Clara, CA Metro Area",San Jose,CA,1969337,162111,38.0,0.3057,0.5546,-0.0093,2024
+47260,"Virginia Beach-Chesapeake-Norfolk, VA-NC Metro Area",Virginia Beach,VA-NC,1787235,82330,37.4,0.283,0.3582,0.0145,2024
+39300,"Providence-Warwick, RI-MA Metro Area",Providence,RI-MA,1684071,87040,40.7,0.2632,0.3535,0.0407,2024
+27260,"Jacksonville, FL Metro Area",Jacksonville,FL,1683960,79643,39.3,0.274,0.3649,0.12,2024
+33340,"Milwaukee-Waukesha, WI Metro Area",Milwaukee,WI,1568938,78218,38.7,0.2699,0.3961,-0.004,2024
+39580,"Raleigh-Cary, NC Metro Area",Raleigh,NC,1487302,100103,37.6,0.29,0.5122,0.1163,2024
+36420,"Oklahoma City, OK Metro Area",Oklahoma City,OK,1463267,72094,36.0,0.2809,0.3407,0.0582,2024
+31140,"Louisville/Jefferson County, KY-IN Metro Area",Louisville/Jefferson County,KY-IN,1372558,73863,39.4,0.2694,0.3294,0.0919,2024
+32820,"Memphis, TN-MS-AR Metro Area",Memphis,TN-MS-AR,1341924,66401,36.8,0.2699,0.3102,0.0017,2024
+40060,"Richmond, VA Metro Area",Richmond,VA,1341248,86679,38.8,0.28,0.4111,0.0565,2024
+41620,"Salt Lake City-Murray, UT Metro Area",Salt Lake City,UT,1275870,98083,33.9,0.3109,0.3841,0.0623,2024
+13820,"Birmingham, AL Metro Area",Birmingham,AL,1184613,71498,38.9,0.2635,0.3372,0.0915,2024
+23420,"Fresno, CA Metro Area",Fresno,CA,1177665,74468,33.7,0.2815,0.234,0.1962,2024
+24340,"Grand Rapids-Wyoming-Kentwood, MI Metro Area",Grand Rapids,MI,1162152,82874,36.8,0.2755,0.3654,0.0939,2024
+15380,"Buffalo-Cheektowaga, NY Metro Area",Buffalo,NY,1161343,72237,40.9,0.2598,0.3619,0.0276,2024
+25540,"Hartford-West Hartford-East Hartford, CT Metro Area",Hartford,CT,1153112,95118,40.8,0.257,0.4272,-0.0452,2024
+46060,"Tucson, AZ Metro Area",Tucson,AZ,1060490,70315,39.8,0.2469,0.3679,0.0324,2024
+40380,"Rochester, NY Metro Area",Rochester,NY,1058413,76284,40.7,0.2536,0.3815,-0.0135,2024
+46140,"Tulsa, OK Metro Area",Tulsa,OK,1037534,69359,37.4,0.2685,0.3049,0.0474,2024
+46520,"Urban Honolulu, HI Metro Area",Urban Honolulu,HI,1001146,106195,39.8,0.2757,0.3846,0.0166,2024
+36540,"Omaha, NE-IA Metro Area",Omaha,NE-IA,982064,84829,36.6,0.2794,0.3926,0.054,2024
+35380,"New Orleans-Metairie, LA Metro Area",New Orleans,LA,981662,62655,39.2,0.2791,0.3344,-0.2257,2024
+24860,"Greenville-Anderson-Greer, SC Metro Area",Greenville,SC,961939,71240,38.8,0.258,0.3459,0.0737,2024
+14860,"Bridgeport-Stamford-Danbury, CT Metro Area",Bridgeport,CT,956330,114565,41.0,0.2454,0.509,0.0131,2024
+28940,"Knoxville, TN Metro Area",Knoxville,TN,932241,72422,40.6,0.2523,0.3272,0.0925,2024
+10740,"Albuquerque, NM Metro Area",Albuquerque,NM,921482,70783,39.8,0.2744,0.3562,0.0103,2024
+12540,"Bakersfield-Delano, CA Metro Area",Bakersfield,CA,915075,70210,32.7,0.2854,0.1877,0.0309,2024
+10580,"Albany-Schenectady-Troy, NY Metro Area",Albany,NY,906052,88074,40.5,0.2559,0.4206,0.0287,2024
+32580,"McAllen-Edinburg-Mission, TX Metro Area",McAllen,TX,891977,54338,30.5,0.2594,0.2063,0.043,2024
+35840,"North Port-Bradenton-Sarasota, FL Metro Area",North Port,FL,889339,80859,53.6,0.1903,0.3829,0.1065,2024
+12940,"Baton Rouge, LA Metro Area",Baton Rouge,LA,875313,69599,36.2,0.269,0.3043,0.0246,2024
+21340,"El Paso, TX Metro Area",El Paso,TX,874182,59751,33.6,0.2821,0.2588,0.0401,2024
+10900,"Allentown-Bethlehem-Easton, PA-NJ Metro Area",Allentown,PA-NJ,873603,84587,41.4,0.2484,0.335,0.043,2024
+49340,"Worcester, MA Metro Area",Worcester,MA,867788,95939,40.2,0.2606,0.3966,-0.0781,2024
+17900,"Columbia, SC Metro Area",Columbia,SC,849181,68359,37.6,0.2623,0.3536,0.0302,2024
+37100,"Oxnard-Thousand Oaks-Ventura, CA Metro Area",Oxnard,CA,837469,109797,39.6,0.2613,0.3613,-0.0116,2024
+16700,"Charleston-North Charleston, SC Metro Area",Charleston,SC,834267,85254,38.2,0.2909,0.4082,0.0772,2024
+15980,"Cape Coral-Fort Myers, FL Metro Area",Cape Coral,FL,817666,76107,49.0,0.2148,0.312,0.1087,2024
+19430,"Dayton-Kettering-Beavercreek, OH Metro Area",Dayton,OH,816080,71739,39.1,0.2575,0.3282,0.0156,2024
+14260,"Boise City, ID Metro Area",Boise City,ID,811115,85987,37.6,0.2772,0.3707,0.1412,2024
+44700,"Stockton-Lodi, CA Metro Area",Stockton,CA,797334,92179,35.4,0.2786,0.2275,0.0737,2024
+29460,"Lakeland-Winter Haven, FL Metro Area",Lakeland,FL,790694,65978,39.5,0.2631,0.2346,0.1522,2024
+24660,"Greensboro-High Point, NC Metro Area",Greensboro,NC,786419,65565,38.9,0.2507,0.3221,0.032,2024
+17820,"Colorado Springs, CO Metro Area",Colorado Springs,CO,767824,90144,35.5,0.2983,0.4172,0.0613,2024
+30780,"Little Rock-North Little Rock-Conway, AR Metro Area",Little Rock,AR,758629,67154,37.6,0.2702,0.3369,0.0293,2024
+19780,"Des Moines-West Des Moines, IA Metro Area",Des Moines,IA,731120,85890,36.8,0.2883,0.3972,0.0745,2024
+39340,"Provo-Orem-Lehi, UT Metro Area",Provo,UT,717986,100704,25.8,0.2765,0.4392,0.1641,2024
+19660,"Deltona-Daytona Beach-Ormond Beach, FL Metro Area",Deltona,FL,706150,71277,47.8,0.2205,0.2891,0.0926,2024
+28880,"Kiryas Joel-Poughkeepsie-Newburgh, NY Metro Area",Kiryas Joel,NY,704836,98233,39.4,0.2438,0.3662,,2024
+10420,"Akron, OH Metro Area",Akron,OH,699820,72371,41.0,0.2526,0.3505,-0.0057,2024
+31540,"Madison, WI Metro Area",Madison,WI,691830,88804,37.0,0.2844,0.5012,0.0583,2024
+49180,"Winston-Salem, NC Metro Area",Winston,NC,689766,65975,40.7,0.2435,0.3083,0.0353,2024
+45060,"Syracuse, NY Metro Area",Syracuse,NY,656410,75492,40.1,0.2454,0.351,0.0061,2024
+36260,"Ogden, UT Metro Area",Ogden,UT,653374,101203,33.0,0.2896,0.3465,-0.0143,2024
+48620,"Wichita, KS Metro Area",Wichita,KS,652622,70655,36.7,0.2652,0.3178,0.0234,2024
+37340,"Palm Bay-Melbourne-Titusville, FL Metro Area",Palm Bay,FL,632780,78476,46.7,0.2297,0.3421,0.0807,2024
+12260,"Augusta-Richmond County, GA-SC Metro Area",Augusta,GA-SC,624181,69344,38.3,0.2666,0.295,0.041,2024
+27140,"Jackson, MS Metro Area",Jackson,MS,611324,61644,38.4,0.263,0.3217,0.0227,2024
+25420,"Harrisburg-Carlisle, PA Metro Area",Harrisburg,PA,604155,80919,40.1,0.2608,0.3577,0.058,2024
+45780,"Toledo, OH Metro Area",Toledo,OH,602322,65486,38.2,0.2551,0.3019,-0.0649,2024
+20500,"Durham-Chapel Hill, NC Metro Area",Durham,NC,601724,83500,37.9,0.2794,0.5338,-0.0398,2024
+44060,"Spokane-Spokane Valley, WA Metro Area",Spokane,WA,597123,77488,39.1,0.2778,0.3218,0.0854,2024
+22220,"Fayetteville-Springdale-Rogers, AR Metro Area",Fayetteville,AR,577726,81650,34.7,0.2891,0.3587,0.1234,2024
+16860,"Chattanooga, TN-GA Metro Area",Chattanooga,TN-GA,575812,72161,40.4,0.2641,0.3186,0.0352,2024
+35300,"New Haven, CT Metro Area",New Haven,CT,570598,88197,40.2,0.2561,0.4204,-0.3346,2024
+42540,"Scranton--Wilkes-Barre, PA Metro Area",Scranton,PA,569788,65158,42.1,0.2447,0.2717,0.0255,2024
+39900,"Reno, NV Metro Area",Reno,NV,563020,87485,39.5,0.2805,0.3224,0.2215,2024
+38860,"Portland-South Portland, ME Metro Area",Portland,ME,562843,92175,43.7,0.2598,0.4589,0.0578,2024
+29540,"Lancaster, PA Metro Area",Lancaster,PA,557931,86959,39.4,0.2487,0.3244,0.0313,2024
+33700,"Modesto, CA Metro Area",Modesto,CA,553990,81468,34.9,0.2758,0.1965,0.0199,2024
+37860,"Pensacola-Ferry Pass-Brent, FL Metro Area",Pensacola,FL,524395,75967,39.0,0.2684,0.3057,0.074,2024
+38940,"Port St. Lucie, FL Metro Area",Port St. Lucie,FL,522676,74514,47.6,0.2187,0.3004,0.1073,2024
+30460,"Lexington-Fayette, KY Metro Area",Lexington,KY,522560,71966,36.7,0.2716,0.4198,0.0233,2024
+26620,"Huntsville, AL Metro Area",Huntsville,AL,516951,85989,38.8,0.2727,0.4287,0.1312,2024
+28660,"Killeen-Temple, TX Metro Area",Killeen,TX,494360,69923,32.8,0.2991,0.2564,0.1116,2024
+44180,"Springfield, MO Metro Area",Springfield,MO,486785,65071,37.3,0.2603,0.3082,0.0527,2024
+42220,"Santa Rosa-Petaluma, CA Metro Area",Santa Rosa,CA,485040,104674,42.9,0.2558,0.3849,-0.0295,2024
+47300,"Visalia, CA Metro Area",Visalia,CA,478693,71300,32.1,0.2727,0.1664,0.0364,2024
+29620,"Lansing-East Lansing, MI Metro Area",Lansing,MI,472669,72550,36.5,0.2582,0.3754,-0.1355,2024
+49620,"York-Hanover, PA Metro Area",York,PA,462924,84829,41.1,0.2503,0.2761,0.039,2024
+44140,"Springfield, MA Metro Area",Springfield,MA,462815,71306,40.0,0.2572,0.2932,-0.3383,2024
+23060,"Fort Wayne, IN Metro Area",Fort Wayne,IN,455416,71213,36.8,0.2655,0.3021,0.1209,2024
+47930,"Waterbury-Shelton, CT Metro Area",Waterbury,CT,454969,86191,41.8,0.2577,0.3382,,2024
+48900,"Wilmington, NC Metro Area",Wilmington,NC,453347,76471,45.4,0.2322,0.3938,0.5723,2024
+46700,"Vallejo, CA Metro Area",Vallejo,CA,451918,100401,39.2,0.2775,0.2876,0.0228,2024
+18580,"Corpus Christi, TX Metro Area",Corpus Christi,TX,448012,67453,37.8,0.2687,0.2317,0.0454,2024
+42200,"Santa Maria-Santa Barbara, CA Metro Area",Santa Maria,CA,443701,98161,34.6,0.2485,0.3681,-0.0025,2024
+41420,"Salem, OR Metro Area",Salem,OR,438906,78900,37.5,0.269,0.2709,0.0384,2024
+41500,"Salinas, CA Metro Area",Salinas,CA,437613,97230,35.5,0.2683,0.2821,0.0097,2024
+39740,"Reading, PA Metro Area",Reading,PA,433015,79777,39.9,0.2469,0.277,0.0359,2024
+49660,"Youngstown-Warren, OH Metro Area",Youngstown,OH,427420,56713,43.5,0.2338,0.241,-0.2112,2024
+31700,"Manchester-Nashua, NH Metro Area",Manchester,NH,426378,103545,41.0,0.2725,0.4153,0.0323,2024
+15180,"Brownsville-Harlingen, TX Metro Area",Brownsville,TX,426120,52601,32.7,0.2473,0.2208,0.0106,2024
+25060,"Gulfport-Biloxi, MS Metro Area",Gulfport,MS,421201,62418,39.8,0.2554,0.2666,0.022,2024
+42340,"Savannah, GA Metro Area",Savannah,GA,418285,77180,36.9,0.2887,0.3583,0.0835,2024
+11700,"Asheville, NC Metro Area",Asheville,NC,414711,71838,44.0,0.2585,0.4251,-0.0872,2024
+29180,"Lafayette, LA Metro Area",Lafayette,LA,413428,60892,37.3,0.2758,0.2764,-0.1561,2024
+33660,"Mobile, AL Metro Area",Mobile,AL,412590,58880,38.5,0.262,0.2597,-0.0419,2024
+22420,"Flint, MI Metro Area",Flint,MI,403305,62281,40.6,0.2468,0.2328,-0.0112,2024
+11260,"Anchorage, AK Metro Area",Anchorage,AK,401964,100505,35.6,0.304,0.3467,0.0077,2024
+15940,"Canton-Massillon, OH Metro Area",Canton,OH,400372,67801,42.1,0.2397,0.2525,0.0016,2024
+36100,"Ocala, FL Metro Area",Ocala,FL,400078,61010,47.9,0.2171,0.2337,0.1317,2024
+34940,"Naples-Marco Island, FL Metro Area",Naples,FL,398291,90045,53.3,0.188,0.4029,0.0723,2024
+13140,"Beaumont-Port Arthur, TX Metro Area",Beaumont,TX,396827,64659,37.7,0.2699,0.1949,0.0042,2024
+22180,"Fayetteville, NC Metro Area",Fayetteville,NC,392380,61763,32.3,0.2935,0.272,-0.2441,2024
+45220,"Tallahassee, FL Metro Area",Tallahassee,FL,391730,65261,34.8,0.2518,0.4144,0.0249,2024
+43340,"Shreveport-Bossier City, LA Metro Area",Shreveport,LA,386819,55925,38.6,0.2651,0.261,-0.032,2024
+33860,"Montgomery, AL Metro Area",Montgomery,AL,386024,64010,38.0,0.2648,0.3091,0.0334,2024
+45940,"Trenton-Princeton, NJ Metro Area",Trenton,NJ,385864,100645,39.5,0.2543,0.4544,0.0488,2024
+21660,"Eugene-Springfield, OR Metro Area",Eugene,OR,384207,71544,40.3,0.2551,0.3403,0.0291,2024
+34820,"Myrtle Beach-Conway-North Myrtle Beach, SC Metro Area",Myrtle Beach,SC,383016,66880,48.7,0.2112,0.2715,-0.1745,2024
+19340,"Davenport-Moline-Rock Island, IA-IL Metro Area",Davenport,IA-IL,381503,72738,40.4,0.2494,0.2995,0.0009,2024
+43900,"Spartanburg, SC Metro Area",Spartanburg,SC,374737,64382,38.2,0.2633,0.2429,0.2182,2024
+12100,"Atlantic City-Hammonton, NJ Metro Area",Atlantic City,NJ,371211,82105,44.5,0.2255,0.338,0.395,2024
+26580,"Huntington-Ashland, WV-KY-OH Metro Area",Huntington,WV-KY-OH,370729,60078,41.9,0.2367,0.2346,0.0246,2024
+11460,"Ann Arbor, MI Metro Area",Ann Arbor,MI,369822,89180,35.0,0.2618,0.5871,0.0077,2024
+25860,"Hickory-Lenoir-Morganton, NC Metro Area",Hickory,NC,368316,62787,43.5,0.2363,0.223,0.0045,2024
+22660,"Fort Collins-Loveland, CO Metro Area",Fort Collins,CO,367368,93765,36.8,0.2773,0.5295,0.0655,2024
+37900,"Peoria, IL Metro Area",Peoria,IL,365202,71857,40.1,0.2504,0.3183,-0.1024,2024
+31180,"Lubbock, TX Metro Area",Lubbock,TX,358708,63629,32.4,0.2701,0.3158,0.1335,2024
+24540,"Greeley, CO Metro Area",Greeley,CO,350396,97097,35.3,0.3009,0.3317,0.1475,2024
+23540,"Gainesville, FL Metro Area",Gainesville,FL,349923,61468,34.5,0.2557,0.4183,0.0807,2024
+30700,"Lincoln, NE Metro Area",Lincoln,NE,344337,75049,34.5,0.262,0.4142,0.0424,2024
+40420,"Rockford, IL Metro Area",Rockford,IL,336522,68033,39.6,0.2443,0.2498,-0.0054,2024
+17300,"Clarksville, TN-KY Metro Area",Clarksville,TN-KY,334564,68967,32.1,0.3072,0.2771,0.1172,2024
+24580,"Green Bay, WI Metro Area",Green Bay,WI,331145,79267,39.5,0.2567,0.3087,0.0368,2024
+14500,"Boulder, CO Metro Area",Boulder,CO,328961,103994,37.7,0.262,0.6416,0.02,2024
+17980,"Columbus, GA-AL Metro Area",Columbus,GA-AL,325615,59336,36.5,0.279,0.2808,0.0195,2024
+43780,"South Bend-Mishawaka, IN-MI Metro Area",South Bend,IN-MI,324560,67217,37.9,0.2499,0.315,0.0088,2024
+40220,"Roanoke, VA Metro Area",Roanoke,VA,314986,68761,42.8,0.241,0.3128,0.0063,2024
+28420,"Kennewick-Richland, WA Metro Area",Kennewick,WA,311807,89010,34.6,0.2759,0.2964,0.077,2024
+28700,"Kingsport-Bristol, TN-VA Metro Area",Kingsport,TN-VA,310842,57792,45.7,0.2299,0.2393,0.014,2024
+25180,"Hagerstown-Martinsburg, MD-WV Metro Area",Hagerstown,MD-WV,302649,78802,40.2,0.2666,0.2417,0.0689,2024
+47380,"Waco, TX Metro Area",Waco,TX,302045,66205,35.1,0.2484,0.2751,0.1255,2024
+18880,"Crestview-Fort Walton Beach-Destin, FL Metro Area",Crestview,FL,299547,81993,39.3,0.2754,0.3488,0.101,2024
+36500,"Olympia-Lacey-Tumwater, WA Metro Area",Olympia,WA,299067,96563,40.0,0.2882,0.385,0.0692,2024
+43620,"Sioux Falls, SD-MN Metro Area",Sioux Falls,SD-MN,298181,82754,36.3,0.2868,0.3671,0.1497,2024
+30980,"Longview, TX Metro Area",Longview,TX,291044,66647,38.1,0.2548,0.2113,0.0219,2024
+32900,"Merced, CA Metro Area",Merced,CA,290201,65510,31.8,0.2745,0.1533,0.0693,2024
+46540,"Utica-Rome, NY Metro Area",Utica,NY,288881,69779,41.7,0.2371,0.2675,-0.0107,2024
+42020,"San Luis Obispo-Paso Robles, CA Metro Area",San Luis Obispo,CA,281555,97446,40.4,0.227,0.3984,-0.0022,2024
+20260,"Duluth, MN-WI Metro Area",Duluth,MN-WI,280870,71769,41.5,0.2402,0.318,-0.029,2024
+35980,"Norwich-New London-Willimantic, CT Metro Area",Norwich,CT,279971,86586,41.1,0.2524,0.358,0.0471,2024
+46220,"Tuscaloosa, AL Metro Area",Tuscaloosa,AL,278526,61517,34.0,0.2527,0.2925,0.1111,2024
+17780,"College Station-Bryan, TX Metro Area",College Station,TX,278335,60087,28.6,0.2565,0.3969,0.0787,2024
+14740,"Bremerton-Silverdale-Port Orchard, WA Metro Area",Bremerton,WA,277881,104158,40.2,0.277,0.3794,0.0451,2024
+16300,"Cedar Rapids, IA Metro Area",Cedar Rapids,IA,276624,78080,39.7,0.2611,0.3286,0.0243,2024
+43640,"Slidell-Mandeville-Covington, LA Metro Area",Slidell,LA,272421,81202,40.5,0.2451,0.3767,,2024
+11100,"Amarillo, TX Metro Area",Amarillo,TX,271917,69611,36.3,0.2766,0.2706,0.0309,2024
+21780,"Evansville, IN Metro Area",Evansville,IN,270494,68232,39.7,0.2577,0.2933,-0.1412,2024
+38660,"Ponce, PR Metro Area",Ponce,PR,270459,22247,44.4,0.2429,0.2812,0.1961,2024
+29700,"Laredo, TX Metro Area",Laredo,TX,269294,63058,30.0,0.2616,0.2138,-0.0155,2024
+21500,"Erie, PA Metro Area",Erie,PA,269052,63354,40.2,0.2456,0.303,-0.0175,2024
+42100,"Santa Cruz-Watsonville, CA Metro Area",Santa Cruz,CA,264926,111093,39.8,0.2385,0.4394,-0.033,2024
+31340,"Lynchburg, VA Metro Area",Lynchburg,VA,263798,68996,40.0,0.2313,0.3109,0.0082,2024
+28020,"Kalamazoo-Portage, MI Metro Area",Kalamazoo,MI,262375,72532,35.0,0.2591,0.4127,-0.0014,2024
+22020,"Fargo, ND-MN Metro Area",Fargo,ND-MN,259459,76756,33.0,0.2964,0.4181,0.0792,2024
+13460,"Bend, OR Metro Area",Bend,OR,257814,89788,43.0,0.2684,0.4035,0.3842,2024
+49420,"Yakima, WA Metro Area",Yakima,WA,257152,70656,33.3,0.2572,0.1915,0.0299,2024
+42580,"Seaford, DE Micro Area",Seaford,DE,255626,81497,51.9,0.1917,0.3299,,2024
+10380,"Aguadilla, PR Metro Area",Aguadilla,PR,251769,22398,45.7,0.2459,0.2431,-0.1639,2024
+19300,"Daphne-Fairhope-Foley, AL Metro Area",Daphne,AL,246989,78775,43.9,0.2315,0.3369,0.1605,2024
+11540,"Appleton, WI Metro Area",Appleton,WI,245768,85825,39.4,0.2627,0.3278,0.043,2024
+39150,"Prescott Valley-Prescott, AZ Metro Area",Prescott Valley,AZ,245480,69613,55.1,0.1828,0.3025,0.0764,2024
+13780,"Binghamton, NY Metro Area",Binghamton,NY,245242,64590,40.3,0.2229,0.2983,0.0139,2024
+29340,"Lake Charles, LA Metro Area",Lake Charles,LA,244027,66700,37.6,0.2658,0.2344,0.1701,2024
+46340,"Tyler, TX Metro Area",Tyler,TX,241740,74192,37.5,0.2589,0.2859,0.0628,2024
+16580,"Champaign-Urbana, IL Metro Area",Champaign,IL,238842,65528,32.0,0.2494,0.4328,0.0553,2024
+31420,"Macon-Bibb County, GA Metro Area",Macon,GA,234943,59526,38.6,0.2535,0.2434,0.0237,2024
+45820,"Topeka, KS Metro Area",Topeka,KS,232468,69888,40.1,0.2413,0.3011,-0.0013,2024
+12700,"Barnstable Town, MA Metro Area",Barnstable Town,MA,231668,95241,55.4,0.1832,0.4824,0.0851,2024
+13380,"Bellingham, WA Metro Area",Bellingham,WA,230503,81784,38.4,0.268,0.3934,0.0438,2024
+22900,"Fort Smith, AR-OK Metro Area",Fort Smith,AR-OK,229899,58468,38.7,0.252,0.2102,-0.0796,2024
+40340,"Rochester, MN Metro Area",Rochester,MN,228522,91882,38.9,0.27,0.43,0.0484,2024
+15540,"Burlington-South Burlington, VT Metro Area",Burlington,VT,227846,93043,38.5,0.2685,0.5017,0.0414,2024
+25940,"Hilton Head Island-Bluffton-Port Royal, SC Metro Area",Hilton Head Island,SC,227455,83304,47.7,0.2075,0.4312,0.0592,2024
+29200,"Lafayette-West Lafayette, IN Metro Area",Lafayette,IN,226805,62011,30.8,0.2465,0.3597,-0.0076,2024
+16820,"Charlottesville, VA Metro Area",Charlottesville,VA,224335,93598,39.4,0.26,0.5352,0.0413,2024
+29740,"Las Cruces, NM Metro Area",Las Cruces,NM,224266,56848,34.3,0.2473,0.3168,0.0379,2024
+33740,"Monroe, LA Metro Area",Monroe,LA,223674,51660,38.0,0.2546,0.246,0.0994,2024
+30150,"Lebanon-Claremont, NH-VT Micro Area",Lebanon,NH-VT,223586,83269,46.1,0.231,0.4132,,2024
+32780,"Medford, OR Metro Area",Medford,OR,222645,73999,42.8,0.2495,0.3171,0.028,2024
+29420,"Lake Havasu City-Kingman, AZ Metro Area",Lake Havasu City,AZ,220517,57684,53.6,0.1964,0.1522,0.0617,2024
+12020,"Athens-Clarke County, GA Metro Area",Athens,GA,220197,65608,33.6,0.2551,0.4319,0.0563,2024
+17860,"Columbia, MO Metro Area",Columbia,MO,215014,72340,33.5,0.2643,0.4798,0.047,2024
+23580,"Gainesville, GA Metro Area",Gainesville,GA,212705,80901,38.4,0.2545,0.2729,0.0707,2024
+37460,"Panama City-Panama City Beach, FL Metro Area",Panama City,FL,211922,71514,41.1,0.2633,0.274,0.1634,2024
+49740,"Yuma, AZ Metro Area",Yuma,AZ,211741,62876,36.1,0.2545,0.1678,0.0109,2024
+27740,"Johnson City, TN Metro Area",Johnson City,TN,210729,57762,42.1,0.2408,0.2929,0.043,2024
+32420,"Mayagüez, PR Metro Area",Mayagüez,PR,209892,21163,46.2,0.2224,0.2741,1.1085,2024
+30500,"Lexington Park, MD Metro Area",Lexington Park,MD,209439,126256,38.6,0.2659,0.3672,,2024
+17020,"Chico, CA Metro Area",Chico,CA,207929,67928,36.2,0.2506,0.3192,-0.0792,2024
+27340,"Jacksonville, NC Metro Area",Jacksonville,NC,207906,68148,27.7,0.2871,0.26,0.0658,2024
+21140,"Elkhart-Goshen, IN Metro Area",Elkhart,IN,207132,68561,35.6,0.2481,0.2012,0.0126,2024
+44100,"Springfield, IL Metro Area",Springfield,IL,207042,75895,41.1,0.2491,0.3612,-0.0102,2024
+25900,"Hilo-Kailua, HI Micro Area",Hilo,HI,205769,78639,44.3,0.2377,0.3142,0.0316,2024
+16620,"Charleston, WV Metro Area",Charleston,WV,205398,60117,44.0,0.2383,0.2718,-0.2223,2024
+27900,"Joplin, MO-KS Metro Area",Joplin,MO-KS,203626,61901,38.3,0.2526,0.2418,0.1433,2024
+41060,"St. Cloud, MN Metro Area",St. Cloud,MN,202458,76497,35.4,0.2486,0.2824,0.0195,2024
+26380,"Houma-Bayou Cane-Thibodaux, LA Metro Area",Houma,LA,202438,64038,38.8,0.2623,0.1986,-0.0368,2024
+39460,"Punta Gorda, FL Metro Area",Punta Gorda,FL,201064,69952,59.9,0.1577,0.2705,0.1104,2024
+12220,"Auburn-Opelika, AL Metro Area",Auburn,AL,199825,63649,34.1,0.2537,0.4042,0.24,2024
+22500,"Florence, SC Metro Area",Florence,SC,199675,54443,39.8,0.2419,0.2295,-0.0284,2024
+47580,"Warner Robins, GA Metro Area",Warner Robins,GA,198209,79345,36.6,0.2759,0.311,0.0972,2024
+39540,"Racine-Mount Pleasant, WI Metro Area",Racine,WI,197532,78096,40.5,0.2461,0.2845,0.0099,2024
+41100,"St. George, UT Metro Area",St. George,UT,196431,80632,39.1,0.2362,0.3522,0.1847,2024
+13740,"Billings, MT Metro Area",Billings,MT,189255,77194,39.9,0.2653,0.3408,0.0569,2024
+40980,"Saginaw, MI Metro Area",Saginaw,MI,188665,60622,41.2,0.2401,0.244,-0.0165,2024
+20100,"Dover, DE Metro Area",Dover,DE,187604,74477,38.8,0.2533,0.2754,0.0617,2024
+14540,"Bowling Green, KY Metro Area",Bowling Green,KY,186959,63328,35.4,0.2572,0.2729,0.0714,2024
+49700,"Yuba City, CA Metro Area",Yuba City,CA,183364,78179,35.4,0.276,0.1948,0.0632,2024
+28740,"Kingston, NY Metro Area",Kingston,NY,182601,86271,44.1,0.2499,0.3822,0.022,2024
+17660,"Coeur d'Alene, ID Metro Area",Coeur d'Alene,ID,181996,81861,40.9,0.2564,0.2995,0.1568,2024
+27180,"Jackson, TN Metro Area",Jackson,TN,181719,61177,38.8,0.2489,0.2367,0.0184,2024
+13980,"Blacksburg-Christiansburg-Radford, VA Metro Area",Blacksburg,VA,181664,65839,35.1,0.2261,0.3593,0.0892,2024
+39820,"Redding, CA Metro Area",Redding,CA,181436,72636,41.7,0.2521,0.2377,0.0124,2024
+11640,"Arecibo, PR Metro Area",Arecibo,PR,180767,25084,45.5,0.2493,0.2671,0.0011,2024
+10180,"Abilene, TX Metro Area",Abilene,TX,180408,67328,34.5,0.2729,0.2656,0.0571,2024
+20940,"El Centro, CA Metro Area",El Centro,CA,180202,57681,33.2,0.2727,0.1607,-0.0028,2024
+33260,"Midland, TX Metro Area",Midland,TX,180019,92952,32.9,0.3183,0.3073,0.0357,2024
+26980,"Iowa City, IA Metro Area",Iowa City,IA,179200,75088,32.1,0.268,0.5108,0.0499,2024
+24780,"Greenville, NC Metro Area",Greenville,NC,177193,58188,33.0,0.2476,0.3383,-0.0069,2024
+15500,"Burlington, NC Metro Area",Burlington,NC,176893,65651,38.9,0.2498,0.2872,0.0831,2024
+34740,"Muskegon-Norton Shores, MI Metro Area",Muskegon,MI,175961,65024,40.0,0.2585,0.2135,0.0154,2024
+20740,"Eau Claire, WI Metro Area",Eau Claire,WI,173915,74595,38.2,0.2552,0.3163,0.0389,2024
+36780,"Oshkosh-Neenah, WI Metro Area",Oshkosh,WI,171769,74925,38.7,0.2606,0.3112,0.008,2024
+14010,"Bloomington, IL Metro Area",Bloomington,IL,171556,79905,34.3,0.2512,0.4722,-0.0059,2024
+29100,"La Crosse-Onalaska, WI-MN Metro Area",La Crosse,WI-MN,170190,73340,39.3,0.2356,0.3358,0.2464,2024
+39380,"Pueblo, CO Metro Area",Pueblo,CO,169356,64010,40.4,0.2586,0.2561,0.0203,2024
+45460,"Terre Haute, IN Metro Area",Terre Haute,IN,168719,56594,38.4,0.2495,0.2287,-0.0973,2024
+47940,"Waterloo-Cedar Falls, IA Metro Area",Waterloo,IA,168637,70811,36.8,0.2443,0.3101,-0.0054,2024
+28450,"Kenosha, WI Metro Area",Kenosha,WI,168438,81239,39.4,0.2565,0.3115,,2024
+20700,"East Stroudsburg, PA Micro Area",East Stroudsburg,PA,167515,83565,44.1,0.2295,0.2739,-0.0031,2024
+42680,"Sebastian-Vero Beach-West Vero Corridor, FL Metro Area",Sebastian,FL,166936,73491,55.3,0.1827,0.3383,0.0841,2024
+26820,"Idaho Falls, ID Metro Area",Idaho Falls,ID,165361,80291,33.5,0.272,0.3172,0.1364,2024
+36220,"Odessa, TX Metro Area",Odessa,TX,164654,71536,31.4,0.3014,0.1763,0.0254,2024
+27980,"Kahului-Wailuku, HI Metro Area",Kahului,HI,164589,97109,43.2,0.2509,0.3096,-0.0084,2024
+27500,"Janesville-Beloit, WI Metro Area",Janesville,WI,164350,75673,40.3,0.2496,0.2581,0.0136,2024
+14020,"Bloomington, IN Metro Area",Bloomington,IN,162569,65543,33.1,0.2462,0.4427,-0.0283,2024
+26140,"Homosassa Springs, FL Metro Area",Homosassa Springs,FL,162472,56546,56.9,0.174,0.2062,0.1192,2024
+11200,"Amherst Town-Northampton, MA Metro Area",Amherst Town,MA,162028,87001,37.4,0.2005,0.516,,2024
+27100,"Jackson, MI Metro Area",Jackson,MI,160060,66073,41.5,0.2514,0.2341,0.009,2024
+24300,"Grand Junction, CO Metro Area",Grand Junction,CO,158601,73658,41.3,0.2577,0.3231,0.0488,2024
+44300,"State College, PA Metro Area",State College,PA,158576,74291,34.2,0.2394,0.4622,-0.0209,2024
+19460,"Decatur, AL Metro Area",Decatur,AL,157747,68116,40.5,0.2438,0.2154,0.036,2024
+16540,"Chambersburg, PA Metro Area",Chambersburg,PA,157379,77003,42.1,0.2425,0.2473,0.021,2024
+42140,"Santa Fe, NM Metro Area",Santa Fe,NM,156105,79071,48.7,0.2263,0.4607,0.0456,2024
+18180,"Concord, NH Micro Area",Concord,NH,155967,97004,42.9,0.2551,0.3891,0.0404,2024
+33780,"Monroe, MI Metro Area",Monroe,MI,155505,77335,42.8,0.241,0.2325,0.0386,2024
+45900,"Traverse City, MI Metro Area",Traverse City,MI,155449,80889,46.3,0.2314,0.3938,0.0431,2024
+25620,"Hattiesburg, MS Metro Area",Hattiesburg,MS,155434,60285,35.5,0.2665,0.3091,-0.0758,2024
+30860,"Logan, UT-ID Metro Area",Logan,UT-ID,155102,81126,26.8,0.2567,0.402,0.127,2024
+12620,"Bangor, ME Metro Area",Bangor,ME,154710,66356,42.5,0.2493,0.3014,0.0193,2024
+22520,"Florence-Muscle Shoals, AL Metro Area",Florence,AL,153852,61891,41.6,0.2361,0.2667,0.0443,2024
+47220,"Vineland, NJ Metro Area",Vineland,NJ,153305,67436,37.7,0.2685,0.1893,0.0092,2024
+25260,"Hanford-Corcoran, CA Metro Area",Hanford,CA,153298,70995,32.5,0.3166,0.1364,0.0173,2024
+35660,"Niles, MI Metro Area",Niles,MI,153288,65425,42.7,0.2328,0.3094,-0.0055,2024
+39660,"Rapid City, SD Metro Area",Rapid City,SD,152950,75255,40.6,0.2521,0.3309,0.1051,2024
+20020,"Dothan, AL Metro Area",Dothan,AL,152674,57791,41.3,0.2452,0.2115,0.0298,2024
+27620,"Jefferson City, MO Metro Area",Jefferson City,MO,150437,74030,39.8,0.2582,0.3109,-0.0055,2024
+46660,"Valdosta, GA Metro Area",Valdosta,GA,150188,57085,33.2,0.2623,0.255,0.0335,2024
+10780,"Alexandria, LA Metro Area",Alexandria,LA,149622,56353,38.0,0.2627,0.2191,-0.0241,2024
+48660,"Wichita Falls, TX Metro Area",Wichita Falls,TX,149358,65379,36.6,0.2669,0.2487,-0.009,2024
+49020,"Winchester, VA-WV Metro Area",Winchester,VA-WV,146386,84298,41.2,0.248,0.2943,0.0637,2024
+45500,"Texarkana, TX-AR Metro Area",Texarkana,TX-AR,146296,55646,39.0,0.2589,0.2058,-0.0201,2024
+10500,"Albany, GA Metro Area",Albany,GA,146018,56906,38.1,0.2505,0.2308,-0.0163,2024
+40580,"Rocky Mount, NC Metro Area",Rocky Mount,NC,144952,59636,41.6,0.2373,0.2055,-0.0118,2024
+43580,"Sioux City, IA-NE-SD Metro Area",Sioux City,IA-NE-SD,144682,75192,36.2,0.2538,0.2456,0.0058,2024
+22380,"Flagstaff, AZ Metro Area",Flagstaff,AZ,144508,72966,32.8,0.255,0.4034,0.0229,2024
+30140,"Lebanon, PA Metro Area",Lebanon,PA,144186,78425,41.1,0.2381,0.2427,0.0319,2024
+19140,"Dalton, GA Metro Area",Dalton,GA,144160,67846,37.1,0.259,0.1873,0.0014,2024
+48680,"Wildwood-The Villages, FL Metro Area",Wildwood,FL,143408,76508,68.5,0.1166,0.3533,,2024
+43300,"Sherman-Denison, TX Metro Area",Sherman,TX,143337,72182,39.0,0.2457,0.2388,0.0941,2024
+34060,"Morgantown, WV Metro Area",Morgantown,WV,141323,64640,35.1,0.2822,0.4013,0.0156,2024
+48140,"Wausau, WI Metro Area",Wausau,WI,138403,77884,41.3,0.2486,0.281,-0.1516,2024
+25500,"Harrisonburg, VA Metro Area",Harrisonburg,VA,136992,75065,34.9,0.2362,0.3159,0.0257,2024
+48540,"Wheeling, WV-OH Metro Area",Wheeling,WV-OH,136920,57418,44.2,0.2362,0.2368,-0.0322,2024
+25220,"Hammond, LA Metro Area",Hammond,LA,136738,56760,35.9,0.2746,0.2081,0.0354,2024
+13900,"Bismarck, ND Metro Area",Bismarck,ND,136216,85156,38.4,0.2725,0.3629,0.0683,2024
+27860,"Jonesboro, AR Metro Area",Jonesboro,AR,135792,56738,35.3,0.2764,0.2648,0.0347,2024
+44220,"Springfield, OH Metro Area",Springfield,OH,135158,63132,41.2,0.2345,0.2021,0.0032,2024
+34900,"Napa, CA Metro Area",Napa,CA,134869,111471,42.9,0.2512,0.3979,-0.034,2024
+31740,"Manhattan, KS Metro Area",Manhattan,KS,133965,65469,27.3,0.287,0.4037,0.0078,2024
+12980,"Battle Creek, MI Metro Area",Battle Creek,MI,133778,63177,40.2,0.2477,0.2291,-0.0032,2024
+27780,"Johnstown, PA Metro Area",Johnstown,PA,131538,58418,45.6,0.2129,0.239,-0.0111,2024
+34580,"Mount Vernon-Anacortes, WA Metro Area",Mount Vernon,WA,131328,89263,42.1,0.2519,0.302,0.0455,2024
+10540,"Albany, OR Metro Area",Albany,OR,130706,76329,40.1,0.2659,0.2157,0.0452,2024
+41540,"Salisbury, MD Metro Area",Salisbury,MD,129736,73802,36.6,0.2443,0.2739,-0.6792,2024
+38340,"Pittsfield, MA Metro Area",Pittsfield,MA,129430,76013,47.3,0.2196,0.3995,0.0238,2024
+17420,"Cleveland, TN Metro Area",Cleveland,TN,128963,66135,40.5,0.2456,0.2327,0.0522,2024
+30020,"Lawton, OK Metro Area",Lawton,OK,127310,60665,34.4,0.2934,0.242,-0.0024,2024
+11180,"Ames, IA Metro Area",Ames,IA,127134,73127,29.9,0.2339,0.4788,0.031,2024
+21060,"Elizabethtown, KY Metro Area",Elizabethtown,KY,127049,67534,37.6,0.2678,0.2369,-0.1581,2024
+44420,"Staunton-Stuarts Draft, VA Metro Area",Staunton,VA,126822,73544,42.7,0.2539,0.2771,0.0425,2024
+24020,"Glens Falls, NY Metro Area",Glens Falls,NY,126039,75836,46.1,0.2394,0.2972,0.0012,2024
+33540,"Missoula, MT Metro Area",Missoula,MT,125631,74989,37.5,0.2945,0.465,0.0709,2024
+43420,"Sierra Vista-Douglas, AZ Metro Area",Sierra Vista,AZ,125566,59742,43.0,0.2381,0.2809,-0.0024,2024
+31900,"Mansfield, OH Metro Area",Mansfield,OH,125099,59509,40.9,0.2537,0.1789,0.033,2024
+48300,"Wenatchee-East Wenatchee, WA Metro Area",Wenatchee,WA,124538,81938,39.8,0.2533,0.2781,0.0532,2024
+14580,"Bozeman, MT Metro Area",Bozeman,MT,124074,93528,34.2,0.3081,0.5428,0.1482,2024
+34100,"Morristown, TN Metro Area",Morristown,TN,122533,60553,41.8,0.2375,0.2042,-0.1304,2024
+11020,"Altoona, PA Metro Area",Altoona,PA,121277,62382,43.1,0.2397,0.2442,-0.0153,2024
+41660,"San Angelo, TX Metro Area",San Angelo,TX,120986,68419,36.1,0.2752,0.255,0.0012,2024
+22140,"Farmington, NM Metro Area",Farmington,NM,120942,55872,38.3,0.2614,0.1826,-0.0441,2024
+29940,"Lawrence, KS Metro Area",Lawrence,KS,120302,69746,31.6,0.2652,0.5319,0.0001,2024
+41140,"St. Joseph, MO-KS Metro Area",St. Joseph,MO-KS,120012,65005,39.9,0.2556,0.2378,-0.0488,2024
+46300,"Twin Falls, ID Metro Area",Twin Falls,ID,118907,68810,35.8,0.2641,0.2158,0.0949,2024
+24140,"Goldsboro, NC Metro Area",Goldsboro,NC,118652,59733,37.3,0.2543,0.2174,-0.0401,2024
+43100,"Sheboygan, WI Metro Area",Sheboygan,WI,117991,73094,41.7,0.2417,0.2747,0.0244,2024
+11500,"Anniston-Oxford, AL Metro Area",Anniston,AL,116090,55029,39.3,0.2465,0.2065,0.0128,2024
+15260,"Brunswick-St. Simons, GA Metro Area",Brunswick,GA,115074,66623,43.6,0.2374,0.283,-0.0198,2024
+48060,"Watertown-Fort Drum, NY Metro Area",Watertown,NY,115040,66301,33.7,0.2861,0.2645,0.0195,2024
+48260,"Weirton-Steubenville, WV-OH Metro Area",Weirton,WV-OH,114754,58784,45.6,0.2179,0.208,-0.0293,2024
+41780,"Sandusky, OH Metro Area",Sandusky,OH,114575,73502,47.1,0.2142,0.2921,0.5322,2024
+48700,"Williamsport, PA Metro Area",Williamsport,PA,113489,63917,41.4,0.2453,0.2479,-0.0074,2024
+30340,"Lewiston-Auburn, ME Metro Area",Lewiston,ME,113423,67873,40.5,0.2467,0.2336,0.0541,2024
+36980,"Owensboro, KY Metro Area",Owensboro,KY,112762,68002,39.0,0.249,0.2545,-0.0482,2024
+13220,"Beckley, WV Metro Area",Beckley,WV,112714,52620,43.4,0.2371,0.2013,-0.0515,2024
+31020,"Longview-Kelso, WA Metro Area",Longview,WA,112360,76531,41.5,0.2517,0.1762,0.0523,2024
+34620,"Muncie, IN Metro Area",Muncie,IN,112280,58127,35.8,0.2239,0.2619,-0.0238,2024
+33140,"Michigan City-La Porte, IN Metro Area",Michigan City,IN,111917,71055,41.1,0.2574,0.2268,0.016,2024
+28100,"Kankakee, IL Metro Area",Kankakee,IL,106635,71281,39.0,0.246,0.2118,-0.0362,2024
+23900,"Gettysburg, PA Metro Area",Gettysburg,PA,106115,84092,43.7,0.218,0.2576,0.0356,2024
+42700,"Sebring, FL Metro Area",Sebring,FL,105702,54897,54.4,0.1888,0.2046,0.0219,2024
+38240,"Pinehurst-Southern Pines, NC Metro Area",Pinehurst,NC,104876,86080,43.0,0.2457,0.41,0.0779,2024
+44940,"Sumter, SC Metro Area",Sumter,SC,104725,56693,38.0,0.2543,0.2355,-0.2558,2024
+27060,"Ithaca, NY Metro Area",Ithaca,NY,104537,74024,32.3,0.2228,0.5876,0.0185,2024
+31860,"Mankato, MN Metro Area",Mankato,MN,104282,75808,34.0,0.2423,0.3485,0.0351,2024
+22540,"Fond du Lac, WI Metro Area",Fond du Lac,WI,104137,74275,41.9,0.2415,0.2231,0.015,2024
+24220,"Grand Forks, ND-MN Metro Area",Grand Forks,ND-MN,103628,69836,33.5,0.2619,0.3477,0.0185,2024
+23460,"Gadsden, AL Metro Area",Gadsden,AL,103105,54563,41.7,0.2389,0.1809,0.0035,2024
+13020,"Bay City, MI Metro Area",Bay City,MI,103008,61763,43.9,0.2431,0.2212,-0.0105,2024
+37140,"Paducah, KY-IL Metro Area",Paducah,KY-IL,102748,64160,43.2,0.2375,0.2471,0.062,2024
+19500,"Decatur, IL Metro Area",Decatur,IL,101849,62666,40.6,0.2351,0.2439,-0.0349,2024
+30620,"Lima, OH Metro Area",Lima,OH,101348,64038,39.7,0.2405,0.201,-0.0177,2024
+16940,"Cheyenne, WY Metro Area",Cheyenne,WY,101060,80173,38.5,0.2767,0.3306,0.0279,2024
+26300,"Hot Springs, AR Metro Area",Hot Springs,AR,100035,57181,45.5,0.2241,0.2533,0.015,2024
+40660,"Rome, GA Metro Area",Rome,GA,99693,65565,38.2,0.2523,0.259,0.0239,2024
+20220,"Dubuque, IA Metro Area",Dubuque,IA,99030,77630,39.1,0.2457,0.3337,0.0211,2024
+47020,"Victoria, TX Metro Area",Victoria,TX,98554,70236,37.2,0.259,0.2002,-0.0112,2024
+16020,"Cape Girardeau, MO-IL Metro Area",Cape Girardeau,MO-IL,98169,66759,38.0,0.2402,0.2975,0.0123,2024
+18700,"Corvallis, OR Metro Area",Corvallis,OR,96303,77702,34.5,0.2391,0.542,0.057,2024
+21820,"Fairbanks-College, AK Metro Area",Fairbanks,AK,95460,88267,32.5,0.3145,0.3307,-0.0365,2024
+25740,"Helena, MT Metro Area",Helena,MT,93906,78528,42.6,0.2488,0.4019,0.1779,2024
+38540,"Pocatello, ID Metro Area",Pocatello,ID,89454,66499,35.2,0.2812,0.3064,-0.0426,2024
+37620,"Parkersburg-Vienna, WV Metro Area",Parkersburg,WV,88460,57391,44.1,0.2318,0.2362,-0.0253,2024
+24420,"Grants Pass, OR Metro Area",Grants Pass,OR,88179,60098,47.3,0.2234,0.1969,0.0224,2024
+25980,"Hinesville, GA Metro Area",Hinesville,GA,85771,61709,29.7,0.3123,0.1883,0.0716,2024
+24500,"Great Falls, MT Metro Area",Great Falls,MT,84606,67690,38.6,0.266,0.2842,0.0365,2024
+33220,"Midland, MI Metro Area",Midland,MI,83757,77705,41.8,0.2504,0.3655,0.0048,2024
+29020,"Kokomo, IN Metro Area",Kokomo,IN,83752,64027,40.7,0.2395,0.2082,0.0173,2024
+18020,"Columbus, IN Metro Area",Columbus,IN,83536,79901,37.5,0.2747,0.341,0.0128,2024
+21300,"Elmira, NY Metro Area",Elmira,NY,82147,63716,42.0,0.2472,0.2722,-0.0324,2024
+16220,"Casper, WY Metro Area",Casper,WY,79977,72156,38.4,0.2779,0.2766,-0.0044,2024
+24260,"Grand Island, NE Metro Area",Grand Island,NE,76794,69704,37.0,0.2477,0.2155,0.0174,2024
+33500,"Minot, ND Metro Area",Minot,ND,76484,78200,34.2,0.2952,0.2858,-0.0084,2024
+25020,"Guayama, PR Metro Area",Guayama,PR,66202,21186,43.9,0.2573,0.2453,-0.1246,2024
+30300,"Lewiston, ID-WA Metro Area",Lewiston,ID-WA,65164,72475,42.8,0.2329,0.2626,0.0403,2024
+47460,"Walla Walla, WA Metro Area",Walla Walla,WA,62161,74202,38.5,0.2411,0.2977,0.0298,2024
+21420,"Enid, OK Metro Area",Enid,OK,62146,66182,36.0,0.2665,0.2327,0.004,2024
+16180,"Carson City, NV Metro Area",Carson City,NV,58384,72355,42.4,0.2515,0.2373,0.0659,2024
+20580,"Eagle Pass, TX Metro Area",Eagle Pass,TX,58082,49568,30.3,0.2556,0.1427,-0.0016,2024
