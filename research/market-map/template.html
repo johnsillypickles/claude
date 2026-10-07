@@ -116,7 +116,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 <header>
   <div class="eyebrow">Silly Pickles · Growth · Jan 1 to Oct 7, 2026</div>
   <h1>League Market Map</h1>
-  <p class="sub">Where Meta ads find new players cheaply in the metros we already run leagues in, and which metros we're not in yet show demand. Market CAC uses Meta spend by Comscore market (Jan 1 to Oct 7) against Shopify signups for that market's leagues.</p>
+  <p class="sub">Where to add leagues in markets we already run (sell-outs, new-player momentum, room to grow, ad cost) and which new metros look strongest (Census 2024, Google Trends, our request forms). Built from Shopify, Meta and Klaviyo data, Jan 1 to Oct 7, 2026.</p>
 </header>
 
 <section class="findings" id="findings"></section>
@@ -124,6 +124,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 <section class="panel" aria-label="Map">
   <div class="toolbar">
     <h2>Map</h2>
+    <div class="filters"><label for="colorBy">Color metros by</label><select id="colorBy"><option value="add">Add-leagues score</option><option value="so">Sell-out rate</option><option value="cac">Market CAC</option></select></div>
     <div class="toggles" role="group" aria-label="Map layers">
       <button class="tog" id="tog-cur" aria-pressed="true"><i class="sw" style="background:var(--good)"></i>Current metros</button>
       <button class="tog" id="tog-cand" aria-pressed="true"><i class="sw" style="border:2px solid var(--cand)"></i>Expansion candidates</button>
@@ -140,12 +141,27 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 
 <section class="tabpanel">
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-dma" aria-selected="true" aria-controls="p-dma">Meta CAC by market</button>
+    <button class="tab" role="tab" id="tab-add" aria-selected="true" aria-controls="p-add">Where to add leagues</button>
+    <button class="tab" role="tab" id="tab-exp" aria-selected="false" aria-controls="p-exp">New markets</button>
+    <button class="tab" role="tab" id="tab-dma" aria-selected="false" aria-controls="p-dma">Meta CAC by market</button>
     <button class="tab" role="tab" id="tab-cur" aria-selected="false" aria-controls="p-cur">City ad sets by quarter</button>
-    <button class="tab" role="tab" id="tab-exp" aria-selected="false" aria-controls="p-exp">Where to expand</button>
   </div>
 
-  <div id="p-dma" role="tabpanel" aria-labelledby="tab-dma" class="tabpanel">
+  <div id="p-add" role="tabpanel" aria-labelledby="tab-add" class="tabpanel">
+    <div class="section-head">
+      <h3>Existing markets: where more leagues should fill</h3>
+      <p class="sub">Each part is a 0 to 100 rank against the other US markets with 4+ leagues this year. Move the weights to re-rank. Markets with fewer than 6 leagues are marked as small samples.</p>
+    </div>
+    <div class="weights">
+      <label for="aSell"><span>Sell-outs (rate, speed, spots added) <b class="num" id="vSell"></b></span><input type="range" id="aSell" min="0" max="100" value="50"></label>
+      <label for="aMom"><span>New-player momentum <b class="num" id="vMom"></b></span><input type="range" id="aMom" min="0" max="100" value="15"></label>
+      <label for="aRoom"><span>Room to grow (density, search) <b class="num" id="vRoom"></b></span><input type="range" id="aRoom" min="0" max="100" value="25"></label>
+      <label for="aEff"><span>Ad efficiency (est. Meta CAC) <b class="num" id="vEff"></b></span><input type="range" id="aEff" min="0" max="100" value="10"></label>
+    </div>
+    <div class="tablewrap"><table id="addTable"></table></div>
+  </div>
+
+  <div id="p-dma" role="tabpanel" aria-labelledby="tab-dma" class="tabpanel" hidden>
     <div class="section-head">
       <h3>All Meta spend by Comscore market, Jan 1 to Oct 7, 2026</h3>
       <p class="sub" id="dma-sub"></p>
@@ -171,14 +187,14 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 
   <div id="p-exp" role="tabpanel" aria-labelledby="tab-exp" class="tabpanel" hidden>
     <div class="section-head">
-      <h3>US metros with no league within 30 miles</h3>
-      <p class="sub">Score = weighted mix of population, income and our own demand signals, each scaled 0 to 100 across this list. Move the weights to re-rank. Google Trends and current Census figures are being added next, so they show as pending.</p>
+      <h3>US metros (200k+ people) with no league within 30 miles</h3>
+      <p class="sub">Census 2024 (ACS 5-year) and Google Trends (last 12 months), plus our own request forms. Each part is a 0 to 100 rank across this list. Pickleball searches run highest in Florida retirement markets, so search interest gets less weight than demographic fit by default.</p>
     </div>
     <div class="weights">
-      <label for="wPop"><span>Population within 30 mi <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="50"></label>
-      <label for="wInc"><span>Median household income <b class="num" id="vInc"></b></span><input type="range" id="wInc" min="0" max="100" value="20"></label>
-      <label for="wDem"><span>Our demand signals <b class="num" id="vDem"></b></span><input type="range" id="wDem" min="0" max="100" value="30"></label>
-      <label class="off" for="wTr"><span>Google Trends interest <span class="pending">pending</span></span><input type="range" id="wTr" min="0" max="100" value="0" disabled></label>
+      <label for="wPop"><span>Population <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="30"></label>
+      <label for="wSea"><span>Search interest (Trends) <b class="num" id="vSea"></b></span><input type="range" id="wSea" min="0" max="100" value="15"></label>
+      <label for="wDemo"><span>Fit: age 25 to 44, degree, income, growth <b class="num" id="vDemo"></b></span><input type="range" id="wDemo" min="0" max="100" value="35"></label>
+      <label for="wDem"><span>Our demand signals <b class="num" id="vDem"></b></span><input type="range" id="wDem" min="0" max="100" value="20"></label>
     </div>
     <div class="filters">
       <label for="distFilter">Distance from nearest league metro</label>
@@ -196,6 +212,9 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div>
     <h3>How the numbers are built</h3>
     <ul>
+      <li><b>Sell-out</b> = a league's Shopify inventory reached 0 through sales on a day with no manual removal. A drop to 0 with stock removed by hand (the 3-day pre-start close, or a cancellation) does not count. Spots added = stock added after launch. Seasons: Winter to Fall 2026, leagues with 10+ spots sold.</li>
+      <li><b>Density</b> = Fall 2026 leagues per 100k residents aged 25 to 44 in the metro (Census 2024). Lower means more room.</li>
+      <li><b>Search interest</b> = average percentile of Google Trends scores for "pickleball", "pickleball near me" and "pickleball league" across 210 DMAs, last 12 months. Metros are matched to the nearest DMA city, so a few border metros may be off.</li>
       <li><b>Market cost per new signup</b> = all Meta spend in a Comscore market ÷ first-time Shopify orders for that market's leagues (Jan 1 to Oct 5), from any channel. It's the floor: it credits Meta with organic signups too.</li>
       <li><b>Estimated Meta CAC</b> = spend ÷ (new signups × that market's Meta-tagged UTM share × <span class="num" id="scaleV"></span>). The multiplier is Meta-reported purchases ÷ Meta-tagged orders account-wide, because UTMs miss most view-through and cross-device purchases. It assumes UTM capture is similar in every market.</li>
       <li><b>Market tiers</b>: estimated CAC vs the median market (<span class="num" id="medEstV"></span>). Efficient ≤ 0.8x, typical up to 1.25x, expensive above. Markets under $5,000 of spend are marked low data.</li>
@@ -214,8 +233,9 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
       <li><b><span class="num" id="unkV"></span> of spend is "Unknown" market</b> (likely Canada and Australia), left out of the market view.</li>
       <li><b>Meta spends almost nothing outside league markets</b> (<span class="num" id="othV"></span> in total), so ad CTR can't be used as an expansion signal.</li>
       <li><b>City-named ad sets mostly go to under-filled leagues</b>, so the second tab's CAC skews high.</li>
-      <li><b>Population and income are 2010-era</b> (bundled ZIP database), so fast-growing Sunbelt metros are understated. Census access is now allowed; it needs the API key to reach this session.</li>
-      <li><b>Google Trends</b> is now reachable and will be added to the expansion score next.</li>
+      <li><b>Sell-outs are measured per league, not per night.</b> A Monday/Wednesday league counts as sold out only when every night is full.</li>
+      <li><b>Waitlists aren't in yet.</b> Back-in-stock signups only started in September 2026.</li>
+      <li><b>Census growth is blank or distorted for redrawn metros</b> (2023 boundary changes), e.g. Worcester shows −7.8%.</li>
       <li><b>Meta-tagged orders</b> = league orders whose Shopify UTM source is facebook, meta_ads, ig or similar, ÷ all orders for that metro's leagues (Q1 to Q3, all orders, not just new). UTMs catch about a third of the purchases Meta reports, so read it as a relative measure across metros, not a true paid share.</li>
       <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
     </ul>
@@ -230,6 +250,9 @@ const DATA = __DATA__;
 const US = __TOPO__;
 const fmt$ = v => v==null ? "–" : "$" + Math.round(v).toLocaleString("en-US");
 const fmtN = v => v==null ? "–" : Math.round(v).toLocaleString("en-US");
+const pct0 = v => v==null ? "–" : Math.round(v*100)+"%";
+const pct1 = v => v==null ? "–" : (v>=0?"+":"")+(v*100).toFixed(1)+"%";
+const scoreCell = v => v==null ? "–" : `${Math.round(v)}<span class="scorebar"><b style="width:${v}%"></b></span>`;
 const TIER = {
   consistent:{label:"Consistently efficient",color:"var(--good)"},
   efficient:{label:"Efficient on average",color:"var(--good)"},
@@ -269,11 +292,15 @@ document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
   const big = DR.filter(r=>r.spend>=15000 && r.cacEst).sort((x,y)=>x.cacEst-y.cacEst);
   const orgHeavy = DR.filter(r=>r.spend>=5000 && r.cacFloor && r.cacEst && r.cacFloor <= DM.medFloor*0.9 && r.cacEst >= DM.medEst && r.metaShare < DATA.netUtm.metaShare).sort((x,y)=>y.new-x.new);
   const nm = r => r.dma.split(/[,-]/)[0];
+  const dScore=(c,w)=>Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/Object.values(w).reduce((a,b)=>a+b,0);
+  const addTop = M.filter(m=>m.cmp && m.so.n>=6).map(m=>({m,s:dScore(m,{sell:50,mom:15,room:25,eff:10})})).sort((a,b)=>b.s-a.s).slice(0,4);
+  const over = M.filter(m=>m.cmp && m.so.n>=8).sort((a,b)=>a.so.rate-b.so.rate).slice(0,4);
+  const newTop = DATA.cands.filter(c=>!c.launching).map(c=>({c,s:dScore(c,{pop:30,search:15,demo:35,ours:20})})).sort((a,b)=>b.s-a.s).slice(0,4);
   const f = [
-    {k:big.slice(0,4).map(nm).join(", "), p:`have the cheapest estimated Meta CAC among markets with $15k+ spend (${big.slice(0,4).map(r=>fmt$(r.cacEst)).join(" / ")} vs a ${fmt$(DM.medEst)} median market).`},
-    {k:big.slice(-4).reverse().map(nm).join(", "), p:`are the most expensive at scale (${big.slice(-4).reverse().map(r=>fmt$(r.cacEst)).join(" / ")}). Together they took ${fmt$(big.slice(-4).reduce((a,r)=>a+r.spend,0))} of spend.`},
-    {k:orgHeavy.slice(0,4).map(nm).join(", "), p:`fill cheaply overall (${orgHeavy.slice(0,4).map(r=>fmt$(r.cacFloor)).join(" / ")} per new signup) but Meta drives few of those signups (${orgHeavy.slice(0,4).map(r=>Math.round(r.metaShare*100)+"%").join(" / ")} Meta-tagged). Good candidates for a spend cut or holdout test.`},
-    {k:outside.map(c=>c.city).join(", "), p:`have the most owned demand outside the footprint (location requests, host applicants, notify-me). Volume is small: ${DATA.signals.reduce((a,s)=>a+s.location_request,0)} requests and ${DATA.signals.reduce((a,s)=>a+s.host_applicant,0)} host applicants since August.`}
+    {k:addTop.map(x=>x.m.metro.split(",")[0]).join(", "), p:`top the add-leagues score among markets with 6+ leagues: ${addTop.map(x=>pct0(x.m.so.rate)+" sold out").join(" / ")} across 2026, and still adding spots after launch.`},
+    {k:over.map(m=>m.metro.split(",")[0]).join(", "), p:`look over-supplied: ${over.map(m=>pct0(m.so.rate)).join(" / ")} of leagues sold out this year. Hold new leagues here until fill improves.`},
+    {k:newTop.map(x=>x.c.city).join(", "), p:`lead the new-market list on population, fit and search interest (Census 2024, Google Trends). Fort Wayne and Little Rock are already launching.`},
+    {k:big.slice(0,4).map(nm).join(", "), p:`have the cheapest estimated Meta CAC among markets with $15k+ spend (${big.slice(0,4).map(r=>fmt$(r.cacEst)).join(" / ")} vs a ${fmt$(DM.medEst)} median market).`}
   ];
   document.getElementById("findings").innerHTML = f.map(x=>`<div class="finding"><div class="k">${x.k}</div><p>${x.p}</p></div>`).join("");
 })();
@@ -294,22 +321,22 @@ const hideTip = () => tip.hidden = true;
 const row = (a,b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
 
 const cands = DATA.cands.filter(c => proj([c.lng,c.lat]));
-const rPop = d3.scaleSqrt().domain([0, d3.max(cands,c=>c.pop30)]).range([0,22]);
+const rPop = d3.scaleSqrt().domain([0, d3.max(cands,c=>c.pop)]).range([0,22]);
 const gC = svg.append("g").attr("id","lay-cand");
 gC.selectAll("circle").data(cands).join("circle")
-  .attr("cx",c=>proj([c.lng,c.lat])[0]).attr("cy",c=>proj([c.lng,c.lat])[1]).attr("r",c=>Math.max(3,rPop(c.pop30)))
+  .attr("cx",c=>proj([c.lng,c.lat])[0]).attr("cy",c=>proj([c.lng,c.lat])[1]).attr("r",c=>Math.max(3,rPop(c.pop)))
   .attr("fill","none").attr("stroke","var(--cand)").attr("stroke-width",1.5).attr("stroke-dasharray","3 2")
-  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.city}, ${c.st}</b><br>No league within 30 mi`+row("Pop. within 30 mi (2010)",fmtN(c.pop30))+row("Median HH income",fmt$(c.income))+row("Requests / hosts / notify",`${c.req} / ${c.host} / ${c.notify}`)+row("Nearest league metro",`${c.nearest_footprint.split(",")[0]}, ${c.dist_mi} mi`)))
+  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.name}</b><br>${c.launching?"Launching Winter 2027":"No league within 30 mi"}`+row("Population (2024)",fmtN(c.pop))+row("5-yr growth",pct1(c.growth))+row("Age 25 to 44",pct0(c.y2544))+row("Bachelor's+",pct0(c.ba))+row("Median HH income",fmt$(c.income))+row("Search interest",c.trends==null?"–":Math.round(c.trends))+row("Requests / hosts / notify",`${c.req} / ${c.host} / ${c.notify}`)+row("Score",Math.round(c.score||0))+row("Nearest league metro",`${c.nearest_footprint.split(",")[0]}, ${c.dist_mi} mi`)))
   .on("mouseleave",hideTip);
 
 const cur = M.filter(m => !m.intl && m.lat && proj([m.lng,m.lat]));
 const rNew = d3.scaleSqrt().domain([0, d3.max(cur,m=>m.new)]).range([0,24]);
 const gM = svg.append("g").attr("id","lay-cur");
-gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join("circle")
+const metroDots = gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join("circle")
   .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rNew(m.new)))
-  .attr("fill",m=>TIER[m.dmaTier].color).attr("fill-opacity",.85)
+  .attr("fill-opacity",.88)
   .attr("stroke","var(--surface)").attr("stroke-width",2)
-  .on("mousemove",(ev,m)=>{const d=DR.find(r=>r.dma===m.dma); showTip(ev,`<b>${m.metro}</b><br>${TIER[m.dmaTier].label}`+(d?row("Meta spend in market",fmt$(d.spend))+row("Cost per new signup",fmt$(d.cacFloor))+row("Est. Meta CAC",fmt$(d.cacEst)):"")+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%"))})
+  .on("mousemove",(ev,m)=>{const d=DR.find(r=>r.dma===m.dma); showTip(ev,`<b>${m.metro}</b><br>${TIER[m.dmaTier].label}`+(m.so&&m.so.n?row("Leagues 2026",m.so.n)+row("Sell-out rate (recent)",pct0(m.so.rate)+" ("+pct0(m.so.recentRate)+")")+row("Median days to sell out",m.so.medDays??"–")+row("Add-leagues score",m.addScore==null?"–":Math.round(m.addScore)):"")+(d?row("Meta spend in market",fmt$(d.spend))+row("Cost per new signup",fmt$(d.cacFloor))+row("Est. Meta CAC",fmt$(d.cacEst)):"")+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%"))})
   .on("mouseleave",hideTip);
 
 const sig = DATA.signals.filter(s => proj([s.lng,s.lat]));
@@ -325,9 +352,19 @@ gS.selectAll("rect").data(sig).join("rect")
   const b=document.getElementById(id);
   b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);g.attr("display",on?null:"none")});
 });
-document.getElementById("legend").innerHTML =
-  ["d_good","d_typ","d_bad","low_data"].map(k=>`<span><i class="sw" style="background:${TIER[k].color}"></i>${TIER[k].label}</span>`).join("") +
-  `<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>Candidate (size = population)</span><span><i class="sw" style="background:var(--signal);border-radius:1px;transform:rotate(45deg);width:8px;height:8px"></i>Demand signal</span><span class="muted">Current metro size = new signups</span>`;
+function legendHTML(mode){
+  const parts = mode==="cac" ? ["d_good","d_typ","d_bad","low_data"].map(k=>[TIER[k].color,TIER[k].label])
+    : mode==="so" ? [["var(--good)","Sell-out 60%+"],["var(--warn)","30 to 59%"],["var(--crit)","Under 30%"],["var(--neutral)","Fewer than 4 leagues"]]
+    : [["var(--good)","Add-leagues score 65+"],["var(--warn)","45 to 64"],["var(--crit)","Under 45"],["var(--neutral)","Fewer than 4 leagues"]];
+  return parts.map(([c,l])=>`<span><i class="sw" style="background:${c}"></i>${l}</span>`).join("") +
+  `<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>New-market candidate (size = population)</span><span><i class="sw" style="background:var(--signal);border-radius:1px;transform:rotate(45deg);width:8px;height:8px"></i>Demand signal</span><span class="muted">Current metro size = new signups</span>`;}
+function metroColor(m,mode){
+  if(mode==="cac") return TIER[m.dmaTier].color;
+  if(mode==="so"){ if(!m.so||m.so.n<4) return "var(--neutral)"; return m.so.rate>=0.6?"var(--good)":m.so.rate>=0.3?"var(--warn)":"var(--crit)"; }
+  if(m.addScore==null) return "var(--neutral)"; return m.addScore>=65?"var(--good)":m.addScore>=45?"var(--warn)":"var(--crit)";
+}
+function recolor(){ const mode=document.getElementById("colorBy").value; metroDots.attr("fill",m=>metroColor(m,mode)); document.getElementById("legend").innerHTML=legendHTML(mode); }
+document.getElementById("colorBy").addEventListener("change",recolor);
 const intl = M.filter(m=>m.intl).sort((a,b)=>b.new-a.new);
 document.getElementById("intl").textContent = "Outside the US (in tables, not on the map): " + intl.map(m=>`${m.metro} ${fmtN(m.new)} new`).join(" · ");
 
@@ -391,39 +428,64 @@ document.getElementById("tierFilter").addEventListener("change",e=>{
   curT.setRows(v==="tested"?M.filter(m=>m.nq>=2):v==="no_local"?M.filter(m=>m.nq===0).sort((a,b)=>b.new-a.new):M);
 });
 
-/* ---------- expansion ---------- */
-const C = DATA.cands.map(c=>({...c, dem:c.req*3+c.host*2+c.notify}));
-const lp = C.map(c=>Math.log(c.pop30||1)), inc = C.map(c=>c.income||0), dem = C.map(c=>Math.log1p(c.dem));
-const sc = (arr,v) => { const lo=Math.min(...arr), hi=Math.max(...arr); return hi===lo?0:(v-lo)/(hi-lo)*100; };
-C.forEach((c,i)=>{c.sPop=sc(lp,lp[i]); c.sInc=sc(inc,inc[i]); c.sDem=sc(dem,dem[i]);});
+/* ---------- add leagues ---------- */
+const AM = M.filter(m=>m.cmp);
+const so4 = (m) => ["Winter 2026","Spring 2026","Summer 2026","Fall 2026"].map(k=>{const x=m.so.seasons[k]; if(!x||!x.n) return `<span class="muted">·</span>`; return `${x.so}/${x.n}`}).join(" ");
+const addCols = [
+  {k:"rank",h:"#",v:null,f:(m,i)=>i+1},
+  {k:"metro",h:"Metro",cls:"l",v:m=>m.metro,f:m=>`${m.metro}${m.so.n<6?` <span class="pending">small sample</span>`:""}`,asc:true},
+  {k:"score",h:"Score",v:m=>m.addScore,f:m=>scoreCell(m.addScore)},
+  {k:"rate",h:"Sold out (all / recent)",v:m=>m.so.rate,f:m=>`${pct0(m.so.rate)} <span class="muted">/ ${pct0(m.so.recentRate)}</span>`},
+  {k:"seas",h:"Sold out by season W·Sp·Su·F",v:null,f:so4},
+  {k:"days",h:"Median days to sell out",v:m=>m.so.medDays,f:m=>m.so.medDays==null?"–":Math.round(m.so.medDays),asc:true},
+  {k:"added",h:"Spots added / league",v:m=>m.so.addedPer,f:m=>m.so.addedPer??"–"},
+  {k:"mom",h:"New players / league Q1 → Q3",v:m=>m.momentum,f:m=>`${m.nl.q1?.newPer??"–"} → ${m.nl.q3?.newPer??"–"}`},
+  {k:"dens",h:"Leagues per 100k age 25 to 44",v:m=>m.density,f:m=>m.density==null?"–":m.density.toFixed(2),asc:true},
+  {k:"tr",h:"Search interest",v:m=>m.trends,f:m=>m.trends==null?"–":Math.round(m.trends)},
+  {k:"cac",h:"Est. Meta CAC",v:m=>m.cacEst,f:m=>fmt$(m.cacEst),asc:true}
+];
+let addT;
+const [aSell,aMom,aRoom,aEff]=["aSell","aMom","aRoom","aEff"].map(id=>document.getElementById(id));
+function rescoreAdd(){
+  const w={sell:+aSell.value,mom:+aMom.value,room:+aRoom.value,eff:+aEff.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
+  [["vSell","sell"],["vMom","mom"],["vRoom","room"],["vEff","eff"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
+  AM.forEach(m=>m.addScore=Object.entries(w).reduce((a,[k,v])=>a+(m.cmp[k]??0)*v,0)/t);
+  if(!addT) addT=makeTable(document.getElementById("addTable"),addCols,AM,"score","desc"); else addT.setRows(AM);
+  recolor();
+}
+[aSell,aMom,aRoom,aEff].forEach(x=>x.addEventListener("input",rescoreAdd));
+
+/* ---------- new markets ---------- */
+const C = DATA.cands;
 const expCols = [
   {k:"rank",h:"#",v:null,f:(c,i)=>i+1},
-  {k:"city",h:"Metro (principal city)",cls:"l",v:c=>c.city+", "+c.st,asc:true},
+  {k:"city",h:"Metro",cls:"l",v:c=>c.name,f:c=>`${c.name}${c.launching?` <span class="pending">launching</span>`:""}`,asc:true},
   {k:"dist",h:"Nearest league metro",cls:"l",v:c=>c.dist_mi,f:c=>`${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span>`,asc:true},
-  {k:"pop",h:"Pop. 30 mi (2010)",v:c=>c.pop30,f:c=>fmtN(c.pop30)},
+  {k:"pop",h:"Population 2024",v:c=>c.pop,f:c=>fmtN(c.pop)},
+  {k:"gr",h:"5-yr growth",v:c=>c.growth,f:c=>pct1(c.growth)},
+  {k:"y",h:"Age 25 to 44",v:c=>c.y2544,f:c=>pct0(c.y2544)},
+  {k:"ba",h:"Bachelor's+",v:c=>c.ba,f:c=>pct0(c.ba)},
   {k:"inc",h:"Median HH income",v:c=>c.income,f:c=>fmt$(c.income)},
-  {k:"req",h:"Requests",v:c=>c.req},
-  {k:"host",h:"Host apps",v:c=>c.host},
-  {k:"notify",h:"Notify me",v:c=>c.notify},
-  {k:"trends",h:"Trends",v:null,f:()=>`<span class="pending">pending</span>`},
-  {k:"score",h:"Score",v:c=>c.score,f:c=>`${c.score.toFixed(0)}<span class="scorebar"><b style="width:${c.score}%"></b></span>`}
+  {k:"tr",h:"Search interest",v:c=>c.trends,f:c=>c.trends==null?"–":Math.round(c.trends)},
+  {k:"own",h:"Requests · hosts · notify",v:c=>c.demand,f:c=>`${c.req} · ${c.host} · ${c.notify}`},
+  {k:"score",h:"Score",v:c=>c.score,f:c=>scoreCell(c.score)}
 ];
 let expT;
+const [wPop,wSea,wDemo,wDem,distFilter]=["wPop","wSea","wDemo","wDem","distFilter"].map(id=>document.getElementById(id));
 function rescore(){
-  const w={p:+wPop.value,i:+wInc.value,d:+wDem.value}, s=(w.p+w.i+w.d)||1;
-  vPop.textContent=Math.round(w.p/s*100)+"%"; vInc.textContent=Math.round(w.i/s*100)+"%"; vDem.textContent=Math.round(w.d/s*100)+"%";
-  C.forEach(c=>c.score=(c.sPop*w.p+c.sInc*w.i+c.sDem*w.d)/s);
+  const w={pop:+wPop.value,search:+wSea.value,demo:+wDemo.value,ours:+wDem.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
+  [["vPop","pop"],["vSea","search"],["vDemo","demo"],["vDem","ours"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
+  C.forEach(c=>c.score=Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/t);
   const f=distFilter.value, rows=C.filter(c=>f==="all"||(f==="adj"?c.dist_mi<=60:c.dist_mi>60));
   if(!expT) expT=makeTable(document.getElementById("expTable"),expCols,rows,"score","desc"); else expT.setRows(rows);
 }
-const [wPop,wInc,wDem,distFilter,vPop,vInc,vDem]=["wPop","wInc","wDem","distFilter","vPop","vInc","vDem"].map(id=>document.getElementById(id));
-[wPop,wInc,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
-rescore();
+[wPop,wSea,wDemo,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
+rescore(); rescoreAdd();
 
 /* ---------- tabs ---------- */
-const tabs=[["tab-dma","p-dma"],["tab-cur","p-cur"],["tab-exp","p-exp"]];
+const tabs=[["tab-add","p-add"],["tab-exp","p-exp"],["tab-dma","p-dma"],["tab-cur","p-cur"]];
 function sel(id){tabs.forEach(([t,p])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on);document.getElementById(p).hidden=!on;});
   try{localStorage.setItem("lmm-tab",id)}catch(e){}}
 tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>sel(t)));
-if(location.hash==="#expand") sel("tab-exp"); else { try{const s=localStorage.getItem("lmm-tab"); if(s) sel(s);}catch(e){} }
+if(location.hash==="#expand") sel("tab-exp"); else { try{const s=localStorage.getItem("lmm-tab"); if(s && document.getElementById(s)) sel(s);}catch(e){} }
 </script>
