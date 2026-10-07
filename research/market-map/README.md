@@ -22,6 +22,8 @@ Inputs (saved next to the scripts, not committed):
 
 - `utm_q1.json` ... `utm_q3.json`: ShopifyQL `FROM sales SHOW orders GROUP BY product_title, order_utm_source`, one per quarter.
 
+Waitlist: Klaviyo metric "Customer signed up for alert (STOQ)" (UHM4zh), pulled with `get_events` 1,000 per page; `wl_take.sh` keeps only league title, date and event id (no emails) in `waitlist.tsv` (not committed), aggregated to `waitlist_agg.json`.
+
 Inventory inputs: `inv_q4_25.json`, `inv_q1.json`, `inv_q2.json`, `inv_q3.json` from ShopifyQL `FROM inventory SHOW starting_inventory_units, ending_inventory_units, inventory_units_sold GROUP BY product_title TIMESERIES day`, one per quarter. Census and Trends come from `external/`.
 
 Run (v4): `python3 build_v4.py` after the steps below, then substitute `__DATA__` with `data_v4.json`.

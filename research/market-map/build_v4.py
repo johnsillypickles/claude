@@ -137,7 +137,11 @@ for q in ['q1','q2','q3']:
         if mm and (r['orders'] or 0)>=5: a=agg[mm]; a[0]+=1; a[1]+=r['orders']; a[2]+=r['first_time_orders']
     for mm,a in agg.items(): nl[mm][q]={'leagues':a[0],'newPer':round(a[2]/a[0],1),'newShare':round(a[2]/a[1],3)}
 DMA={r['dma']:r for r in D['dma']['rows']}
-peer=[m for m in D['metros'] if not m['intl'] and m['so']['n']>=4]
+WL=json.load(open('waitlist_agg.json'))['byMetro']
+for m in D['metros']:
+    w=WL.get(m['metro'],{}); m['wl']={'after':w.get('after_sellout',0),'close':w.get('after_close',0),'pre':w.get('pre_launch',0)}
+    m['wlPer']=round(m['wl']['after']/m['so']['n'],1) if m['so']['n'] else None
+peer=[m for m in D['metros'] if not m['intl'] and (m['so']['n']>=4 or (m['so']['n']>=2 and m['wl']['after']>=200))]
 for m in D['metros']:
     m['nl']=nl.get(m['metro'],{})
     q1=m['nl'].get('q1',{}).get('newPer'); q3=m['nl'].get('q3',{}).get('newPer')
@@ -154,7 +158,8 @@ for m in D['metros']:
                         prank([p['so']['addedPer'] for p in peer],m['so']['addedPer'])]),
           'mom': mean([prank([p['momentum'] for p in peer],m['momentum']), prank([p['nl'].get('q3',{}).get('newShare') for p in peer],m['nl'].get('q3',{}).get('newShare'))]),
           'room': mean([prank([p['density'] for p in peer],m['density'],True), prank([p['trends'] for p in peer],m['trends'])]),
-          'eff': prank([p['cacEst'] for p in peer],m['cacEst'],True)}
+          'eff': prank([p['cacEst'] for p in peer],m['cacEst'],True),
+          'wait': prank([p['wlPer'] for p in peer],m['wlPer'])}
     else: m['cmp']=None
 C2=D['cands']
 for c in C2:
@@ -169,7 +174,7 @@ for c in C2:
 mx=max(math.log1p(c['demand']) for c in C2) or 1
 for c in C2: c['cmp']['ours']=round(math.log1p(c['demand'])/mx*100,1)
 json.dump(D,open('data_v4.json','w'),separators=(',',':'))
-W={'sell':45,'mom':15,'room':25,'eff':15}
+W={'sell':35,'wait':25,'mom':10,'room':20,'eff':10}
 def sc(m): 
     c=m['cmp']; return sum((c[k] or 0)*w for k,w in W.items())/100
 print('\nADD-LEAGUES default ranking')

@@ -150,12 +150,13 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div id="p-add" role="tabpanel" aria-labelledby="tab-add" class="tabpanel">
     <div class="section-head">
       <h3>Existing markets: where more leagues should fill</h3>
-      <p class="sub">Each part is a 0 to 100 rank against the other US markets with 4+ leagues this year. Move the weights to re-rank. Markets with fewer than 6 leagues are marked as small samples.</p>
+      <p class="sub">Each part is a 0 to 100 rank against the other US markets with 4+ leagues this year (or 2+ leagues and 200+ waitlist signups). Move the weights to re-rank. Markets with fewer than 6 leagues are marked as small samples.</p>
     </div>
     <div class="weights">
-      <label for="aSell"><span>Sell-outs (rate, speed, spots added) <b class="num" id="vSell"></b></span><input type="range" id="aSell" min="0" max="100" value="50"></label>
-      <label for="aMom"><span>New-player momentum <b class="num" id="vMom"></b></span><input type="range" id="aMom" min="0" max="100" value="15"></label>
-      <label for="aRoom"><span>Room to grow (density, search) <b class="num" id="vRoom"></b></span><input type="range" id="aRoom" min="0" max="100" value="25"></label>
+      <label for="aSell"><span>Sell-outs (rate, speed, spots added) <b class="num" id="vSell"></b></span><input type="range" id="aSell" min="0" max="100" value="35"></label>
+      <label for="aWait"><span>Waitlist after sell-out (Stoq) <b class="num" id="vWait"></b></span><input type="range" id="aWait" min="0" max="100" value="25"></label>
+      <label for="aMom"><span>New-player momentum <b class="num" id="vMom"></b></span><input type="range" id="aMom" min="0" max="100" value="10"></label>
+      <label for="aRoom"><span>Room to grow (density, search) <b class="num" id="vRoom"></b></span><input type="range" id="aRoom" min="0" max="100" value="20"></label>
       <label for="aEff"><span>Ad efficiency (est. Meta CAC) <b class="num" id="vEff"></b></span><input type="range" id="aEff" min="0" max="100" value="10"></label>
     </div>
     <div class="tablewrap"><table id="addTable"></table></div>
@@ -234,7 +235,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
       <li><b>Meta spends almost nothing outside league markets</b> (<span class="num" id="othV"></span> in total), so ad CTR can't be used as an expansion signal.</li>
       <li><b>City-named ad sets mostly go to under-filled leagues</b>, so the second tab's CAC skews high.</li>
       <li><b>Sell-outs are measured per league, not per night.</b> A Monday/Wednesday league counts as sold out only when every night is full.</li>
-      <li><b>Waitlists aren't in yet.</b> Back-in-stock signups only started in September 2026.</li>
+      <li><b>Waitlist</b> = Stoq "signed up for alert" events in Klaviyo (17,731 since Nov 2025), matched to each league's timeline. Only signups after the league sold out count; 20% belong to products with no inventory record in this window and are left out.</li>
       <li><b>Census growth is blank or distorted for redrawn metros</b> (2023 boundary changes), e.g. Worcester shows −7.8%.</li>
       <li><b>Meta-tagged orders</b> = league orders whose Shopify UTM source is facebook, meta_ads, ig or similar, ÷ all orders for that metro's leagues (Q1 to Q3, all orders, not just new). UTMs catch about a third of the purchases Meta reports, so read it as a relative measure across metros, not a true paid share.</li>
       <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
@@ -293,11 +294,11 @@ document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
   const orgHeavy = DR.filter(r=>r.spend>=5000 && r.cacFloor && r.cacEst && r.cacFloor <= DM.medFloor*0.9 && r.cacEst >= DM.medEst && r.metaShare < DATA.netUtm.metaShare).sort((x,y)=>y.new-x.new);
   const nm = r => r.dma.split(/[,-]/)[0];
   const dScore=(c,w)=>Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/Object.values(w).reduce((a,b)=>a+b,0);
-  const addTop = M.filter(m=>m.cmp && m.so.n>=6).map(m=>({m,s:dScore(m,{sell:50,mom:15,room:25,eff:10})})).sort((a,b)=>b.s-a.s).slice(0,4);
+  const addTop = M.filter(m=>m.cmp && (m.so.n>=6 || m.wl.after>=300)).map(m=>({m,s:dScore(m,{sell:35,wait:25,mom:10,room:20,eff:10})})).sort((a,b)=>b.s-a.s).slice(0,4);
   const over = M.filter(m=>m.cmp && m.so.n>=8).sort((a,b)=>a.so.rate-b.so.rate).slice(0,4);
   const newTop = DATA.cands.filter(c=>!c.launching).map(c=>({c,s:dScore(c,{pop:30,search:15,demo:35,ours:20})})).sort((a,b)=>b.s-a.s).slice(0,4);
   const f = [
-    {k:addTop.map(x=>x.m.metro.split(",")[0]).join(", "), p:`top the add-leagues score among markets with 6+ leagues: ${addTop.map(x=>pct0(x.m.so.rate)+" sold out").join(" / ")} across 2026, and still adding spots after launch.`},
+    {k:addTop.map(x=>x.m.metro.split(",")[0]).join(", "), p:`top the add-leagues score: ${addTop.map(x=>pct0(x.m.so.rate)+" sold out, "+fmtN(x.m.wl.after)+" waitlisted").join(" / ")} in 2026.`},
     {k:over.map(m=>m.metro.split(",")[0]).join(", "), p:`look over-supplied: ${over.map(m=>pct0(m.so.rate)).join(" / ")} of leagues sold out this year. Hold new leagues here until fill improves.`},
     {k:newTop.map(x=>x.c.city).join(", "), p:`lead the new-market list on population, fit and search interest (Census 2024, Google Trends). Fort Wayne and Little Rock are already launching.`},
     {k:big.slice(0,4).map(nm).join(", "), p:`have the cheapest estimated Meta CAC among markets with $15k+ spend (${big.slice(0,4).map(r=>fmt$(r.cacEst)).join(" / ")} vs a ${fmt$(DM.medEst)} median market).`}
@@ -336,7 +337,7 @@ const metroDots = gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join
   .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rNew(m.new)))
   .attr("fill-opacity",.88)
   .attr("stroke","var(--surface)").attr("stroke-width",2)
-  .on("mousemove",(ev,m)=>{const d=DR.find(r=>r.dma===m.dma); showTip(ev,`<b>${m.metro}</b><br>${TIER[m.dmaTier].label}`+(m.so&&m.so.n?row("Leagues 2026",m.so.n)+row("Sell-out rate (recent)",pct0(m.so.rate)+" ("+pct0(m.so.recentRate)+")")+row("Median days to sell out",m.so.medDays??"–")+row("Add-leagues score",m.addScore==null?"–":Math.round(m.addScore)):"")+(d?row("Meta spend in market",fmt$(d.spend))+row("Cost per new signup",fmt$(d.cacFloor))+row("Est. Meta CAC",fmt$(d.cacEst)):"")+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%"))})
+  .on("mousemove",(ev,m)=>{const d=DR.find(r=>r.dma===m.dma); showTip(ev,`<b>${m.metro}</b><br>${TIER[m.dmaTier].label}`+(m.so&&m.so.n?row("Leagues 2026",m.so.n)+row("Sell-out rate (recent)",pct0(m.so.rate)+" ("+pct0(m.so.recentRate)+")")+row("Median days to sell out",m.so.medDays??"–")+row("Waitlist after sell-out",fmtN(m.wl?.after))+row("Add-leagues score",m.addScore==null?"–":Math.round(m.addScore)):"")+(d?row("Meta spend in market",fmt$(d.spend))+row("Cost per new signup",fmt$(d.cacFloor))+row("Est. Meta CAC",fmt$(d.cacEst)):"")+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%"))})
   .on("mouseleave",hideTip);
 
 const sig = DATA.signals.filter(s => proj([s.lng,s.lat]));
@@ -437,6 +438,7 @@ const addCols = [
   {k:"score",h:"Score",v:m=>m.addScore,f:m=>scoreCell(m.addScore)},
   {k:"rate",h:"Sold out (all / recent)",v:m=>m.so.rate,f:m=>`${pct0(m.so.rate)} <span class="muted">/ ${pct0(m.so.recentRate)}</span>`},
   {k:"seas",h:"Sold out by season W·Sp·Su·F",v:null,f:so4},
+  {k:"wl",h:"Waitlist after sell-out (per league)",v:m=>m.wlPer,f:m=>`${fmtN(m.wl.after)} <span class="muted">(${m.wlPer??"–"})</span>`},
   {k:"days",h:"Median days to sell out",v:m=>m.so.medDays,f:m=>m.so.medDays==null?"–":Math.round(m.so.medDays),asc:true},
   {k:"added",h:"Spots added / league",v:m=>m.so.addedPer,f:m=>m.so.addedPer??"–"},
   {k:"mom",h:"New players / league Q1 → Q3",v:m=>m.momentum,f:m=>`${m.nl.q1?.newPer??"–"} → ${m.nl.q3?.newPer??"–"}`},
@@ -445,15 +447,15 @@ const addCols = [
   {k:"cac",h:"Est. Meta CAC",v:m=>m.cacEst,f:m=>fmt$(m.cacEst),asc:true}
 ];
 let addT;
-const [aSell,aMom,aRoom,aEff]=["aSell","aMom","aRoom","aEff"].map(id=>document.getElementById(id));
+const [aSell,aWait,aMom,aRoom,aEff]=["aSell","aWait","aMom","aRoom","aEff"].map(id=>document.getElementById(id));
 function rescoreAdd(){
-  const w={sell:+aSell.value,mom:+aMom.value,room:+aRoom.value,eff:+aEff.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
-  [["vSell","sell"],["vMom","mom"],["vRoom","room"],["vEff","eff"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
+  const w={sell:+aSell.value,wait:+aWait.value,mom:+aMom.value,room:+aRoom.value,eff:+aEff.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
+  [["vSell","sell"],["vWait","wait"],["vMom","mom"],["vRoom","room"],["vEff","eff"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
   AM.forEach(m=>m.addScore=Object.entries(w).reduce((a,[k,v])=>a+(m.cmp[k]??0)*v,0)/t);
   if(!addT) addT=makeTable(document.getElementById("addTable"),addCols,AM,"score","desc"); else addT.setRows(AM);
   recolor();
 }
-[aSell,aMom,aRoom,aEff].forEach(x=>x.addEventListener("input",rescoreAdd));
+[aSell,aWait,aMom,aRoom,aEff].forEach(x=>x.addEventListener("input",rescoreAdd));
 
 /* ---------- new markets ---------- */
 const C = DATA.cands;
