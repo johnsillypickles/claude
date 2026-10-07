@@ -30,7 +30,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
 | Affiliate orders | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See the UpPromote section below |
 | Organic referrals | Organic Marketing Scoreboard (Fall 2026) vF, `1AnH2yBWuTUfeTT6xjAjaAM-2VKIzNbEUJe8dn0zFSsE` | If it can't be read, carry forward and mark `[Carried from last week, update]` |
-| Facility | Narrative from John / Facility Marketing Tracker | Carry forward if nothing new |
+| Facility | Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) plus Gmail threads John is copied on | See "Facility Marketing" below |
 
 ## Formulas
 
@@ -141,3 +141,18 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
   3. For videos, grab a frame at 1s with ffmpeg (`pip install pillow imageio-ffmpeg` gives both). Resize to 480px max with Pillow, save as JPEG quality ~72, and embed as a `data:image/jpeg;base64,...` URI in the creative's `dimg` field so the HTML stays a single attachable file.
   4. No spend threshold: low-spend and test ads get thumbnails too. Use Drive when a small file exists. Otherwise use the Meta preview, which is often quicker for test ads.
 - Render it in Chromium before sending and check there are no script errors. Python Playwright isn't preinstalled: `pip install playwright`, then `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')` (never `playwright install`). Collect `pageerror` and console errors, force `loading='eager'` on images, then count `img` elements where `naturalWidth` is 0 and list the `.ph` placeholders with their card names. The `.ph` list must be empty, and the count of `#testsec img.tthumb` must equal the count of `#testsec tr.adrow`.
+
+## Facility Marketing
+
+Sources:
+- **Tracker** (Facility Marketing Tracker v4): `Dashboard` tab for coverage, pipeline by status and owner workload; `Leagues` tab for each league's owner, start date, fill %, outreach status and last contact.
+- **Gmail**: John is copied on facility outreach. Search the report week, e.g. `after:<Mon> before:<next Mon> league (from:aly@sillypickles.com OR from:katie@sillypickles.com OR from:grace@sillypickles.com OR from:tommy@sillypickles.com OR to:aly@sillypickles.com OR to:katie@sillypickles.com)`, and read the threads with facility domains (subjects like "Marketing Kickoff!" or "Silly Pickles League at <facility>"). Skip pure ops/booking threads (court booking, invoices, agreements).
+
+**The tracker lags the inbox.** Treat email as the source of truth for what happened, and list every league where the tracker status disagrees with the emails (e.g. Pictona was "Not Started" while Tommy had already asked the facility for a list of fun/social players). Tommy and Nate also do facility outreach that never gets logged.
+
+Section layout:
+1. Coverage line from the Dashboard (leagues starting in 30 days, how many have outreach started, coverage %, follow-ups due, unassigned).
+2. **Activity this week** (from email): facility, who reached out, what was asked or sent, the facility's response, and the league's current fill %.
+3. **At-risk leagues**: start within 14 days and under 60% full, with outreach status (flag any with no outreach).
+4. **Tracker updates needed**: leagues where email activity isn't reflected in the tracker.
+- Don't present "avg fill, contacted vs not contacted" from the Dashboard as an effect of outreach: the team targets struggling leagues, so contacted leagues are lower-fill by selection.
