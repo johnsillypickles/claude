@@ -139,6 +139,12 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <p class="intl" id="intl"></p>
 </section>
 
+<section class="panel" aria-labelledby="topnew-h">
+  <div class="toolbar"><h2 id="topnew-h">Top new-market candidates</h2><button class="tog" id="seeAllNew">See all 152 and adjust weights</button></div>
+  <p class="sub">US metros of 200k+ people with no Silly Pickles league within 30 miles, ranked on population, fit (age 25 to 44, degree, income, growth), Google search interest and our own request forms. Fort Wayne and Little Rock are already launching and are listed separately.</p>
+  <div class="tablewrap"><table id="topNewTable"></table></div>
+</section>
+
 <section class="tabpanel">
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="tab-add" aria-selected="true" aria-controls="p-add">Where to add leagues</button>
@@ -483,6 +489,14 @@ function rescore(){
 }
 [wPop,wSea,wDemo,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
 rescore(); rescoreAdd();
+(function(){
+  const w={pop:30,search:15,demo:35,ours:20}, t=100;
+  const rows=C.map(c=>({...c, s:Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/t}));
+  const top=rows.filter(c=>!c.launching).sort((a,b)=>b.s-a.s).slice(0,15), launch=rows.filter(c=>c.launching);
+  const tr=(c,i)=>`<tr><td>${i}</td><td class="l">${c.name}</td><td class="l">${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span></td><td>${fmtN(c.pop)}</td><td>${pct1(c.growth)}</td><td>${pct0(c.y2544)}</td><td>${fmt$(c.income)}</td><td>${c.trends==null?"–":Math.round(c.trends)}</td><td>${c.req} · ${c.host} · ${c.notify}</td><td>${scoreCell(c.s)}</td></tr>`;
+  document.getElementById("topNewTable").innerHTML=`<thead><tr><th>#</th><th class="l">Metro</th><th class="l">Nearest league metro</th><th>Population 2024</th><th>5-yr growth</th><th>Age 25 to 44</th><th>Median HH income</th><th>Search interest</th><th>Requests · hosts · notify</th><th>Score</th></tr></thead><tbody>${top.map((c,i)=>tr(c,i+1)).join("")}<tr><td colspan="10" class="l muted" style="font-family:var(--body)">Already launching</td></tr>${launch.map(c=>tr(c,"–")).join("")}</tbody>`;
+  document.getElementById("seeAllNew").addEventListener("click",()=>{sel("tab-exp");document.getElementById("tab-exp").scrollIntoView({behavior:"smooth"});});
+})();
 
 /* ---------- tabs ---------- */
 const tabs=[["tab-add","p-add"],["tab-exp","p-exp"],["tab-dma","p-dma"],["tab-cur","p-cur"]];

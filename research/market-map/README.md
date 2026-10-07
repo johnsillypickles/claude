@@ -37,3 +37,7 @@ New league cities need an entry in `metros.py` (`M`).
 - The Comscore market export has spend and clicks but no purchases, and no monthly split yet.
 - Population and income are 2010-era. Current ACS needs `api.census.gov` allowed in the environment's network settings.
 - Google Trends needs `trends.google.com` allowed.
+
+## League Demand Atlas (for facility partners)
+
+`league-demand-atlas.html`, built by `build_facility.py` from `data_v4.json` into `facility.json`, then `facility_template.html` with `__DATA__` and `__TOPO__` substituted. Demand index = mean percentile of sell-out rate, waitlist per league, registrations per league and new players per 100k aged 25 to 44, across metros with 3+ leagues.

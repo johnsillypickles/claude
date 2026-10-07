@@ -1,0 +1,274 @@
+<title>League Demand Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a field guide for facility owners. Headline numbers, one map, a metro explorer with a profile panel, then new markets and how to read it. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --sunk:#e8ecf0; --line:#d5dce3; --ink:#0f1b26; --ink-2:#45535f; --ink-3:#73808b;
+  --accent:#0e6b8c; --land:#e2e7ec; --land-line:#ffffff;
+  --under:#0ca30c; --balanced:#2a78d6; --soft:#eda100; --sat:#d03b3b; --early:#9aa5ae; --cand:#7a4fd0;
+  --under-bg:#e2f4e2; --balanced-bg:#e2edfa; --soft-bg:#fcf0d4; --sat-bg:#f8e1e1; --early-bg:#eceff2;
+  --display:"Archivo",ui-sans-serif,system-ui,sans-serif; --body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f151b; --surface:#172028; --sunk:#1e2933; --line:#2c3a46; --ink:#eef3f7; --ink-2:#b6c2cc; --ink-3:#8795a1;
+  --accent:#4fb7d9; --land:#22303b; --land-line:#0f151b;
+  --under:#3cc43c; --balanced:#5598e7; --soft:#f0b429; --sat:#e66767; --early:#7b8792; --cand:#a998f0;
+  --under-bg:#1c3320; --balanced-bg:#1b2b40; --soft-bg:#3a3018; --sat-bg:#3b2020; --early-bg:#24303a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --surface:#172028; --sunk:#1e2933; --line:#2c3a46; --ink:#eef3f7; --ink-2:#b6c2cc; --ink-3:#8795a1;
+  --accent:#4fb7d9; --land:#22303b; --land-line:#0f151b;
+  --under:#3cc43c; --balanced:#5598e7; --soft:#f0b429; --sat:#e66767; --early:#7b8792; --cand:#a998f0;
+  --under-bg:#1c3320; --balanced-bg:#1b2b40; --soft-bg:#3a3018; --sat-bg:#3b2020; --early-bg:#24303a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:32px 72px;display:grid;gap:32px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.015em}
+h1{font-size:clamp(32px,5vw,52px);line-height:1.02;font-weight:800}
+h2{font-size:24px;font-weight:700}
+h3{font-size:18px;font-weight:700}
+p{margin:0}
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.sub{color:var(--ink-2);max-width:70ch}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header{display:grid;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stat{background:var(--surface);padding:16px 18px;display:grid;gap:4px}
+.stat b{font:700 28px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--ink-2)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:14px;min-width:0}
+.row-between{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.mapbox{position:relative}
+#map{width:100%;height:auto;display:block}
+#map .state{fill:var(--land);stroke:var(--land-line);stroke-width:1}
+#map circle.metro{cursor:pointer}
+#map circle.metro:hover,#map circle.metro.sel{stroke:var(--ink);stroke-width:2.5}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;font-size:13px;max-width:240px;z-index:5}
+.tog{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer}
+.tog[aria-pressed="false"]{opacity:.5}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--body);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.chip i{width:7px;height:7px;border-radius:50%}
+.v-under{background:var(--under-bg)} .v-under i{background:var(--under)}
+.v-balanced{background:var(--balanced-bg)} .v-balanced i{background:var(--balanced)}
+.v-soft{background:var(--soft-bg)} .v-soft i{background:var(--soft)}
+.v-saturated{background:var(--sat-bg)} .v-saturated i{background:var(--sat)}
+.v-early{background:var(--early-bg)} .v-early i{background:var(--early)}
+.explorer{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.explorer{grid-template-columns:1fr}}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--ink-2)}
+input[type=search],select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+input[type=search]{min-width:0;flex:1 1 180px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:620px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th.l,td.l{text-align:left}
+thead th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--body);color:var(--ink-2);z-index:1}
+th button{all:unset;cursor:pointer}
+th[aria-sort="descending"] button::after{content:" ↓"} th[aria-sort="ascending"] button::after{content:" ↑"}
+td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px}
+td.l{font-family:var(--body);font-size:14px}
+tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
+.muted{color:var(--ink-3)}
+.profile{position:sticky;top:16px;display:grid;gap:14px}
+.profile .kv{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14px}
+.profile .kv span:nth-child(odd){color:var(--ink-2)}
+.profile .kv span:nth-child(even){font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.profile h4{margin:6px 0 0;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.callout{background:var(--sunk);border-radius:10px;padding:12px 14px;font-size:15px}
+.meter{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.meter b{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bar{display:inline-block;width:56px;height:6px;background:var(--sunk);border-radius:3px;vertical-align:middle;margin-left:6px;overflow:hidden;position:relative}
+.bar b{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:3px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:15px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.wrap{padding-inline:16px}.panel{padding:14px}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Silly Pickles · League Demand Atlas · 2026</div>
+  <h1>Where pickleball leagues fill</h1>
+  <p class="sub">Demand for adult social pickleball leagues by metro, from every Silly Pickles league run in 2026: how fast leagues sell out, how many players join waitlists, what it costs to find new players, and who lives there. Use it to judge whether a market can support more league nights or a new facility.</p>
+</header>
+
+<section class="stats" id="stats" aria-label="Network totals"></section>
+
+<section class="panel" aria-labelledby="map-h">
+  <div class="row-between">
+    <h2 id="map-h">Demand by metro</h2>
+    <div class="controls" role="group" aria-label="Map layers">
+      <button class="tog" id="togM" aria-pressed="true"><i class="sw" style="background:var(--under)"></i>Current league metros</button>
+      <button class="tog" id="togC" aria-pressed="true"><i class="sw" style="border:2px dashed var(--cand)"></i>New-market candidates</button>
+    </div>
+  </div>
+  <div class="mapbox" id="mapbox">
+    <svg id="map" viewBox="0 0 975 610" role="img" aria-label="US map of league demand by metro and new-market candidates"></svg>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <p class="muted" style="font-size:13px">Click a metro to open its profile. Circle size = league registrations, Jan to Sep 2026. Canadian metros are in the table.</p>
+</section>
+
+<section class="explorer" aria-labelledby="exp-h">
+  <div class="panel">
+    <div class="row-between"><h2 id="exp-h">Metro explorer</h2></div>
+    <div class="controls">
+      <label for="q" class="muted">Search</label><input type="search" id="q" placeholder="City or state">
+      <label for="vf" class="muted">Show</label>
+      <select id="vf"><option value="all">All metros</option><option value="under">Under-supplied</option><option value="balanced">Healthy demand</option><option value="soft">Softer demand</option><option value="saturated">Crowded</option><option value="early">Early</option></select>
+    </div>
+    <div class="tablewrap"><table id="mt"></table></div>
+  </div>
+  <aside class="panel profile" id="profile" aria-live="polite"></aside>
+</section>
+
+<section class="panel" aria-labelledby="new-h">
+  <h2 id="new-h">New-market candidates</h2>
+  <p class="sub">US metros of 200,000+ people with no Silly Pickles league within 30 miles. Ranked on population (30%), fit for adult social leagues: share aged 25 to 44, bachelor's degrees, income and growth (35%), pickleball search interest (15%), and requests we've received to start leagues there (20%).</p>
+  <div class="controls"><label for="cq" class="muted">Search</label><input type="search" id="cq" placeholder="City or state"><label for="cn" class="muted">Show</label><select id="cn"><option value="25">Top 25</option><option value="50">Top 50</option><option value="999">All</option></select></div>
+  <div class="tablewrap"><table id="ct"></table></div>
+</section>
+
+<section class="panel notes" aria-labelledby="how-h">
+  <div>
+    <h3 id="how-h">How to read it</h3>
+    <ul>
+      <li><b>Demand index (0 to 100)</b> ranks a metro against other metros with 3+ leagues on four things: sell-out rate, waitlist signups per league, registrations per league, and new players per 100k residents aged 25 to 44.</li>
+      <li><b>Under-supplied</b>: 60%+ of leagues sold out and index 60+. <b>Crowded</b>: 8+ leagues and under 30% sold out. <b>Early</b>: fewer than 3 leagues, too few to judge.</li>
+      <li><b>Sold out</b> means registration filled before it closed. <b>Waitlist</b> counts people who asked to be notified after a league filled.</li>
+      <li><b>Cost per new player</b> = Meta ad spend in the metro's media market ÷ first-time registrations there, Jan 1 to Oct 7, 2026.</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Sources</h3>
+    <ul>
+      <li>Silly Pickles registrations, inventory and waitlists (Shopify, Stoq), Winter to Fall 2026.</li>
+      <li>Meta ad spend by Comscore market, Jan 1 to Oct 7, 2026.</li>
+      <li>US Census Bureau, American Community Survey 2024 5-year estimates, by metro area.</li>
+      <li>Google Trends, last 12 months, "pickleball", "pickleball near me" and "pickleball league" by media market. Retirement-heavy markets search for pickleball a lot, so search interest alone overstates league demand there.</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+const DATA = __DATA__;
+const US = __TOPO__;
+const M = DATA.metros, C = DATA.cands, T = DATA.tot;
+const fmt$ = v => v==null ? "–" : "$" + Math.round(v).toLocaleString("en-US");
+const fmtN = v => v==null ? "–" : Math.round(v).toLocaleString("en-US");
+const pct0 = v => v==null ? "–" : Math.round(v*100)+"%";
+const pct1 = v => v==null ? "–" : (v>=0?"+":"")+(v*100).toFixed(1)+"%";
+const V = {
+  under:{label:"Under-supplied",color:"var(--under)",say:"Leagues here sell out and keep a waitlist. More league nights, or a new facility, are likely to fill."},
+  balanced:{label:"Healthy demand",color:"var(--balanced)",say:"Leagues fill steadily. New nights work best at well-located venues or at times not already covered."},
+  soft:{label:"Softer demand",color:"var(--soft)",say:"Leagues fill slowly here. Start with one partner league before committing more courts."},
+  saturated:{label:"Crowded",color:"var(--sat)",say:"Plenty of leagues already, and most don't sell out. New supply would compete for the same players."},
+  early:{label:"Early",color:"var(--early)",say:"Too few leagues to read yet. Lean on the market numbers and search interest below."}
+};
+const chip = v => `<span class="chip v-${v}"><i></i>${V[v].label}</span>`;
+const short = m => m.metro.replace(/, (\w\w)$/,", $1");
+
+/* stats */
+document.getElementById("stats").innerHTML = [
+  [fmtN(T.us),"US metros with leagues"],[fmtN(T.leagues),"leagues run in 2026"],[fmtN(T.players),"registrations, Jan to Sep"],
+  [fmtN(T.newPlayers),"first-time players, Jan to Sep"],[pct0(T.soRate),"of leagues sold out"],[fmtN(T.waitlist),"waitlist signups after sell-out"]
+].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+
+/* map */
+const svg=d3.select("#map"), proj=d3.geoAlbersUsa().scale(1300).translate([487.5,305]);
+svg.append("g").selectAll("path").data(topojson.feature(US,US.objects.states).features).join("path").attr("class","state").attr("d",d3.geoPath());
+const tip=document.getElementById("tip"), box=document.getElementById("mapbox");
+function showTip(ev,html){tip.innerHTML=html;tip.hidden=false;const r=box.getBoundingClientRect();let x=ev.clientX-r.left+12,y=ev.clientY-r.top+12;if(x+250>r.width)x-=262;if(y+90>r.height)y-=100;tip.style.left=x+"px";tip.style.top=y+"px";}
+const hide=()=>tip.hidden=true;
+const cand=C.filter(c=>proj([c.lng,c.lat])), rP=d3.scaleSqrt().domain([0,d3.max(cand,c=>c.pop)]).range([0,20]);
+const gC=svg.append("g");
+gC.selectAll("circle").data(cand.slice(0,60)).join("circle").attr("cx",c=>proj([c.lng,c.lat])[0]).attr("cy",c=>proj([c.lng,c.lat])[1]).attr("r",c=>Math.max(3,rP(c.pop)))
+  .attr("fill","none").attr("stroke","var(--cand)").attr("stroke-width",1.5).attr("stroke-dasharray","3 2")
+  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.name}</b><br>New-market candidate · score ${Math.round(c.score)}<br>${fmtN(c.pop)} people`)).on("mouseleave",hide);
+const us=M.filter(m=>!m.intl&&m.lat&&proj([m.lng,m.lat])), rO=d3.scaleSqrt().domain([0,d3.max(us,m=>m.orders)]).range([0,24]);
+const gM=svg.append("g");
+const dots=gM.selectAll("circle").data(us.sort((a,b)=>b.orders-a.orders)).join("circle").attr("class","metro")
+  .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rO(m.orders)))
+  .attr("fill",m=>V[m.verdict].color).attr("fill-opacity",.88).attr("stroke","var(--surface)").attr("stroke-width",1.5)
+  .on("mousemove",(ev,m)=>showTip(ev,`<b>${m.metro}</b><br>${V[m.verdict].label}${m.index!=null?" · index "+Math.round(m.index):""}<br>${fmtN(m.orders)} registrations · ${pct0(m.soRate)} sold out`)).on("mouseleave",hide)
+  .on("click",(ev,m)=>select(m.metro,true));
+[["togM",gM],["togC",gC]].forEach(([id,g])=>{const b=document.getElementById(id);b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);g.attr("display",on?null:"none");});});
+document.getElementById("legend").innerHTML=Object.entries(V).map(([k,v])=>`<span><i class="sw" style="background:${v.color}"></i>${v.label}</span>`).join("")+`<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>New-market candidate (top 60, size = population)</span>`;
+
+/* sortable table */
+function makeTable(el,cols,getRows,key,dir,onRow){
+  let k=key,d=dir;
+  function render(){
+    const rows=[...getRows()].sort((a,b)=>{const c=cols.find(c=>c.k===k);const va=c.v(a),vb=c.v(b);if(va==null&&vb==null)return 0;if(va==null)return 1;if(vb==null)return -1;return (typeof va==="string"?va.localeCompare(vb):va-vb)*(d==="asc"?1:-1);});
+    el.innerHTML=`<thead><tr>${cols.map(c=>`<th class="${c.cls||""}" aria-sort="${c.k===k?(d==="asc"?"ascending":"descending"):"none"}">${c.v?`<button data-k="${c.k}">${c.h}</button>`:c.h}</th>`).join("")}</tr></thead><tbody>${rows.map((r,i)=>`<tr data-id="${r._id}" tabindex="${onRow?0:-1}">${cols.map(c=>`<td class="${c.cls||""}">${c.f?c.f(r,i):c.v(r)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    el.querySelectorAll("th button").forEach(b=>b.addEventListener("click",()=>{const n=b.dataset.k;if(n===k)d=d==="asc"?"desc":"asc";else{k=n;d=cols.find(c=>c.k===n).asc?"asc":"desc";}render();}));
+    if(onRow) el.querySelectorAll("tbody tr").forEach(tr=>{tr.addEventListener("click",()=>onRow(tr.dataset.id));tr.addEventListener("keydown",e=>{if(e.key==="Enter")onRow(tr.dataset.id);});});
+  }
+  render(); return {render};
+}
+M.forEach(m=>m._id=m.metro);
+const idxBar=v=>v==null?"–":`${Math.round(v)}<span class="bar"><b style="width:${v}%"></b></span>`;
+const mCols=[
+  {k:"metro",h:"Metro",cls:"l",v:m=>m.metro,asc:true},
+  {k:"v",h:"Demand",cls:"l",v:m=>({under:0,balanced:1,soft:2,saturated:3,early:4})[m.verdict]*1000-(m.index??0),f:m=>chip(m.verdict),asc:true},
+  {k:"idx",h:"Index",v:m=>m.index,f:m=>idxBar(m.index)},
+  {k:"lg",h:"Leagues",v:m=>m.leagues},
+  {k:"reg",h:"Registrations",v:m=>m.orders,f:m=>fmtN(m.orders)},
+  {k:"so",h:"Sold out",v:m=>m.soRate,f:m=>pct0(m.soRate)},
+  {k:"wl",h:"Waitlist",v:m=>m.wl,f:m=>fmtN(m.wl)},
+  {k:"cpn",h:"Cost / new player",v:m=>m.costNew,f:m=>fmt$(m.costNew),asc:true}
+];
+const qEl=document.getElementById("q"), vf=document.getElementById("vf");
+const mRows=()=>M.filter(m=>(vf.value==="all"||m.verdict===vf.value)&&m.metro.toLowerCase().includes(qEl.value.trim().toLowerCase()));
+const mt=makeTable(document.getElementById("mt"),mCols,mRows,"v","asc",id=>select(id,false));
+qEl.addEventListener("input",()=>mt.render()); vf.addEventListener("change",()=>mt.render());
+
+/* profile */
+const kv=(pairs)=>`<div class="kv">${pairs.map(([a,b])=>`<span>${a}</span><span>${b}</span>`).join("")}</div>`;
+function select(id,scroll){
+  const m=M.find(x=>x.metro===id); if(!m) return;
+  dots.classed("sel",d=>d.metro===id);
+  document.querySelectorAll("#mt tbody tr").forEach(tr=>tr.classList.toggle("sel",tr.dataset.id===id));
+  document.getElementById("profile").innerHTML=`
+    <div class="eyebrow">Metro profile</div>
+    <h2>${m.metro}</h2>
+    <div>${chip(m.verdict)}</div>
+    ${m.index!=null?`<div><div class="row-between" style="font-size:14px"><span class="muted">Demand index</span><span class="num">${Math.round(m.index)} / 100</span></div><div class="meter"><b style="width:${m.index}%"></b></div></div>`:""}
+    <p class="callout">${V[m.verdict].say}</p>
+    <h4>League performance, 2026</h4><p class="muted" style="font-size:13px;margin:0">Registrations and players: Jan to Sep. Sell-outs and waitlists: Winter to Fall leagues.</p>
+    ${kv([["Leagues run",fmtN(m.leagues)],["Registrations",fmtN(m.orders)],["First-time players",fmtN(m.new)],["Leagues sold out",pct0(m.soRate)+(m.soRecent!=null?` <span class="muted">(${pct0(m.soRecent)} summer/fall)</span>`:"")],["Median days to sell out",m.medDays==null?"–":Math.round(m.medDays)],["Spots added after launch, per league",m.addedPer??"–"],["Waitlist signups after sell-out",fmtN(m.wl)+(m.wlPer!=null?` <span class="muted">(${m.wlPer}/league)</span>`:"")],["Registrations per league",m.ordPer??"–"]])}
+    <h4>Marketing, Jan to Oct 2026</h4>
+    ${kv([["Meta ad spend",fmt$(m.spend)],["Cost per new player",fmt$(m.costNew)],["Ad click-through rate",m.ctr==null?"–":(m.ctr*100).toFixed(2)+"%"]])}
+    ${m.pop?`<h4>Market (Census 2024)</h4>${kv([["Metro population",fmtN(m.pop)],["5-year growth",pct1(m.growth)],["Aged 25 to 44",pct0(m.y2544)],["Bachelor's degree or higher",pct0(m.ba)],["Median household income",fmt$(m.income)],["Pickleball search interest",m.trends==null?"–":Math.round(m.trends)+" / 100"],["Leagues per 100k aged 25 to 44",m.density==null?"–":m.density.toFixed(2)]])}`:`<p class="muted">Census data covers US metros only.</p>`}`;
+  if(scroll) document.getElementById("profile").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+select((M.filter(m=>m.verdict==="under"&&!m.intl).sort((a,b)=>b.orders-a.orders)[0]||M[0]).metro,false);
+
+/* candidates */
+C.forEach((c,i)=>{c._id=c.name;c.rank=i+1;});
+const cCols=[
+  {k:"rank",h:"#",v:c=>c.rank,asc:true},
+  {k:"name",h:"Metro",cls:"l",v:c=>c.name,f:c=>c.name+(c.launching?` <span class="muted">(Silly Pickles launching)</span>`:""),asc:true},
+  {k:"score",h:"Score",v:c=>c.score,f:c=>idxBar(c.score)},
+  {k:"pop",h:"Population",v:c=>c.pop,f:c=>fmtN(c.pop)},
+  {k:"gr",h:"5-yr growth",v:c=>c.growth,f:c=>pct1(c.growth)},
+  {k:"y",h:"Aged 25 to 44",v:c=>c.y2544,f:c=>pct0(c.y2544)},
+  {k:"ba",h:"Bachelor's+",v:c=>c.ba,f:c=>pct0(c.ba)},
+  {k:"inc",h:"Median HH income",v:c=>c.income,f:c=>fmt$(c.income)},
+  {k:"tr",h:"Search interest",v:c=>c.trends,f:c=>c.trends==null?"–":Math.round(c.trends)},
+  {k:"rq",h:"League requests",v:c=>c.req+c.host+c.notify,f:c=>fmtN(c.req+c.host+c.notify)},
+  {k:"near",h:"Nearest league metro",cls:"l",v:c=>c.dist_mi,f:c=>`${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span>`,asc:true}
+];
+const cq=document.getElementById("cq"), cn=document.getElementById("cn");
+const cRows=()=>C.filter(c=>c.name.toLowerCase().includes(cq.value.trim().toLowerCase())).filter(c=>c.rank<=+cn.value||cq.value.trim());
+const ct=makeTable(document.getElementById("ct"),cCols,cRows,"rank","asc",null);
+cq.addEventListener("input",()=>ct.render()); cn.addEventListener("change",()=>ct.render());
+</script>
