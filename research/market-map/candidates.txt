@@ -1,0 +1,169 @@
+New York,NY
+Los Angeles,CA
+Chicago,IL
+Dallas,TX
+Houston,TX
+Washington,DC
+Philadelphia,PA
+Miami,FL
+Atlanta,GA
+Boston,MA
+Phoenix,AZ
+San Francisco,CA
+Riverside,CA
+Detroit,MI
+Seattle,WA
+Minneapolis,MN
+San Diego,CA
+Tampa,FL
+Denver,CO
+Baltimore,MD
+St. Louis,MO
+Orlando,FL
+Charlotte,NC
+San Antonio,TX
+Portland,OR
+Sacramento,CA
+Pittsburgh,PA
+Austin,TX
+Las Vegas,NV
+Cincinnati,OH
+Kansas City,MO
+Columbus,OH
+Indianapolis,IN
+Cleveland,OH
+San Jose,CA
+Nashville,TN
+Virginia Beach,VA
+Providence,RI
+Jacksonville,FL
+Milwaukee,WI
+Raleigh,NC
+Oklahoma City,OK
+Memphis,TN
+Richmond,VA
+Louisville,KY
+New Orleans,LA
+Salt Lake City,UT
+Hartford,CT
+Buffalo,NY
+Birmingham,AL
+Rochester,NY
+Grand Rapids,MI
+Tucson,AZ
+Tulsa,OK
+Fresno,CA
+Honolulu,HI
+Worcester,MA
+Omaha,NE
+Bridgeport,CT
+Greenville,SC
+Albuquerque,NM
+Bakersfield,CA
+Albany,NY
+Knoxville,TN
+El Paso,TX
+Baton Rouge,LA
+McAllen,TX
+New Haven,CT
+Allentown,PA
+Oxnard,CA
+Columbia,SC
+North Port,FL
+Dayton,OH
+Charleston,SC
+Greensboro,NC
+Stockton,CA
+Cape Coral,FL
+Boise,ID
+Colorado Springs,CO
+Little Rock,AR
+Lakeland,FL
+Akron,OH
+Des Moines,IA
+Springfield,MA
+Ogden,UT
+Madison,WI
+Winston-Salem,NC
+Deltona,FL
+Syracuse,NY
+Provo,UT
+Toledo,OH
+Wichita,KS
+Durham,NC
+Augusta,GA
+Palm Bay,FL
+Jackson,MS
+Harrisburg,PA
+Spokane,WA
+Scranton,PA
+Chattanooga,TN
+Lancaster,PA
+Modesto,CA
+Portland,ME
+Fayetteville,AR
+Lexington,KY
+Lansing,MI
+Pensacola,FL
+Youngstown,OH
+Myrtle Beach,SC
+Huntsville,AL
+Reno,NV
+Fort Wayne,IN
+Port St. Lucie,FL
+Santa Rosa,CA
+Asheville,NC
+Ann Arbor,MI
+Savannah,GA
+Mobile,AL
+Shreveport,LA
+Wilmington,NC
+Anchorage,AK
+Corpus Christi,TX
+Fort Collins,CO
+Salem,OR
+Eugene,OR
+Gainesville,FL
+Boulder,CO
+Santa Barbara,CA
+Tallahassee,FL
+Lubbock,TX
+Killeen,TX
+Evansville,IN
+Kalamazoo,MI
+South Bend,IN
+Rockford,IL
+Peoria,IL
+Green Bay,WI
+Sioux Falls,SD
+Fargo,ND
+Lincoln,NE
+Cedar Rapids,IA
+Montgomery,AL
+Roanoke,VA
+Charlottesville,VA
+Columbus,GA
+Naples,FL
+Ocala,FL
+Waco,TX
+Billings,MT
+Bend,OR
+Burlington,VT
+Manchester,NH
+Trenton,NJ
+Atlantic City,NJ
+Harrisonburg,VA
+Lafayette,LA
+Springfield,MO
+Columbia,MO
+Lexington,SC
+Bloomington,IN
+State College,PA
+Champaign,IL
+Iowa City,IA
+Duluth,MN
+Rochester,MN
+Toledo,OH
+Erie,PA
+Hilton Head Island,SC
+Sarasota,FL

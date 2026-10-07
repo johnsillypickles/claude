@@ -1,0 +1,374 @@
+<title>League Market Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an operator's console. Summary strip, then one shared map, then two working tabs (current metros / expansion), then method notes. */
+:root{
+  --bg:#f4f6f2; --surface:#ffffff; --sunk:#e9ede6; --line:#d6ddd2; --ink:#16211b; --ink-2:#4a564e; --ink-3:#77837b;
+  --accent:#1f6f5c; --accent-ink:#ffffff; --land:#e3e8e0; --land-line:#ffffff;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --neutral:#9aa59d; --organic:#2a78d6; --cand:#7a4fd0; --signal:#eb6834;
+  --good-bg:#e3f4e3; --warn-bg:#fdf1d6; --crit-bg:#f8e1e1; --neutral-bg:#ecefea; --organic-bg:#e1ecfa;
+  --display:"Familjen Grotesk",ui-sans-serif,system-ui,sans-serif; --body:"Public Sans",ui-sans-serif,system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121814; --surface:#1a211c; --sunk:#222b25; --line:#2f3a33; --ink:#eef3ef; --ink-2:#b9c4bc; --ink-3:#8b978f;
+  --accent:#5cc3a6; --accent-ink:#0d1a15; --land:#253029; --land-line:#121814;
+  --good:#3cc43c; --warn:#fab219; --crit:#e66767; --neutral:#7d887f; --organic:#5598e7; --cand:#a998f0; --signal:#f08a5e;
+  --good-bg:#1d3320; --warn-bg:#3a3018; --crit-bg:#3b2020; --neutral-bg:#262e28; --organic-bg:#1b2b40; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121814; --surface:#1a211c; --sunk:#222b25; --line:#2f3a33; --ink:#eef3ef; --ink-2:#b9c4bc; --ink-3:#8b978f;
+  --accent:#5cc3a6; --accent-ink:#0d1a15; --land:#253029; --land-line:#121814;
+  --good:#3cc43c; --warn:#fab219; --crit:#e66767; --neutral:#7d887f; --organic:#5598e7; --cand:#a998f0; --signal:#f08a5e;
+  --good-bg:#1d3320; --warn-bg:#3a3018; --crit-bg:#3b2020; --neutral-bg:#262e28; --organic-bg:#1b2b40; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4vw,40px);line-height:1.1}
+h2{font-size:22px}
+h3{font-size:16px}
+p{margin:0}
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.sub{color:var(--ink-2);max-width:72ch}
+header{display:grid;gap:10px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+/* findings */
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.finding{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start;min-width:0}
+.finding .k{font:600 26px/1.1 var(--display)}
+.finding p{color:var(--ink-2);font-size:14px}
+/* map */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.toggles{display:flex;flex-wrap:wrap;gap:6px}
+.tog{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px;font:500 13px var(--body);cursor:pointer}
+.tog[aria-pressed="false"]{opacity:.5}
+.tog:focus-visible,.tab:focus-visible,th button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.mapbox{position:relative;width:100%;overflow:hidden}
+#map{width:100%;height:auto;display:block}
+#map .state{fill:var(--land);stroke:var(--land-line);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:9px 11px;font-size:12.5px;line-height:1.45;max-width:260px;box-shadow:0 6px 20px rgb(0 0 0 / .18);z-index:5}
+.tip b{font-family:var(--display);font-size:14px}
+.tip .row{display:flex;justify-content:space-between;gap:14px}
+.tip .row span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.intl{font-size:12.5px;color:var(--ink-3)}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{border:0;background:none;color:var(--ink-2);font:600 15px var(--display);padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabpanel{display:grid;gap:18px}
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:760px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+thead th{position:sticky;top:0;background:var(--sunk);font:600 12px var(--body);color:var(--ink-2);letter-spacing:.02em}
+th button{all:unset;cursor:pointer}
+th button::after{content:"";margin-left:4px}
+th[aria-sort="descending"] button::after{content:"↓"}
+th[aria-sort="ascending"] button::after{content:"↑"}
+td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.l{font-family:var(--body)}
+tbody tr:hover{background:var(--sunk)}
+.muted{color:var(--ink-3)}
+.chip{display:inline-flex;align-items:center;gap:5px;font:600 11.5px var(--body);padding:3px 8px;border-radius:999px;white-space:nowrap}
+.chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.t-consistent{background:var(--good-bg)} .t-consistent i{background:var(--good)}
+.t-efficient{background:var(--good-bg)} .t-efficient i{background:transparent;border:2px solid var(--good);width:8px;height:8px}
+.t-average{background:var(--warn-bg)} .t-average i{background:var(--warn)}
+.t-expensive{background:var(--crit-bg)} .t-expensive i{background:var(--crit)}
+.t-one_test{background:var(--neutral-bg)} .t-one_test i{background:var(--neutral)}
+.t-no_local{background:var(--organic-bg)} .t-no_local i{background:var(--organic)}
+.idx{display:inline-flex;align-items:center;gap:6px;justify-content:flex-end}
+.bar{width:44px;height:6px;background:var(--sunk);border-radius:3px;position:relative;overflow:hidden}
+.bar b{position:absolute;inset:0 auto 0 0;border-radius:3px}
+.mid{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--ink-3)}
+.section-head{display:grid;gap:6px}
+.weights{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;background:var(--sunk);border-radius:10px;padding:14px}
+.weights label{display:grid;gap:4px;font-size:13px;color:var(--ink-2)}
+.weights label span{display:flex;justify-content:space-between}
+.weights input[type=range]{width:100%;accent-color:var(--accent)}
+.weights .off{opacity:.55}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--ink-2)}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.notes > div{display:grid;gap:8px;align-content:start;min-width:0}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:14px}
+.pending{font:500 11px var(--mono);color:var(--ink-3);border:1px dashed var(--line);border-radius:4px;padding:2px 6px}
+.scorebar{display:inline-block;width:60px;height:6px;background:var(--sunk);border-radius:3px;vertical-align:middle;margin-left:6px;position:relative;overflow:hidden}
+.scorebar b{position:absolute;inset:0 auto 0 0;background:var(--cand);border-radius:3px}
+@media (max-width:560px){.wrap{padding-inline:16px}.panel{padding:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Silly Pickles · Growth · Jan 1 to Sep 30, 2026</div>
+  <h1>League Market Map</h1>
+  <p class="sub">Where Meta ads find new players cheaply in the metros we already run leagues in, and which metros we're not in yet show demand. Paid CAC uses Meta ad sets named for a city. National and regional campaigns can't be split by metro yet.</p>
+</header>
+
+<section class="findings" id="findings"></section>
+
+<section class="panel" aria-label="Map">
+  <div class="toolbar">
+    <h2>Map</h2>
+    <div class="toggles" role="group" aria-label="Map layers">
+      <button class="tog" id="tog-cur" aria-pressed="true"><i class="sw" style="background:var(--good)"></i>Current metros</button>
+      <button class="tog" id="tog-cand" aria-pressed="true"><i class="sw" style="border:2px solid var(--cand)"></i>Expansion candidates</button>
+      <button class="tog" id="tog-sig" aria-pressed="true"><i class="sw" style="background:var(--signal);border-radius:2px"></i>Demand signals</button>
+    </div>
+  </div>
+  <div class="mapbox" id="mapbox">
+    <svg id="map" viewBox="0 0 975 610" role="img" aria-label="US map of current league metros, expansion candidates and demand signals"></svg>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <p class="intl" id="intl"></p>
+</section>
+
+<section class="tabpanel">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-cur" aria-selected="true" aria-controls="p-cur">Current metros: CAC</button>
+    <button class="tab" role="tab" id="tab-exp" aria-selected="false" aria-controls="p-exp">Where to expand</button>
+  </div>
+
+  <div id="p-cur" role="tabpanel" aria-labelledby="tab-cur" class="tabpanel">
+    <div class="section-head">
+      <h3>Consistency of local Meta CAC, by quarter</h3>
+      <p class="sub" id="cur-sub"></p>
+    </div>
+    <div class="filters">
+      <label for="tierFilter">Show</label>
+      <select id="tierFilter">
+        <option value="tested">Tested in 2+ quarters</option>
+        <option value="all">All metros</option>
+        <option value="no_local">Filling with no local ads</option>
+      </select>
+    </div>
+    <div class="tablewrap"><table id="curTable"></table></div>
+  </div>
+
+  <div id="p-exp" role="tabpanel" aria-labelledby="tab-exp" class="tabpanel" hidden>
+    <div class="section-head">
+      <h3>US metros with no league within 30 miles</h3>
+      <p class="sub">Score = weighted mix of population, income and our own demand signals, each scaled 0 to 100 across this list. Move the weights to re-rank. Google Trends and current Census demographics are blocked in this environment, so they show as pending.</p>
+    </div>
+    <div class="weights">
+      <label for="wPop"><span>Population within 30 mi <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="50"></label>
+      <label for="wInc"><span>Median household income <b class="num" id="vInc"></b></span><input type="range" id="wInc" min="0" max="100" value="20"></label>
+      <label for="wDem"><span>Our demand signals <b class="num" id="vDem"></b></span><input type="range" id="wDem" min="0" max="100" value="30"></label>
+      <label class="off" for="wTr"><span>Google Trends interest <span class="pending">pending</span></span><input type="range" id="wTr" min="0" max="100" value="0" disabled></label>
+    </div>
+    <div class="filters">
+      <label for="distFilter">Distance from nearest league metro</label>
+      <select id="distFilter">
+        <option value="all">Any</option>
+        <option value="adj">Adjacent (30 to 60 mi)</option>
+        <option value="new">New region (60+ mi)</option>
+      </select>
+    </div>
+    <div class="tablewrap"><table id="expTable"></table></div>
+  </div>
+</section>
+
+<section class="panel notes">
+  <div>
+    <h3>How the numbers are built</h3>
+    <ul>
+      <li><b>Local Meta CAC</b> = spend ÷ Meta-reported purchases for ad sets named for a city, grouped to metro. A quarter counts if the metro had at least $<span class="num">1,500</span> local spend.</li>
+      <li><b>Index</b> = metro CAC ÷ median local CAC that quarter (Q1 <span class="num" id="m1"></span>, Q2 <span class="num" id="m2"></span>, Q3 <span class="num" id="m3"></span>). Under 1.00 is cheaper than the typical metro.</li>
+      <li><b>Consistently efficient</b>: 2+ tested quarters, average index ≤ 0.85, and no quarter above 1.05.</li>
+      <li><b>New signups</b> = first-time Shopify orders on that metro's league products, all channels. <b>Local spend per new signup</b> = local ad spend ÷ those signups, so it includes organic and national halo.</li>
+      <li><b>Demand signals</b> (Aug 1 to Oct 7): New League Location Request form, League Host Applicants form, and "Notify me" on upcoming leagues, counted within 35 mi. Weighted 3 / 2 / 1.</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Gaps and what fixes them</h3>
+    <ul>
+      <li><b>About 58% of Meta spend (Q1 to Q3) is national, regional or creative-test</b> and can't be assigned to a metro here. Fix: export Meta with Breakdown → Delivery → DMA, or reconnect Windsor so it can pull the DMA breakdown.</li>
+      <li><b>City-named ad sets mostly go to under-filled leagues</b>, so local CAC skews high and the best markets (Atlanta, DC, Raleigh) barely appear in it.</li>
+      <li><b>Population and income are 2010-era</b> (bundled ZIP database), so fast-growing Sunbelt metros are understated. Fix: allow <span class="num">api.census.gov</span> in the environment's network settings.</li>
+      <li><b>Google Trends is blocked.</b> Fix: allow <span class="num">trends.google.com</span>. Then the Trends weight turns on.</li>
+      <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+const DATA = __DATA__;
+const US = __TOPO__;
+const fmt$ = v => v==null ? "–" : "$" + Math.round(v).toLocaleString("en-US");
+const fmtN = v => v==null ? "–" : Math.round(v).toLocaleString("en-US");
+const TIER = {
+  consistent:{label:"Consistently efficient",color:"var(--good)"},
+  efficient:{label:"Efficient on average",color:"var(--good)"},
+  average:{label:"Average",color:"var(--warn)"},
+  expensive:{label:"Expensive",color:"var(--crit)"},
+  one_test:{label:"One quarter tested",color:"var(--neutral)"},
+  no_local:{label:"No local ads",color:"var(--organic)"}
+};
+const chip = t => `<span class="chip t-${t}"><i></i>${TIER[t].label}</span>`;
+const M = DATA.metros, Q = ["Q1","Q2","Q3"];
+document.getElementById("m1").textContent = fmt$(DATA.medians.q1);
+document.getElementById("m2").textContent = fmt$(DATA.medians.q2);
+document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
+
+/* ---------- findings ---------- */
+(function(){
+  const t = DATA.tot;
+  const acct = ["q1","q2","q3"].map(q => t[q].spend / t[q].purch);
+  const share = ["q1","q2","q3"].map(q => t[q].local_spend / t[q].spend);
+  const ratio = ["q1","q2","q3"].map((q,i) => DATA.medians[q] / acct[i]);
+  const cons = M.filter(m => m.tier==="consistent").sort((a,b)=>b.spend-a.spend);
+  const organic = M.filter(m => !m.intl && m.new>=200 && (m.spendPerNew||0) < 12).sort((a,b)=>b.new-a.new);
+  const outside = DATA.cands.map(c => ({...c, d: c.req*3+c.host*2+c.notify})).sort((a,b)=>b.d-a.d).slice(0,3);
+  const f = [
+    {k:`${cons.length} metros`, p:`are consistently cheap on local Meta ads: ${cons.map(m=>m.metro.split(",")[0]+" ("+fmt$(m.cac)+")").join(", ")}. Chicago is the only one at real scale (${fmt$(cons.find(m=>m.metro.startsWith("Chicago"))?.spend)} spend).`},
+    {k:`${Math.min(...ratio).toFixed(1)}x to ${Math.max(...ratio).toFixed(1)}x`, p:`Median local CAC vs the whole Meta account (${acct.map(fmt$).join(" / ")} by quarter). City ad sets are ${Math.round(Math.min(...share)*100)} to ${Math.round(Math.max(...share)*100)}% of spend and mostly back under-filled leagues.`},
+    {k:organic.slice(0,4).map(m=>m.metro.split(",")[0]).join(", "), p:`fill on national, organic and referral traffic, with under $12 of local spend per new signup. These are likely your strongest markets, and the paid view can't see them.`},
+    {k:outside.map(c=>c.city).join(", "), p:`have the most owned demand outside the footprint (location requests, host applicants, notify-me). Volume is small: ${DATA.signals.reduce((a,s)=>a+s.location_request,0)} requests and ${DATA.signals.reduce((a,s)=>a+s.host_applicant,0)} host applicants since August, most inside current metros.`}
+  ];
+  document.getElementById("findings").innerHTML = f.map(x=>`<div class="finding"><div class="k">${x.k}</div><p>${x.p}</p></div>`).join("");
+})();
+
+/* ---------- map ---------- */
+const svg = d3.select("#map");
+const proj = d3.geoAlbersUsa().scale(1300).translate([487.5,305]);
+const tip = document.getElementById("tip"), box = document.getElementById("mapbox");
+svg.append("g").selectAll("path").data(topojson.feature(US, US.objects.states).features).join("path")
+  .attr("class","state").attr("d", d3.geoPath());
+function showTip(ev, html){
+  tip.innerHTML = html; tip.hidden = false;
+  const r = box.getBoundingClientRect(); let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14;
+  if (x + 270 > r.width) x = ev.clientX - r.left - 270; if (y + 160 > r.height) y = ev.clientY - r.top - 160;
+  tip.style.left = Math.max(4,x)+"px"; tip.style.top = Math.max(4,y)+"px";
+}
+const hideTip = () => tip.hidden = true;
+const row = (a,b) => `<div class="row"><span>${a}</span><span>${b}</span></div>`;
+
+const cands = DATA.cands.filter(c => proj([c.lng,c.lat]));
+const rPop = d3.scaleSqrt().domain([0, d3.max(cands,c=>c.pop30)]).range([0,22]);
+const gC = svg.append("g").attr("id","lay-cand");
+gC.selectAll("circle").data(cands).join("circle")
+  .attr("cx",c=>proj([c.lng,c.lat])[0]).attr("cy",c=>proj([c.lng,c.lat])[1]).attr("r",c=>Math.max(3,rPop(c.pop30)))
+  .attr("fill","none").attr("stroke","var(--cand)").attr("stroke-width",1.5).attr("stroke-dasharray","3 2")
+  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.city}, ${c.st}</b><br>No league within 30 mi`+row("Pop. within 30 mi (2010)",fmtN(c.pop30))+row("Median HH income",fmt$(c.income))+row("Requests / hosts / notify",`${c.req} / ${c.host} / ${c.notify}`)+row("Nearest league metro",`${c.nearest_footprint.split(",")[0]}, ${c.dist_mi} mi`)))
+  .on("mouseleave",hideTip);
+
+const cur = M.filter(m => !m.intl && m.lat && proj([m.lng,m.lat]));
+const rNew = d3.scaleSqrt().domain([0, d3.max(cur,m=>m.new)]).range([0,24]);
+const gM = svg.append("g").attr("id","lay-cur");
+gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join("circle")
+  .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rNew(m.new)))
+  .attr("fill",m=>m.tier==="efficient"?"var(--surface)":TIER[m.tier].color).attr("fill-opacity",m=>m.tier==="efficient"?1:.85)
+  .attr("stroke",m=>m.tier==="efficient"?"var(--good)":"var(--surface)").attr("stroke-width",m=>m.tier==="efficient"?2.5:2)
+  .on("mousemove",(ev,m)=>showTip(ev,`<b>${m.metro}</b><br>${TIER[m.tier].label}`+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))))
+  .on("mouseleave",hideTip);
+
+const sig = DATA.signals.filter(s => proj([s.lng,s.lat]));
+const gS = svg.append("g").attr("id","lay-sig");
+gS.selectAll("rect").data(sig).join("rect")
+  .attr("x",s=>proj([s.lng,s.lat])[0]-3.5).attr("y",s=>proj([s.lng,s.lat])[1]-3.5).attr("width",7).attr("height",7)
+  .attr("transform",s=>{const p=proj([s.lng,s.lat]);return `rotate(45 ${p[0]} ${p[1]})`})
+  .attr("fill","var(--signal)").attr("stroke","var(--surface)").attr("stroke-width",1)
+  .on("mousemove",(ev,s)=>showTip(ev,`<b>${s.city}, ${s.st}</b>`+row("Location requests",s.location_request)+row("Host applicants",s.host_applicant)+row("Notify me",s.notify_me)))
+  .on("mouseleave",hideTip);
+
+[["tog-cur",gM],["tog-cand",gC],["tog-sig",gS]].forEach(([id,g])=>{
+  const b=document.getElementById(id);
+  b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);g.attr("display",on?null:"none")});
+});
+document.getElementById("legend").innerHTML =
+  Object.entries(TIER).map(([k,v])=>`<span><i class="sw" style="${k==='efficient'?'border:2px solid var(--good)':'background:'+v.color}"></i>${v.label}</span>`).join("") +
+  `<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>Candidate (size = population)</span><span><i class="sw" style="background:var(--signal);border-radius:1px;transform:rotate(45deg);width:8px;height:8px"></i>Demand signal</span><span class="muted">Current metro size = new signups</span>`;
+const intl = M.filter(m=>m.intl).sort((a,b)=>b.new-a.new);
+document.getElementById("intl").textContent = "Outside the US (in tables, not on the map): " + intl.map(m=>`${m.metro} ${fmtN(m.new)} new`).join(" · ");
+
+/* ---------- sortable table helper ---------- */
+function makeTable(el, cols, rows, sortKey, dir){
+  let key = sortKey, d = dir;
+  function render(){
+    const r = [...rows].sort((a,b)=>{const va=cols.find(c=>c.k===key).v(a), vb=cols.find(c=>c.k===key).v(b);
+      if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
+      return (typeof va==="string"? va.localeCompare(vb) : va-vb) * (d==="asc"?1:-1);});
+    el.innerHTML = `<thead><tr>${cols.map(c=>`<th class="${c.cls||""}" aria-sort="${c.k===key?(d==="asc"?"ascending":"descending"):"none"}">${c.v?`<button data-k="${c.k}">${c.h}</button>`:c.h}</th>`).join("")}</tr></thead>
+      <tbody>${r.map((x,i)=>`<tr>${cols.map(c=>`<td class="${c.cls||""}">${c.f?c.f(x,i):c.v(x)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    el.querySelectorAll("th button").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k; if(k===key) d=d==="asc"?"desc":"asc"; else {key=k; d=cols.find(c=>c.k===k).asc?"asc":"desc";} render();}));
+  }
+  render();
+  return {setRows(nr){rows=nr;render();}};
+}
+const idxCell = (q) => {
+  if (q.idx==null) return `<span class="muted">${q.spend>0 && q.purch>0 ? fmt$(q.cac) : "–"}</span>`;
+  const w = Math.min(q.idx/2,1)*100, col = q.idx<=0.85?"var(--good)":q.idx<=1.05?"var(--good)":q.idx<=1.3?"var(--warn)":"var(--crit)";
+  return `<span class="idx">${fmt$(q.cac)}<span class="bar" title="index ${q.idx.toFixed(2)}"><b style="width:${w}%;background:${col}"></b><span class="mid"></span></span><span class="muted">${q.idx.toFixed(2)}</span></span>`;
+};
+
+/* ---------- current metros ---------- */
+const tierOrder = {consistent:0,efficient:1,average:2,expensive:3,one_test:4,no_local:5};
+const curCols = [
+  {k:"metro",h:"Metro",cls:"l",v:m=>m.metro,asc:true},
+  {k:"tier",h:"Status",cls:"l",v:m=>tierOrder[m.tier]*10+(m.avgIdx??9),f:m=>chip(m.tier),asc:true},
+  ...[0,1,2].map(i=>({k:"q"+i,h:`${Q[i]} CAC · index`,v:m=>m.q[i].idx,f:m=>idxCell(m.q[i]),asc:true})),
+  {k:"avg",h:"Avg index",v:m=>m.avgIdx,f:m=>m.avgIdx==null?"–":m.avgIdx.toFixed(2),asc:true},
+  {k:"cac",h:"3-qtr CAC",v:m=>m.cac,f:m=>fmt$(m.cac),asc:true},
+  {k:"spend",h:"Local spend",v:m=>m.spend,f:m=>fmt$(m.spend)},
+  {k:"new",h:"New signups",v:m=>m.new,f:m=>fmtN(m.new)},
+  {k:"spn",h:"Spend / new signup",v:m=>m.spendPerNew,f:m=>fmt$(m.spendPerNew),asc:true}
+];
+const curT = makeTable(document.getElementById("curTable"), curCols, M.filter(m=>m.nq>=2), "tier", "asc");
+const subs = {
+  tested:"Metros with at least $1,500 of city-named ad spend in two or more quarters. Each quarter shows CAC and its index against that quarter's median metro.",
+  all:"Every metro with league signups or local ad spend this year. A dash means less than $1,500 of local spend that quarter.",
+  no_local:"Metros with no tested quarter of local ads. Sorted by new signups: these fill on national campaigns, organic and referrals."
+};
+const curSub = document.getElementById("cur-sub"); curSub.textContent = subs.tested;
+document.getElementById("tierFilter").addEventListener("change",e=>{
+  const v=e.target.value; curSub.textContent=subs[v];
+  curT.setRows(v==="tested"?M.filter(m=>m.nq>=2):v==="no_local"?M.filter(m=>m.nq===0).sort((a,b)=>b.new-a.new):M);
+});
+
+/* ---------- expansion ---------- */
+const C = DATA.cands.map(c=>({...c, dem:c.req*3+c.host*2+c.notify}));
+const lp = C.map(c=>Math.log(c.pop30||1)), inc = C.map(c=>c.income||0), dem = C.map(c=>Math.log1p(c.dem));
+const sc = (arr,v) => { const lo=Math.min(...arr), hi=Math.max(...arr); return hi===lo?0:(v-lo)/(hi-lo)*100; };
+C.forEach((c,i)=>{c.sPop=sc(lp,lp[i]); c.sInc=sc(inc,inc[i]); c.sDem=sc(dem,dem[i]);});
+const expCols = [
+  {k:"rank",h:"#",v:null,f:(c,i)=>i+1},
+  {k:"city",h:"Metro (principal city)",cls:"l",v:c=>c.city+", "+c.st,asc:true},
+  {k:"dist",h:"Nearest league metro",cls:"l",v:c=>c.dist_mi,f:c=>`${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span>`,asc:true},
+  {k:"pop",h:"Pop. 30 mi (2010)",v:c=>c.pop30,f:c=>fmtN(c.pop30)},
+  {k:"inc",h:"Median HH income",v:c=>c.income,f:c=>fmt$(c.income)},
+  {k:"req",h:"Requests",v:c=>c.req},
+  {k:"host",h:"Host apps",v:c=>c.host},
+  {k:"notify",h:"Notify me",v:c=>c.notify},
+  {k:"trends",h:"Trends",v:null,f:()=>`<span class="pending">pending</span>`},
+  {k:"score",h:"Score",v:c=>c.score,f:c=>`${c.score.toFixed(0)}<span class="scorebar"><b style="width:${c.score}%"></b></span>`}
+];
+let expT;
+function rescore(){
+  const w={p:+wPop.value,i:+wInc.value,d:+wDem.value}, s=(w.p+w.i+w.d)||1;
+  vPop.textContent=Math.round(w.p/s*100)+"%"; vInc.textContent=Math.round(w.i/s*100)+"%"; vDem.textContent=Math.round(w.d/s*100)+"%";
+  C.forEach(c=>c.score=(c.sPop*w.p+c.sInc*w.i+c.sDem*w.d)/s);
+  const f=distFilter.value, rows=C.filter(c=>f==="all"||(f==="adj"?c.dist_mi<=60:c.dist_mi>60));
+  if(!expT) expT=makeTable(document.getElementById("expTable"),expCols,rows,"score","desc"); else expT.setRows(rows);
+}
+const [wPop,wInc,wDem,distFilter,vPop,vInc,vDem]=["wPop","wInc","wDem","distFilter","vPop","vInc","vDem"].map(id=>document.getElementById(id));
+[wPop,wInc,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
+rescore();
+
+/* ---------- tabs ---------- */
+const tabs=[["tab-cur","p-cur"],["tab-exp","p-exp"]];
+function sel(id){tabs.forEach(([t,p])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on);document.getElementById(p).hidden=!on;});
+  try{localStorage.setItem("lmm-tab",id)}catch(e){}}
+tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>sel(t)));
+if(location.hash==="#expand") sel("tab-exp"); else { try{const s=localStorage.getItem("lmm-tab"); if(s) sel(s);}catch(e){} }
+</script>
