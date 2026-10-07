@@ -41,7 +41,21 @@ for mm in metros:
     c=collections.Counter()
     for v in U.get(mm['metro'],{}).values(): c.update(v)
     mm.update(shares(c))
-out={'netUtm':shares(net),'medians':{q:round(med[q],2) for q in Q},'tot':tot,'metros':metros,'cands':cands,'signals':sig,'minSpend':MIN}
+DC=json.load(open('dma_cac.json'))
+rel=[r for r in DC['rows'] if r['spend']>=5000 and r['cacEst']]
+medEst=st.median([r['cacEst'] for r in rel]); medFloor=st.median([r['cacFloor'] for r in rel])
+for r in DC['rows']:
+    if r['spend']<5000 or not r['cacEst']: r['tier']='low_data'
+    else:
+        x=r['cacEst']/medEst
+        r['tier']='d_good' if x<=0.8 else 'd_typ' if x<=1.25 else 'd_bad'
+    r['idxEst']=round(r['cacEst']/medEst,3) if r['cacEst'] else None
+    r['ctr']=round(r['ctr'],5) if r['ctr'] else None
+byMetro={m:r for r in DC['rows'] for m in r['metros']}
+for mm in metros:
+    r=byMetro.get(mm['metro'])
+    mm['dma']=r['dma'] if r else None; mm['dmaTier']=r['tier'] if r else ('intl' if mm['intl'] else 'no_dma')
+out={'dma':{'rows':DC['rows'],'scale':round(DC['scale'],3),'total':round(DC['total']),'unknown':round(DC['unknown']),'other':round(DC['otherUnmapped']),'medEst':round(medEst,2),'medFloor':round(medFloor,2)},'netUtm':shares(net),'medians':{q:round(med[q],2) for q in Q},'tot':tot,'metros':metros,'cands':cands,'signals':sig,'minSpend':MIN}
 json.dump(out,open('data.json','w'),separators=(',',':'))
 print(len(metros),len(cands),len(sig),collections.Counter(m['tier'] for m in metros))
 print(out['medians'])

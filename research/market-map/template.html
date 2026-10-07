@@ -83,6 +83,13 @@ tbody tr:hover{background:var(--sunk)}
 .t-expensive{background:var(--crit-bg)} .t-expensive i{background:var(--crit)}
 .t-one_test{background:var(--neutral-bg)} .t-one_test i{background:var(--neutral)}
 .t-no_local{background:var(--organic-bg)} .t-no_local i{background:var(--organic)}
+.t-d_good{background:var(--good-bg)} .t-d_good i{background:var(--good)}
+.t-d_typ{background:var(--warn-bg)} .t-d_typ i{background:var(--warn)}
+.t-d_bad{background:var(--crit-bg)} .t-d_bad i{background:var(--crit)}
+.t-low_data{background:var(--neutral-bg)} .t-low_data i{background:var(--neutral)}
+.t-no_dma{background:var(--neutral-bg)} .t-no_dma i{background:var(--neutral)}
+.t-intl{background:var(--neutral-bg)} .t-intl i{background:var(--neutral)}
+.pair{display:inline-flex;gap:4px;align-items:baseline;justify-content:flex-end}
 .idx{display:inline-flex;align-items:center;gap:6px;justify-content:flex-end}
 .bar{width:44px;height:6px;background:var(--sunk);border-radius:3px;position:relative;overflow:hidden}
 .bar b{position:absolute;inset:0 auto 0 0;border-radius:3px}
@@ -107,9 +114,9 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 
 <div class="wrap">
 <header>
-  <div class="eyebrow">Silly Pickles · Growth · Jan 1 to Sep 30, 2026</div>
+  <div class="eyebrow">Silly Pickles · Growth · Jan 1 to Oct 7, 2026</div>
   <h1>League Market Map</h1>
-  <p class="sub">Where Meta ads find new players cheaply in the metros we already run leagues in, and which metros we're not in yet show demand. Paid CAC uses Meta ad sets named for a city. National and regional campaigns can't be split by metro yet.</p>
+  <p class="sub">Where Meta ads find new players cheaply in the metros we already run leagues in, and which metros we're not in yet show demand. Market CAC uses Meta spend by Comscore market (Jan 1 to Oct 7) against Shopify signups for that market's leagues.</p>
 </header>
 
 <section class="findings" id="findings"></section>
@@ -133,13 +140,22 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 
 <section class="tabpanel">
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-cur" aria-selected="true" aria-controls="p-cur">Current metros: CAC</button>
+    <button class="tab" role="tab" id="tab-dma" aria-selected="true" aria-controls="p-dma">Meta CAC by market</button>
+    <button class="tab" role="tab" id="tab-cur" aria-selected="false" aria-controls="p-cur">City ad sets by quarter</button>
     <button class="tab" role="tab" id="tab-exp" aria-selected="false" aria-controls="p-exp">Where to expand</button>
   </div>
 
-  <div id="p-cur" role="tabpanel" aria-labelledby="tab-cur" class="tabpanel">
+  <div id="p-dma" role="tabpanel" aria-labelledby="tab-dma" class="tabpanel">
     <div class="section-head">
-      <h3>Consistency of local Meta CAC, by quarter</h3>
+      <h3>All Meta spend by Comscore market, Jan 1 to Oct 7, 2026</h3>
+      <p class="sub" id="dma-sub"></p>
+    </div>
+    <div class="tablewrap"><table id="dmaTable"></table></div>
+  </div>
+
+  <div id="p-cur" role="tabpanel" aria-labelledby="tab-cur" class="tabpanel" hidden>
+    <div class="section-head">
+      <h3>City-named ad sets only: CAC by quarter</h3>
       <p class="sub" id="cur-sub"></p>
     </div>
     <div class="filters">
@@ -156,7 +172,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div id="p-exp" role="tabpanel" aria-labelledby="tab-exp" class="tabpanel" hidden>
     <div class="section-head">
       <h3>US metros with no league within 30 miles</h3>
-      <p class="sub">Score = weighted mix of population, income and our own demand signals, each scaled 0 to 100 across this list. Move the weights to re-rank. Google Trends and current Census demographics are blocked in this environment, so they show as pending.</p>
+      <p class="sub">Score = weighted mix of population, income and our own demand signals, each scaled 0 to 100 across this list. Move the weights to re-rank. Google Trends and current Census figures are being added next, so they show as pending.</p>
     </div>
     <div class="weights">
       <label for="wPop"><span>Population within 30 mi <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="50"></label>
@@ -180,7 +196,10 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div>
     <h3>How the numbers are built</h3>
     <ul>
-      <li><b>Local Meta CAC</b> = spend ÷ Meta-reported purchases for ad sets named for a city, grouped to metro. A quarter counts if the metro had at least $<span class="num">1,500</span> local spend.</li>
+      <li><b>Market cost per new signup</b> = all Meta spend in a Comscore market ÷ first-time Shopify orders for that market's leagues (Jan 1 to Oct 5), from any channel. It's the floor: it credits Meta with organic signups too.</li>
+      <li><b>Estimated Meta CAC</b> = spend ÷ (new signups × that market's Meta-tagged UTM share × <span class="num" id="scaleV"></span>). The multiplier is Meta-reported purchases ÷ Meta-tagged orders account-wide, because UTMs miss most view-through and cross-device purchases. It assumes UTM capture is similar in every market.</li>
+      <li><b>Market tiers</b>: estimated CAC vs the median market (<span class="num" id="medEstV"></span>). Efficient ≤ 0.8x, typical up to 1.25x, expensive above. Markets under $5,000 of spend are marked low data.</li>
+      <li><b>City ad set CAC</b> (second tab) = spend ÷ Meta-reported purchases for ad sets named for a city, grouped to metro. A quarter counts if the metro had at least $<span class="num">1,500</span> local spend.</li>
       <li><b>Index</b> = metro CAC ÷ median local CAC that quarter (Q1 <span class="num" id="m1"></span>, Q2 <span class="num" id="m2"></span>, Q3 <span class="num" id="m3"></span>). Under 1.00 is cheaper than the typical metro.</li>
       <li><b>Consistently efficient</b>: 2+ tested quarters, average index ≤ 0.85, and no quarter above 1.05.</li>
       <li><b>New signups</b> = first-time Shopify orders on that metro's league products, all channels. <b>Local spend per new signup</b> = local ad spend ÷ those signups, so it includes organic and national halo.</li>
@@ -190,10 +209,13 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div>
     <h3>Gaps and what fixes them</h3>
     <ul>
-      <li><b>About 58% of Meta spend (Q1 to Q3) is national, regional or creative-test</b> and can't be assigned to a metro here. Fix: export Meta with Breakdown → Delivery → DMA, or reconnect Windsor so it can pull the DMA breakdown.</li>
-      <li><b>City-named ad sets mostly go to under-filled leagues</b>, so local CAC skews high and the best markets (Atlanta, DC, Raleigh) barely appear in it.</li>
-      <li><b>Population and income are 2010-era</b> (bundled ZIP database), so fast-growing Sunbelt metros are understated. Fix: allow <span class="num">api.census.gov</span> in the environment's network settings.</li>
-      <li><b>Google Trends is blocked.</b> Fix: allow <span class="num">trends.google.com</span>. Then the Trends weight turns on.</li>
+      <li><b>Meta's market export has no purchases</b>, so market CAC leans on Shopify signups and UTMs. A geo holdout (pausing Meta in one market for a few weeks) would measure true incrementality.</li>
+      <li><b>No monthly split yet.</b> Re-export with Breakdown → By Time → Month to check whether a market's CAC holds quarter to quarter.</li>
+      <li><b><span class="num" id="unkV"></span> of spend is "Unknown" market</b> (likely Canada and Australia), left out of the market view.</li>
+      <li><b>Meta spends almost nothing outside league markets</b> (<span class="num" id="othV"></span> in total), so ad CTR can't be used as an expansion signal.</li>
+      <li><b>City-named ad sets mostly go to under-filled leagues</b>, so the second tab's CAC skews high.</li>
+      <li><b>Population and income are 2010-era</b> (bundled ZIP database), so fast-growing Sunbelt metros are understated. Census access is now allowed; it needs the API key to reach this session.</li>
+      <li><b>Google Trends</b> is now reachable and will be added to the expansion score next.</li>
       <li><b>Meta-tagged orders</b> = league orders whose Shopify UTM source is facebook, meta_ads, ig or similar, ÷ all orders for that metro's leagues (Q1 to Q3, all orders, not just new). UTMs catch about a third of the purchases Meta reports, so read it as a relative measure across metros, not a true paid share.</li>
       <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
     </ul>
@@ -214,8 +236,19 @@ const TIER = {
   average:{label:"Average",color:"var(--warn)"},
   expensive:{label:"Expensive",color:"var(--crit)"},
   one_test:{label:"One quarter tested",color:"var(--neutral)"},
-  no_local:{label:"No local ads",color:"var(--organic)"}
+  no_local:{label:"No local ads",color:"var(--organic)"},
+  d_good:{label:"Efficient market",color:"var(--good)"},
+  d_typ:{label:"Typical market",color:"var(--warn)"},
+  d_bad:{label:"Expensive market",color:"var(--crit)"},
+  low_data:{label:"Low data (<$5k)",color:"var(--neutral)"},
+  no_dma:{label:"No market match",color:"var(--neutral)"},
+  intl:{label:"Outside US",color:"var(--neutral)"}
 };
+const DM = DATA.dma, DR = DM.rows;
+document.getElementById("scaleV").textContent = DM.scale.toFixed(2);
+document.getElementById("medEstV").textContent = "$" + Math.round(DM.medEst);
+document.getElementById("unkV").textContent = "$" + Math.round(DM.unknown).toLocaleString("en-US") + " (" + Math.round(DM.unknown/DM.total*100) + "%)";
+document.getElementById("othV").textContent = "$" + Math.round(DM.other).toLocaleString("en-US");
 const chip = t => `<span class="chip t-${t}"><i></i>${TIER[t].label}</span>`;
 const M = DATA.metros, Q = ["Q1","Q2","Q3"];
 document.getElementById("m1").textContent = fmt$(DATA.medians.q1);
@@ -233,11 +266,14 @@ document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
   const organic = M.filter(m => !m.intl && m.new>=200 && (m.spendPerNew||0) < 12 && m.metaShare < net*0.8).sort((a,b)=>b.new-a.new);
   const nationalFed = M.filter(m => !m.intl && m.new>=150 && (m.spendPerNew||0) < 12 && m.metaShare > net*1.2).sort((a,b)=>b.metaShare-a.metaShare);
   const outside = DATA.cands.map(c => ({...c, d: c.req*3+c.host*2+c.notify})).sort((a,b)=>b.d-a.d).slice(0,3);
+  const big = DR.filter(r=>r.spend>=15000 && r.cacEst).sort((x,y)=>x.cacEst-y.cacEst);
+  const orgHeavy = DR.filter(r=>r.spend>=5000 && r.cacFloor && r.cacEst && r.cacFloor <= DM.medFloor*0.9 && r.cacEst >= DM.medEst && r.metaShare < DATA.netUtm.metaShare).sort((x,y)=>y.new-x.new);
+  const nm = r => r.dma.split(/[,-]/)[0];
   const f = [
-    {k:`${cons.length} metros`, p:`are consistently cheap on local Meta ads: ${cons.map(m=>m.metro.split(",")[0]+" ("+fmt$(m.cac)+")").join(", ")}. Chicago is the only one at real scale (${fmt$(cons.find(m=>m.metro.startsWith("Chicago"))?.spend)} spend).`},
-    {k:`${Math.min(...ratio).toFixed(1)}x to ${Math.max(...ratio).toFixed(1)}x`, p:`Median local CAC vs the whole Meta account (${acct.map(fmt$).join(" / ")} by quarter). City ad sets are ${Math.round(Math.min(...share)*100)} to ${Math.round(Math.max(...share)*100)}% of spend and mostly back under-filled leagues.`},
-    {k:organic.slice(0,4).map(m=>m.metro.split(",")[0]).join(", "), p:`fill mostly without ads: under $12 of local spend per new signup and only ${organic.slice(0,4).map(m=>Math.round(m.metaShare*100)+"%").join(" / ")} of orders Meta-tagged (network ${Math.round(net*100)}%). By contrast ${nationalFed.slice(0,3).map(m=>m.metro.split(",")[0]+" ("+Math.round(m.metaShare*100)+"%)").join(", ")} get little local spend but lean on national Meta campaigns.`},
-    {k:outside.map(c=>c.city).join(", "), p:`have the most owned demand outside the footprint (location requests, host applicants, notify-me). Volume is small: ${DATA.signals.reduce((a,s)=>a+s.location_request,0)} requests and ${DATA.signals.reduce((a,s)=>a+s.host_applicant,0)} host applicants since August, most inside current metros.`}
+    {k:big.slice(0,4).map(nm).join(", "), p:`have the cheapest estimated Meta CAC among markets with $15k+ spend (${big.slice(0,4).map(r=>fmt$(r.cacEst)).join(" / ")} vs a ${fmt$(DM.medEst)} median market).`},
+    {k:big.slice(-4).reverse().map(nm).join(", "), p:`are the most expensive at scale (${big.slice(-4).reverse().map(r=>fmt$(r.cacEst)).join(" / ")}). Together they took ${fmt$(big.slice(-4).reduce((a,r)=>a+r.spend,0))} of spend.`},
+    {k:orgHeavy.slice(0,4).map(nm).join(", "), p:`fill cheaply overall (${orgHeavy.slice(0,4).map(r=>fmt$(r.cacFloor)).join(" / ")} per new signup) but Meta drives few of those signups (${orgHeavy.slice(0,4).map(r=>Math.round(r.metaShare*100)+"%").join(" / ")} Meta-tagged). Good candidates for a spend cut or holdout test.`},
+    {k:outside.map(c=>c.city).join(", "), p:`have the most owned demand outside the footprint (location requests, host applicants, notify-me). Volume is small: ${DATA.signals.reduce((a,s)=>a+s.location_request,0)} requests and ${DATA.signals.reduce((a,s)=>a+s.host_applicant,0)} host applicants since August.`}
   ];
   document.getElementById("findings").innerHTML = f.map(x=>`<div class="finding"><div class="k">${x.k}</div><p>${x.p}</p></div>`).join("");
 })();
@@ -271,9 +307,9 @@ const rNew = d3.scaleSqrt().domain([0, d3.max(cur,m=>m.new)]).range([0,24]);
 const gM = svg.append("g").attr("id","lay-cur");
 gM.selectAll("circle").data(cur.sort((a,b)=>b.new-a.new)).join("circle")
   .attr("cx",m=>proj([m.lng,m.lat])[0]).attr("cy",m=>proj([m.lng,m.lat])[1]).attr("r",m=>Math.max(4,rNew(m.new)))
-  .attr("fill",m=>m.tier==="efficient"?"var(--surface)":TIER[m.tier].color).attr("fill-opacity",m=>m.tier==="efficient"?1:.85)
-  .attr("stroke",m=>m.tier==="efficient"?"var(--good)":"var(--surface)").attr("stroke-width",m=>m.tier==="efficient"?2.5:2)
-  .on("mousemove",(ev,m)=>showTip(ev,`<b>${m.metro}</b><br>${TIER[m.tier].label}`+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%")))
+  .attr("fill",m=>TIER[m.dmaTier].color).attr("fill-opacity",.85)
+  .attr("stroke","var(--surface)").attr("stroke-width",2)
+  .on("mousemove",(ev,m)=>{const d=DR.find(r=>r.dma===m.dma); showTip(ev,`<b>${m.metro}</b><br>${TIER[m.dmaTier].label}`+(d?row("Meta spend in market",fmt$(d.spend))+row("Cost per new signup",fmt$(d.cacFloor))+row("Est. Meta CAC",fmt$(d.cacEst)):"")+row("New signups, 3 qtrs",fmtN(m.new))+row("Local Meta spend",fmt$(m.spend))+row("Local Meta CAC",fmt$(m.cac))+row("Quarterly CAC",m.q.map(q=>q.cac&&q.spend>=DATA.minSpend?fmt$(q.cac):"–").join(" · "))+row("Spend per new signup",fmt$(m.spendPerNew))+row("Orders Meta-tagged (UTM)",Math.round(m.metaShare*100)+"%"))})
   .on("mouseleave",hideTip);
 
 const sig = DATA.signals.filter(s => proj([s.lng,s.lat]));
@@ -290,7 +326,7 @@ gS.selectAll("rect").data(sig).join("rect")
   b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);g.attr("display",on?null:"none")});
 });
 document.getElementById("legend").innerHTML =
-  Object.entries(TIER).map(([k,v])=>`<span><i class="sw" style="${k==='efficient'?'border:2px solid var(--good)':'background:'+v.color}"></i>${v.label}</span>`).join("") +
+  ["d_good","d_typ","d_bad","low_data"].map(k=>`<span><i class="sw" style="background:${TIER[k].color}"></i>${TIER[k].label}</span>`).join("") +
   `<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>Candidate (size = population)</span><span><i class="sw" style="background:var(--signal);border-radius:1px;transform:rotate(45deg);width:8px;height:8px"></i>Demand signal</span><span class="muted">Current metro size = new signups</span>`;
 const intl = M.filter(m=>m.intl).sort((a,b)=>b.new-a.new);
 document.getElementById("intl").textContent = "Outside the US (in tables, not on the map): " + intl.map(m=>`${m.metro} ${fmtN(m.new)} new`).join(" · ");
@@ -314,6 +350,21 @@ const idxCell = (q) => {
   const w = Math.min(q.idx/2,1)*100, col = q.idx<=0.85?"var(--good)":q.idx<=1.05?"var(--good)":q.idx<=1.3?"var(--warn)":"var(--crit)";
   return `<span class="idx">${fmt$(q.cac)}<span class="bar" title="index ${q.idx.toFixed(2)}"><b style="width:${w}%;background:${col}"></b><span class="mid"></span></span><span class="muted">${q.idx.toFixed(2)}</span></span>`;
 };
+
+/* ---------- market table ---------- */
+document.getElementById("dma-sub").textContent = `${DR.length} markets with league signups. Sorted by status, then estimated Meta CAC. Click a column to re-sort.`;
+const dmaCols = [
+  {k:"dma",h:"Comscore market",cls:"l",v:r=>r.dma,f:r=>`${r.dma}${r.metros.length>1?`<br><span class="muted">${r.metros.map(m=>m.split(",")[0]).join(", ")}</span>`:""}`,asc:true},
+  {k:"tier",h:"Status",cls:"l",v:r=>({d_good:0,d_typ:1,d_bad:2,low_data:3})[r.tier]*1000+(r.cacEst||999),f:r=>chip(r.tier),asc:true},
+  {k:"spend",h:"Meta spend",v:r=>r.spend,f:r=>fmt$(r.spend)},
+  {k:"new",h:"New signups",v:r=>r.new,f:r=>fmtN(r.new)},
+  {k:"floor",h:"Cost / new signup",v:r=>r.cacFloor,f:r=>fmt$(r.cacFloor),asc:true},
+  {k:"meta",h:"Meta-tagged orders",v:r=>r.metaShare,f:r=>Math.round(r.metaShare*100)+"%"},
+  {k:"est",h:"Est. Meta CAC",v:r=>r.cacEst,f:r=>{ if(r.cacEst==null) return "–"; const x=r.idxEst, col=x<=0.8?"var(--good)":x<=1.25?"var(--warn)":"var(--crit)";
+      return `<span class="idx">${fmt$(r.cacEst)}<span class="bar" title="${x.toFixed(2)}x median"><b style="width:${Math.min(x/2,1)*100}%;background:${col}"></b><span class="mid"></span></span><span class="muted">${x.toFixed(2)}x</span></span>`;},asc:true},
+  {k:"ctr",h:"Link CTR",v:r=>r.ctr,f:r=>r.ctr==null?"–":(r.ctr*100).toFixed(2)+"%"}
+];
+makeTable(document.getElementById("dmaTable"), dmaCols, DR, "tier", "asc");
 
 /* ---------- current metros ---------- */
 const tierOrder = {consistent:0,efficient:1,average:2,expensive:3,one_test:4,no_local:5};
@@ -370,7 +421,7 @@ const [wPop,wInc,wDem,distFilter,vPop,vInc,vDem]=["wPop","wInc","wDem","distFilt
 rescore();
 
 /* ---------- tabs ---------- */
-const tabs=[["tab-cur","p-cur"],["tab-exp","p-exp"]];
+const tabs=[["tab-dma","p-dma"],["tab-cur","p-cur"],["tab-exp","p-exp"]];
 function sel(id){tabs.forEach(([t,p])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on);document.getElementById(p).hidden=!on;});
   try{localStorage.setItem("lmm-tab",id)}catch(e){}}
 tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>sel(t)));
