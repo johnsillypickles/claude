@@ -1,0 +1,51 @@
+[
+  {
+    "term": "pickleball",
+    "resolution": "DMA",
+    "status": "ok after 2 tries",
+    "rows": 210,
+    "pulled_at": "2026-10-07T21:07:36+00:00"
+  },
+  {
+    "term": "pickleball league",
+    "resolution": "DMA",
+    "status": "ok after 1 tries",
+    "rows": 210,
+    "pulled_at": "2026-10-07T21:08:08+00:00"
+  },
+  {
+    "term": "pickleball near me",
+    "resolution": "DMA",
+    "status": "ok after 1 tries",
+    "rows": 210,
+    "pulled_at": "2026-10-07T21:09:08+00:00"
+  },
+  {
+    "term": "indoor pickleball",
+    "resolution": "DMA",
+    "status": "ok after 1 tries",
+    "rows": 210,
+    "pulled_at": "2026-10-07T21:10:05+00:00"
+  },
+  {
+    "term": "pickleball lessons",
+    "resolution": "DMA",
+    "status": "ok after 1 tries",
+    "rows": 210,
+    "pulled_at": "2026-10-07T21:11:00+00:00"
+  },
+  {
+    "term": "pickleball league",
+    "resolution": "CITY",
+    "status": "ok after 1 tries",
+    "rows": 200,
+    "pulled_at": "2026-10-07T21:11:25+00:00"
+  },
+  {
+    "term": "pickleball near me",
+    "resolution": "CITY",
+    "status": "ok after 1 tries",
+    "rows": 200,
+    "pulled_at": "2026-10-07T21:12:20+00:00"
+  }
+]
