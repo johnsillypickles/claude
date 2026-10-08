@@ -1,0 +1,66 @@
+comscore_market,league_metros,meta_spend_jan_oct7,impressions,link_clicks,link_ctr,new_signups_jan_oct5,cost_per_new_signup,meta_tagged_order_share,est_meta_cac,tier
+"Chicago, IL","Chicago, IL",88387,4951496,52361,0.01057,1545,57.21,0.1943,108.91,typical
+"New York, NY","New York, NY; Bridgeport-Stamford, CT",78416,3963485,47500,0.01198,820,95.63,0.2704,130.85,expensive
+"Los Angeles, CA","Los Angeles, CA; Riverside, CA",66700,3073971,37515,0.0122,1036,64.38,0.2668,89.28,typical
+"Houston, TX","Houston, TX",57980,3259658,28577,0.00877,670,86.54,0.1956,163.68,expensive
+"Dallas-Ft. Worth, TX","Dallas-Fort Worth, TX",56584,3015712,26565,0.00881,895,63.22,0.2272,102.94,typical
+"Denver-Aurora, CO","Denver, CO",50964,2673610,23471,0.00878,860,59.26,0.1718,127.65,expensive
+"Indianapolis, IN","Indianapolis, IN",39526,2563469,18801,0.00733,417,94.79,0.1642,213.59,expensive
+"Atlanta, GA","Atlanta, GA",36680,2027059,18022,0.00889,704,52.1,0.1302,148.02,expensive
+"Philadelphia, PA","Philadelphia, PA; Trenton, NJ; Allentown, PA",36544,2211866,20460,0.00925,616,59.32,0.1798,122.03,typical
+"Miami, FL","Miami, FL",32275,1604495,14760,0.0092,542,59.55,0.2181,101.03,typical
+"Minneapolis-St. Paul, MN","Minneapolis, MN",31106,2082635,17506,0.00841,475,65.49,0.1913,126.65,typical
+"Boston, MA","Boston, MA",30270,1685409,15083,0.00895,350,86.48,0.322,99.37,typical
+"Phoenix, AZ","Phoenix, AZ",30169,1514486,15001,0.00991,586,51.48,0.2065,92.22,typical
+"Austin, TX","Austin, TX",27156,1336293,13021,0.00974,323,84.07,0.3372,92.25,typical
+"Portland, OR","Portland, OR",26257,1357852,14428,0.01063,523,50.2,0.1636,113.52,typical
+"Albuquerque, NM","Albuquerque, NM",25239,1543965,10967,0.0071,213,118.49,0.2019,217.1,expensive
+"Charlotte, NC","Charlotte, NC",24426,1449099,12537,0.00865,402,60.76,0.2462,91.3,typical
+"Nashville, TN","Nashville, TN",21959,1228304,10894,0.00887,461,47.63,0.2353,74.89,efficient
+"Washington, DC","Washington, DC",21474,1121305,12025,0.01072,347,61.88,0.2847,80.4,efficient
+"Louisville, KY","Louisville, KY",21143,1314402,10371,0.00789,201,105.19,0.1277,304.7,expensive
+"Raleigh-Durham, NC","Raleigh, NC",19303,1090895,9398,0.00861,511,37.78,0.1364,102.45,typical
+"Baltimore, MD","Baltimore, MD",19156,1112285,9096,0.00818,211,90.79,0.1844,182.17,expensive
+"Las Vegas, NV","Las Vegas, NV",17932,923649,8926,0.00966,377,47.56,0.1557,112.98,typical
+"Columbus, OH","Columbus, OH",17667,1130586,9285,0.00821,302,58.5,0.216,100.21,typical
+"Jacksonville, FL","Jacksonville, FL",16953,1011375,7941,0.00785,93,182.29,0.396,182.29,expensive
+"Oklahoma City, OK","Oklahoma City, OK",16872,1142005,8721,0.00764,191,88.34,0.2247,145.45,expensive
+"San Francisco-San Jose, CA","San Francisco, CA",16395,752817,10702,0.01422,246,66.65,0.2892,85.26,typical
+"San Diego, CA","San Diego, CA",16160,815429,10085,0.01237,241,67.05,0.3486,71.16,efficient
+"Baton Rouge, LA","Baton Rouge, LA",14261,813993,5335,0.00655,209,68.23,0.1425,177.17,expensive
+"Salt Lake City, UT","Salt Lake City, UT",13779,725498,7154,0.00986,276,49.93,0.2715,68.03,efficient
+"Orlando, FL","Orlando, FL; Daytona Beach, FL; Ocala, FL",13766,703666,6639,0.00943,185,74.41,0.2051,134.2,expensive
+"Charleston, SC","Charleston, SC",12998,735566,5313,0.00722,167,77.83,0.2778,103.66,typical
+"Knoxville, TN","Knoxville, TN",12106,827412,6018,0.00727,83,145.85,0.3214,167.87,expensive
+"Grand Rapids-Kalamazoo, MI","Grand Rapids, MI; Kalamazoo, MI",11784,794499,5822,0.00733,254,46.39,0.1918,89.48,typical
+"Kansas City, MO","Kansas City, MO",11071,681561,6156,0.00903,218,50.78,0.188,99.93,typical
+"Wichita, KS","Wichita, KS",10190,708365,5622,0.00794,92,110.76,0.1366,299.87,expensive
+"Seattle, WA","Seattle, WA",9622,509641,7113,0.01396,218,44.14,0.3922,44.14,efficient
+"Des Moines, IA","Des Moines, IA",9158,613037,4759,0.00776,155,59.08,0.3005,72.73,efficient
+"Tampa-St. Petersburg, FL","Tampa, FL",9154,501609,5705,0.01137,260,35.21,0.3114,41.83,efficient
+"Fresno, CA","Fresno, CA",8681,404315,5878,0.01454,165,52.61,0.5484,52.61,efficient
+"Evansville-Owensboro, IN-KY","Evansville, IN",8554,617686,4053,0.00656,72,118.81,0.1034,424.9,expensive
+"Milwaukee, WI","Milwaukee, WI",8153,545988,4314,0.0079,220,37.06,0.1643,83.47,typical
+"St. Louis, MO","St. Louis, MO",7772,478109,4767,0.00997,133,58.44,0.1814,119.17,typical
+"San Antonio, TX","San Antonio, TX",6526,366320,4357,0.01189,136,47.99,0.2374,74.8,efficient
+"Greensboro-Winston-Salem, NC","Winston-Salem, NC",6453,394036,3575,0.00907,195,33.09,0.1937,63.21,efficient
+"Detroit, MI","Detroit, MI",6393,356215,3345,0.00939,86,74.34,0.3646,75.44,efficient
+"Boise, ID","Boise, ID",5912,367714,3473,0.00944,111,53.26,0.3056,64.48,efficient
+"Cincinnati, OH","Cincinnati, OH",5592,328672,3576,0.01088,73,76.6,0.4595,76.6,efficient
+"Cleveland, OH","Cleveland, OH; Sandusky, OH",5548,366155,3314,0.00905,163,34.04,0.2007,62.75,efficient
+"New Orleans, LA","New Orleans, LA",5201,334312,2742,0.0082,182,28.58,0.1019,103.73,typical
+"Colorado Springs, CO","Colorado Springs, CO",4731,268177,2914,0.01087,173,27.35,0.1565,64.66,low data
+"Pittsburgh, PA","Pittsburgh, PA",4626,279832,3208,0.01146,168,27.54,0.1892,53.85,low data
+"Springfield, MA","Springfield, MA",3782,223121,1882,0.00843,41,92.23,0.5366,92.23,low data
+"Lexington, KY","Lexington, KY",3758,236935,2032,0.00858,66,56.94,0.4242,56.94,low data
+"Buffalo, NY","Buffalo, NY",3743,227189,2635,0.0116,122,30.68,0.2429,46.73,low data
+"Portland, ME","Portland, ME",3516,201890,2048,0.01014,101,34.81,0.3654,35.25,low data
+"Hartford-New Haven, CT","Hartford, CT",2897,171127,2260,0.01321,59,49.1,0.4576,49.1,low data
+"Greenville-Spartanburg-Ashville, SC-NC","Greenville, SC",2876,170220,1416,0.00832,83,34.65,0.18,71.21,low data
+"Harrisonburg, VA","Harrisonburg, VA",2827,201595,1498,0.00743,39,72.48,0.1489,180.03,low data
+"Madison, WI","Madison, WI",2792,168360,1426,0.00847,95,29.39,0.4151,29.39,low data
+"Dayton, OH","Dayton, OH",2750,173467,1632,0.00941,51,53.92,0.3462,57.63,low data
+"Charlottesville, VA","Charlottesville, VA",2129,145280,1161,0.00799,61,34.91,0.0376,343.52,low data
+"Rochester, NY","Rochester, NY",1723,90156,933,0.01035,47,36.67,0.4255,36.67,low data
+"Ft. Wayne, IN","Fort Wayne, IN",492,47411,636,0.01341,0,,0.0,,low data
+"Little Rock, AR","Little Rock, AR",467,47246,556,0.01177,0,,0.0,,low data

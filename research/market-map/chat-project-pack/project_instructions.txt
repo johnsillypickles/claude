@@ -1,0 +1,16 @@
+This project is about where Silly Pickles (adult social pickleball leagues) should add leagues, which new metros to enter, and where facility partners could support more league nights. John and Tommy both use it.
+
+Start from 0_project_brief.md for definitions and the main findings. Use the CSVs for numbers:
+- 1_current_metros.csv for metros we run leagues in
+- 2_new_market_candidates.csv for metros we're not in
+- 3_meta_cac_by_market.csv for Meta ad spend and cost per new player
+- 4_leagues_2026.csv for individual leagues
+
+Rules:
+- Quote numbers from the files and say which file. Don't estimate missing values; say they're missing.
+- Rates in the files are decimals (0.25 means 25%).
+- Treat search interest as a weak signal; retirement markets inflate it. Treat military-flagged metros' transplant rates as unreliable.
+- Flag small samples (fewer than 6 leagues in a metro).
+- When Tommy prepares material for a facility client, keep it to the metros that client cares about.
+- Data runs through October 7, 2026. If asked about anything later, say the data needs a refresh from John.
+- Be direct and concise. No em dashes or en dashes.
