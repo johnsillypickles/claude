@@ -141,7 +141,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 
 <section class="panel" aria-labelledby="topnew-h">
   <div class="toolbar"><h2 id="topnew-h">Top new-market candidates</h2><button class="tog" id="seeAllNew">See all 152 and adjust weights</button></div>
-  <p class="sub">US metros of 200k+ people with no Silly Pickles league within 30 miles, ranked on population, fit (age 25 to 44, degree, income, growth), Google search interest and our own request forms. Fort Wayne and Little Rock are already launching and are listed separately.</p>
+  <p class="sub">US metros of 200k+ people with no Silly Pickles league within 30 miles, ranked on population, transplants (ages 25 to 44 moving in from out of state), fit (age 25 to 44, degree, income, growth), Google search interest and our own request forms. Fort Wayne and Little Rock are already launching and are listed separately.</p>
   <div class="tablewrap"><table id="topNewTable"></table></div>
 </section>
 
@@ -162,7 +162,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
       <label for="aSell"><span>Sell-outs (rate, speed, spots added) <b class="num" id="vSell"></b></span><input type="range" id="aSell" min="0" max="100" value="35"></label>
       <label for="aWait"><span>Waitlist after sell-out (Stoq) <b class="num" id="vWait"></b></span><input type="range" id="aWait" min="0" max="100" value="25"></label>
       <label for="aMom"><span>New-player momentum <b class="num" id="vMom"></b></span><input type="range" id="aMom" min="0" max="100" value="10"></label>
-      <label for="aRoom"><span>Room to grow (density, search) <b class="num" id="vRoom"></b></span><input type="range" id="aRoom" min="0" max="100" value="20"></label>
+      <label for="aRoom"><span>Room to grow (density, search, transplants) <b class="num" id="vRoom"></b></span><input type="range" id="aRoom" min="0" max="100" value="20"></label>
       <label for="aEff"><span>Ad efficiency (est. Meta CAC) <b class="num" id="vEff"></b></span><input type="range" id="aEff" min="0" max="100" value="10"></label>
     </div>
     <div class="tablewrap"><table id="addTable"></table></div>
@@ -195,12 +195,13 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div id="p-exp" role="tabpanel" aria-labelledby="tab-exp" class="tabpanel" hidden>
     <div class="section-head">
       <h3>US metros (200k+ people) with no league within 30 miles</h3>
-      <p class="sub">Census 2024 (ACS 5-year) and Google Trends (last 12 months), plus our own request forms. Each part is a 0 to 100 rank across this list. Pickleball searches run highest in Florida retirement markets, so search interest gets less weight than demographic fit by default.</p>
+      <p class="sub">Census 2024 (ACS 5-year) and Google Trends (last 12 months), plus our own request forms. Each part is a 0 to 100 rank across this list. Transplants = share of residents aged 25 to 44 who moved in from another state or abroad in the past year, its change since 2015 to 2019, and growth in the 25 to 44 population. Military-base metros are flagged and get a neutral transplant rate. Pickleball searches run highest in Florida retirement markets, so search interest gets the least weight.</p>
     </div>
     <div class="weights">
-      <label for="wPop"><span>Population <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="30"></label>
-      <label for="wSea"><span>Search interest (Trends) <b class="num" id="vSea"></b></span><input type="range" id="wSea" min="0" max="100" value="15"></label>
-      <label for="wDemo"><span>Fit: age 25 to 44, degree, income, growth <b class="num" id="vDemo"></b></span><input type="range" id="wDemo" min="0" max="100" value="35"></label>
+      <label for="wPop"><span>Population <b class="num" id="vPop"></b></span><input type="range" id="wPop" min="0" max="100" value="25"></label>
+      <label for="wMove"><span>Transplants: ages 25 to 44 moving in <b class="num" id="vMove"></b></span><input type="range" id="wMove" min="0" max="100" value="20"></label>
+      <label for="wSea"><span>Search interest (Trends) <b class="num" id="vSea"></b></span><input type="range" id="wSea" min="0" max="100" value="10"></label>
+      <label for="wDemo"><span>Fit: age 25 to 44, degree, income, growth <b class="num" id="vDemo"></b></span><input type="range" id="wDemo" min="0" max="100" value="25"></label>
       <label for="wDem"><span>Our demand signals <b class="num" id="vDem"></b></span><input type="range" id="wDem" min="0" max="100" value="20"></label>
     </div>
     <div class="filters">
@@ -221,6 +222,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
     <ul>
       <li><b>Sell-out</b> = a league's Shopify inventory reached 0 through sales on a day with no manual removal. A drop to 0 with stock removed by hand (the 3-day pre-start close, or a cancellation) does not count. Spots added = stock added after launch. Seasons: Winter to Fall 2026, leagues with 10+ spots sold.</li>
       <li><b>Density</b> = Fall 2026 leagues per 100k residents aged 25 to 44 in the metro (Census 2024). Lower means more room.</li>
+      <li><b>Transplants</b> = Census ACS table B07001: residents aged 25 to 44 who lived in another state or abroad one year earlier, as a share of all residents 25 to 44 (2020 to 2024), with the change vs 2015 to 2019. Metros where 3%+ of adults are in the armed forces are flagged "military" and scored neutral on this, since base rotations aren't social transplants.</li>
       <li><b>Search interest</b> = average percentile of Google Trends scores for "pickleball", "pickleball near me" and "pickleball league" across 210 DMAs, last 12 months. Metros are matched to the nearest DMA city, so a few border metros may be off.</li>
       <li><b>Market cost per new signup</b> = all Meta spend in a Comscore market ÷ first-time Shopify orders for that market's leagues (Jan 1 to Oct 5), from any channel. It's the floor: it credits Meta with organic signups too.</li>
       <li><b>Estimated Meta CAC</b> = spend ÷ (new signups × that market's Meta-tagged UTM share × <span class="num" id="scaleV"></span>). The multiplier is Meta-reported purchases ÷ Meta-tagged orders account-wide, because UTMs miss most view-through and cross-device purchases. It assumes UTM capture is similar in every market.</li>
@@ -242,7 +244,8 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
       <li><b>City-named ad sets mostly go to under-filled leagues</b>, so the second tab's CAC skews high.</li>
       <li><b>Sell-outs are measured per league, not per night.</b> A Monday/Wednesday league counts as sold out only when every night is full.</li>
       <li><b>Waitlist</b> = Stoq "signed up for alert" events in Klaviyo (17,731 since Nov 2025), matched to each league's timeline. Only signups after the league sold out count; 20% belong to products with no inventory record in this window and are left out.</li>
-      <li><b>Census growth is blank or distorted for redrawn metros</b> (2023 boundary changes), e.g. Worcester shows −7.8%.</li>
+      <li><b>Growth is rebuilt from counties</b> (the same counties in 2015 to 2019 and 2020 to 2024), so 2023 boundary changes no longer distort it. Connecticut metros have no growth figure because Connecticut replaced its counties in 2022.</li>
+      <li><b>News cross-check</b> (sources linked in tooltips): Redfin (Sep 2026), U-Haul 2026 midyear, This Old House (ACS 2013 to 2023), Brookings, SmartAsset 2025 and the UVA Cooper Center broadly agree with the Census transplant data for big metros. News covers few smaller metros, so Census is the score input.</li>
       <li><b>Meta-tagged orders</b> = league orders whose Shopify UTM source is facebook, meta_ads, ig or similar, ÷ all orders for that metro's leagues (Q1 to Q3, all orders, not just new). UTMs catch about a third of the purchases Meta reports, so read it as a relative measure across metros, not a true paid share.</li>
       <li><b>Le Pixel new-customer counts</b> start in Q3 only, so the quarterly view uses Meta-reported purchases.</li>
     </ul>
@@ -259,6 +262,8 @@ const fmt$ = v => v==null ? "–" : "$" + Math.round(v).toLocaleString("en-US");
 const fmtN = v => v==null ? "–" : Math.round(v).toLocaleString("en-US");
 const pct0 = v => v==null ? "–" : Math.round(v*100)+"%";
 const pct1 = v => v==null ? "–" : (v>=0?"+":"")+(v*100).toFixed(1)+"%";
+const tpCell = c => c.transplant==null?"–":`${(c.transplant*100).toFixed(1)}%${c.tChange!=null?` <span class="muted">(${c.tChange>=0?"+":""}${(c.tChange*100).toFixed(1)})</span>`:""}${c.milFlag?` <span class="pending">military</span>`:""}`;
+const newsHTML = n => (n||[]).length ? `<div style="margin-top:6px">In the news: ${n.map(x=>`${x.dir==="in"?"▲":"▼"} ${x.src}`).join("; ")}</div>` : "";
 const scoreCell = v => v==null ? "–" : `${Math.round(v)}<span class="scorebar"><b style="width:${v}%"></b></span>`;
 const TIER = {
   consistent:{label:"Consistently efficient",color:"var(--good)"},
@@ -302,11 +307,11 @@ document.getElementById("m3").textContent = fmt$(DATA.medians.q3);
   const dScore=(c,w)=>Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/Object.values(w).reduce((a,b)=>a+b,0);
   const addTop = M.filter(m=>m.cmp && (m.so.n>=6 || m.wl.after>=300)).map(m=>({m,s:dScore(m,{sell:35,wait:25,mom:10,room:20,eff:10})})).sort((a,b)=>b.s-a.s).slice(0,4);
   const over = M.filter(m=>m.cmp && m.so.n>=8).sort((a,b)=>a.so.rate-b.so.rate).slice(0,4);
-  const newTop = DATA.cands.filter(c=>!c.launching).map(c=>({c,s:dScore(c,{pop:30,search:15,demo:35,ours:20})})).sort((a,b)=>b.s-a.s).slice(0,4);
+  const newTop = DATA.cands.filter(c=>!c.launching).map(c=>({c,s:dScore(c,{pop:25,move:20,search:10,demo:25,ours:20})})).sort((a,b)=>b.s-a.s).slice(0,4);
   const f = [
     {k:addTop.map(x=>x.m.metro.split(",")[0]).join(", "), p:`top the add-leagues score: ${addTop.map(x=>pct0(x.m.so.rate)+" sold out, "+fmtN(x.m.wl.after)+" waitlisted").join(" / ")} in 2026.`},
     {k:over.map(m=>m.metro.split(",")[0]).join(", "), p:`look over-supplied: ${over.map(m=>pct0(m.so.rate)).join(" / ")} of leagues sold out this year. Hold new leagues here until fill improves.`},
-    {k:newTop.map(x=>x.c.city).join(", "), p:`lead the new-market list on population, fit and search interest (Census 2024, Google Trends). Fort Wayne and Little Rock are already launching.`},
+    {k:newTop.map(x=>x.c.city).join(", "), p:`lead the new-market list on population, young transplants, fit and search interest (Census 2024, Google Trends). Fort Wayne and Little Rock are already launching.`},
     {k:big.slice(0,4).map(nm).join(", "), p:`have the cheapest estimated Meta CAC among markets with $15k+ spend (${big.slice(0,4).map(r=>fmt$(r.cacEst)).join(" / ")} vs a ${fmt$(DM.medEst)} median market).`}
   ];
   document.getElementById("findings").innerHTML = f.map(x=>`<div class="finding"><div class="k">${x.k}</div><p>${x.p}</p></div>`).join("");
@@ -333,7 +338,7 @@ const gC = svg.append("g").attr("id","lay-cand");
 gC.selectAll("circle").data(cands).join("circle")
   .attr("cx",c=>proj([c.lng,c.lat])[0]).attr("cy",c=>proj([c.lng,c.lat])[1]).attr("r",c=>Math.max(3,rPop(c.pop)))
   .attr("fill","none").attr("stroke","var(--cand)").attr("stroke-width",1.5).attr("stroke-dasharray","3 2")
-  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.name}</b><br>${c.launching?"Launching Winter 2027":"No league within 30 mi"}`+row("Population (2024)",fmtN(c.pop))+row("5-yr growth",pct1(c.growth))+row("Age 25 to 44",pct0(c.y2544))+row("Bachelor's+",pct0(c.ba))+row("Median HH income",fmt$(c.income))+row("Search interest",c.trends==null?"–":Math.round(c.trends))+row("Requests / hosts / notify",`${c.req} / ${c.host} / ${c.notify}`)+row("Score",Math.round(c.score||0))+row("Nearest league metro",`${c.nearest_footprint.split(",")[0]}, ${c.dist_mi} mi`)))
+  .on("mousemove",(ev,c)=>showTip(ev,`<b>${c.name}</b><br>${c.launching?"Launching Winter 2027":"No league within 30 mi"}`+row("Population (2024)",fmtN(c.pop))+row("5-yr growth",pct1(c.growth))+row("Age 25 to 44",pct0(c.y2544))+row("Bachelor's+",pct0(c.ba))+row("Median HH income",fmt$(c.income))+row("Transplants 25 to 44 / yr",c.transplant==null?"–":(c.transplant*100).toFixed(1)+"%"+(c.milFlag?" (military)":""))+row("25 to 44 growth",pct1(c.growth2544))+row("Search interest",c.trends==null?"–":Math.round(c.trends))+newsHTML(c.news)+row("Requests / hosts / notify",`${c.req} / ${c.host} / ${c.notify}`)+row("Score",Math.round(c.score||0))+row("Nearest league metro",`${c.nearest_footprint.split(",")[0]}, ${c.dist_mi} mi`)))
   .on("mouseleave",hideTip);
 
 const cur = M.filter(m => !m.intl && m.lat && proj([m.lng,m.lat]));
@@ -450,6 +455,7 @@ const addCols = [
   {k:"mom",h:"New players / league Q1 → Q3",v:m=>m.momentum,f:m=>`${m.nl.q1?.newPer??"–"} → ${m.nl.q3?.newPer??"–"}`},
   {k:"dens",h:"Leagues per 100k age 25 to 44",v:m=>m.density,f:m=>m.density==null?"–":m.density.toFixed(2),asc:true},
   {k:"tr",h:"Search interest",v:m=>m.trends,f:m=>m.trends==null?"–":Math.round(m.trends)},
+  {k:"tp",h:"Transplants 25 to 44 / yr",v:m=>m.census?.transplant,f:m=>m.census?tpCell(m.census):"–"},
   {k:"cac",h:"Est. Meta CAC",v:m=>m.cacEst,f:m=>fmt$(m.cacEst),asc:true}
 ];
 let addT;
@@ -472,6 +478,8 @@ const expCols = [
   {k:"pop",h:"Population 2024",v:c=>c.pop,f:c=>fmtN(c.pop)},
   {k:"gr",h:"5-yr growth",v:c=>c.growth,f:c=>pct1(c.growth)},
   {k:"y",h:"Age 25 to 44",v:c=>c.y2544,f:c=>pct0(c.y2544)},
+  {k:"tp",h:"Transplants 25 to 44 / yr",v:c=>c.transplant,f:tpCell},
+  {k:"g25",h:"25 to 44 growth",v:c=>c.growth2544,f:c=>pct1(c.growth2544)},
   {k:"ba",h:"Bachelor's+",v:c=>c.ba,f:c=>pct0(c.ba)},
   {k:"inc",h:"Median HH income",v:c=>c.income,f:c=>fmt$(c.income)},
   {k:"tr",h:"Search interest",v:c=>c.trends,f:c=>c.trends==null?"–":Math.round(c.trends)},
@@ -479,22 +487,22 @@ const expCols = [
   {k:"score",h:"Score",v:c=>c.score,f:c=>scoreCell(c.score)}
 ];
 let expT;
-const [wPop,wSea,wDemo,wDem,distFilter]=["wPop","wSea","wDemo","wDem","distFilter"].map(id=>document.getElementById(id));
+const [wPop,wMove,wSea,wDemo,wDem,distFilter]=["wPop","wMove","wSea","wDemo","wDem","distFilter"].map(id=>document.getElementById(id));
 function rescore(){
-  const w={pop:+wPop.value,search:+wSea.value,demo:+wDemo.value,ours:+wDem.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
-  [["vPop","pop"],["vSea","search"],["vDemo","demo"],["vDem","ours"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
+  const w={pop:+wPop.value,move:+wMove.value,search:+wSea.value,demo:+wDemo.value,ours:+wDem.value}, t=Object.values(w).reduce((a,b)=>a+b,0)||1;
+  [["vPop","pop"],["vMove","move"],["vSea","search"],["vDemo","demo"],["vDem","ours"]].forEach(([id,k])=>document.getElementById(id).textContent=Math.round(w[k]/t*100)+"%");
   C.forEach(c=>c.score=Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/t);
   const f=distFilter.value, rows=C.filter(c=>f==="all"||(f==="adj"?c.dist_mi<=60:c.dist_mi>60));
   if(!expT) expT=makeTable(document.getElementById("expTable"),expCols,rows,"score","desc"); else expT.setRows(rows);
 }
-[wPop,wSea,wDemo,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
+[wPop,wMove,wSea,wDemo,wDem].forEach(x=>x.addEventListener("input",rescore)); distFilter.addEventListener("change",rescore);
 rescore(); rescoreAdd();
 (function(){
-  const w={pop:30,search:15,demo:35,ours:20}, t=100;
+  const w={pop:25,move:20,search:10,demo:25,ours:20}, t=100;
   const rows=C.map(c=>({...c, s:Object.entries(w).reduce((a,[k,v])=>a+(c.cmp[k]??0)*v,0)/t}));
   const top=rows.filter(c=>!c.launching).sort((a,b)=>b.s-a.s).slice(0,15), launch=rows.filter(c=>c.launching);
-  const tr=(c,i)=>`<tr><td>${i}</td><td class="l">${c.name}</td><td class="l">${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span></td><td>${fmtN(c.pop)}</td><td>${pct1(c.growth)}</td><td>${pct0(c.y2544)}</td><td>${fmt$(c.income)}</td><td>${c.trends==null?"–":Math.round(c.trends)}</td><td>${c.req} · ${c.host} · ${c.notify}</td><td>${scoreCell(c.s)}</td></tr>`;
-  document.getElementById("topNewTable").innerHTML=`<thead><tr><th>#</th><th class="l">Metro</th><th class="l">Nearest league metro</th><th>Population 2024</th><th>5-yr growth</th><th>Age 25 to 44</th><th>Median HH income</th><th>Search interest</th><th>Requests · hosts · notify</th><th>Score</th></tr></thead><tbody>${top.map((c,i)=>tr(c,i+1)).join("")}<tr><td colspan="10" class="l muted" style="font-family:var(--body)">Already launching</td></tr>${launch.map(c=>tr(c,"–")).join("")}</tbody>`;
+  const tr=(c,i)=>`<tr><td>${i}</td><td class="l">${c.name}</td><td class="l">${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span></td><td>${fmtN(c.pop)}</td><td>${pct1(c.growth)}</td><td>${pct0(c.y2544)}</td><td>${tpCell(c)}</td><td>${fmt$(c.income)}</td><td>${c.trends==null?"–":Math.round(c.trends)}</td><td>${c.req} · ${c.host} · ${c.notify}</td><td>${scoreCell(c.s)}</td></tr>`;
+  document.getElementById("topNewTable").innerHTML=`<thead><tr><th>#</th><th class="l">Metro</th><th class="l">Nearest league metro</th><th>Population 2024</th><th>5-yr growth</th><th>Age 25 to 44</th><th>Transplants 25 to 44 / yr</th><th>Median HH income</th><th>Search interest</th><th>Requests · hosts · notify</th><th>Score</th></tr></thead><tbody>${top.map((c,i)=>tr(c,i+1)).join("")}<tr><td colspan="11" class="l muted" style="font-family:var(--body)">Already launching</td></tr>${launch.map(c=>tr(c,"–")).join("")}</tbody>`;
   document.getElementById("seeAllNew").addEventListener("click",()=>{sel("tab-exp");document.getElementById("tab-exp").scrollIntoView({behavior:"smooth"});});
 })();
 

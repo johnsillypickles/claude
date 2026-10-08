@@ -18,7 +18,7 @@ for m in D['metros']:
       'wl':m['wl']['after'],'wlPer':m['wlPer'],'ordPer':round(orders/so['n'],1) if so['n'] else None,
       'pen':round(m['new']/a,1) if a else None,
       'spend':d.get('spend'),'costNew':d.get('cacFloor'),'cacEst':d.get('cacEst'),'ctr':d.get('ctr'),'dma':m.get('dma'),
-      'pop':c.get('pop'),'y2544':c.get('y2544'),'income':c.get('income'),'growth':c.get('growth'),'ba':c.get('ba'),'trends':m.get('trends'),'density':m.get('density'),
+      'pop':c.get('pop'),'y2544':c.get('y2544'),'income':c.get('income'),'growth':c.get('growth'),'ba':c.get('ba'),'trends':m.get('trends'),'density':m.get('density'),'transplant':c.get('transplant'),'tChange':c.get('tChange'),'growth2544':c.get('growth2544'),'milFlag':c.get('milFlag'),'news':c.get('news') or [],
       'cbsaName':c.get('name')})
 peer=[r for r in rows if r['leagues']>=3]
 for r in rows:
@@ -36,11 +36,11 @@ print(collections.Counter(r['verdict'] for r in rows))
 for r in sorted([r for r in rows if r['index'] is not None],key=lambda r:-r['index'])[:15]: print(r['metro'],r['index'],r['verdict'],r['leagues'],r['soRate'],r['wl'])
 # new markets: default score
 for c in D['cands']:
-    w={'pop':30,'search':15,'demo':35,'ours':20}
+    w={'pop':25,'move':20,'search':10,'demo':25,'ours':20}
     c['score']=round(sum((c['cmp'][k] or 0)*v for k,v in w.items())/100,1)
 cands=sorted(D['cands'],key=lambda c:-c['score'])
 tot={'metros':len(rows),'us':sum(1 for r in rows if not r['intl']),'leagues':sum(r['leagues'] for r in rows),'players':sum(r['orders'] for r in rows),
      'newPlayers':sum(r['new'] for r in rows),'waitlist':sum(r['wl'] for r in rows),
      'soRate':round(sum(r['soRate']*r['leagues'] for r in rows if r['soRate'] is not None)/sum(r['leagues'] for r in rows if r['soRate'] is not None),3)}
 print(tot)
-json.dump({'metros':rows,'cands':[{k:c[k] for k in ('city','st','name','lat','lng','pop','income','growth','y2544','ba','trends','req','host','notify','nearest_footprint','dist_mi','score','launching')} for c in cands],'tot':tot},open('facility.json','w'),separators=(',',':'))
+json.dump({'metros':rows,'cands':[{k:c[k] for k in ('city','st','name','lat','lng','pop','income','growth','y2544','ba','trends','req','host','notify','nearest_footprint','dist_mi','score','launching','transplant','tChange','growth2544','milFlag','news')} for c in cands],'tot':tot},open('facility.json','w'),separators=(',',':'))

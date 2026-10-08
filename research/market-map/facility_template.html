@@ -129,7 +129,7 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
 
 <section class="panel" aria-labelledby="new-h">
   <h2 id="new-h">New-market candidates</h2>
-  <p class="sub">US metros of 200,000+ people with no Silly Pickles league within 30 miles. Ranked on population (30%), fit for adult social leagues: share aged 25 to 44, bachelor's degrees, income and growth (35%), pickleball search interest (15%), and requests we've received to start leagues there (20%).</p>
+  <p class="sub">US metros of 200,000+ people with no Silly Pickles league within 30 miles. Ranked on population (25%), young transplants: people aged 25 to 44 moving in from another state (20%), fit for adult social leagues: share aged 25 to 44, bachelor's degrees, income and growth (25%), pickleball search interest (10%), and requests we've received to start leagues there (20%).</p>
   <div class="controls"><label for="cq" class="muted">Search</label><input type="search" id="cq" placeholder="City or state"><label for="cn" class="muted">Show</label><select id="cn"><option value="25">Top 25</option><option value="50">Top 50</option><option value="999">All</option></select></div>
   <div class="tablewrap"><table id="ct"></table></div>
 </section>
@@ -138,6 +138,7 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
   <div>
     <h3 id="how-h">How to read it</h3>
     <ul>
+      <li><b>Transplants</b> = residents aged 25 to 44 who lived in another state or abroad a year earlier, as a share of everyone that age (Census, 2020 to 2024), with the change since 2015 to 2019. New arrivals looking for friends are a core audience for social leagues. Metros around large military bases are marked, since base rotations inflate this number.</li>
       <li><b>Demand index (0 to 100)</b> ranks a metro against other metros with 3+ leagues on four things: sell-out rate, waitlist signups per league, registrations per league, and new players per 100k residents aged 25 to 44.</li>
       <li><b>Under-supplied</b>: 60%+ of leagues sold out and index 60+. <b>Crowded</b>: 8+ leagues and under 30% sold out. <b>Early</b>: fewer than 3 leagues, too few to judge.</li>
       <li><b>Sold out</b> means registration filled before it closed. <b>Waitlist</b> counts people who asked to be notified after a league filled.</li>
@@ -150,6 +151,8 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
       <li>Silly Pickles registrations, inventory and waitlists (Shopify, Stoq), Winter to Fall 2026.</li>
       <li>Meta ad spend by Comscore market, Jan 1 to Oct 7, 2026.</li>
       <li>US Census Bureau, American Community Survey 2024 5-year estimates, by metro area.</li>
+      <li>US Census Bureau ACS table B07001 (moves by age), 2015 to 2019 and 2020 to 2024 5-year estimates. Growth is computed on the same counties in both periods.</li>
+      <li>News cross-check: <a href="https://www.prnewswire.com/news-releases/san-antonio-is-the-top-destination-for-gen-z-movers-while-millennials-favor-houston-302878628.html" target="_blank" rel="noopener">Redfin (Sep 2026)</a>, <a href="https://secure.businesswire.com/news/home/20260729379124/en/U-Haul-Migration-Trends-2026-Midyear-Report" target="_blank" rel="noopener">U-Haul 2026 midyear</a>, <a href="https://www.thisoldhouse.com/moving/moving-by-generation" target="_blank" rel="noopener">This Old House</a>, <a href="https://www.brookings.edu/articles/how-migration-of-millennials-and-seniors-has-shifted-since-the-great-recession/" target="_blank" rel="noopener">Brookings</a>, <a href="https://www.nasdaq.com/articles/cities-attracting-most-millennials-2025-study" target="_blank" rel="noopener">SmartAsset 2025</a>, <a href="https://www.coopercenter.org/research/young-adults-fuel-revival-small-towns-rural-areas" target="_blank" rel="noopener">UVA Cooper Center</a>.</li>
       <li>Google Trends, last 12 months, "pickleball", "pickleball near me" and "pickleball league" by media market. Retirement-heavy markets search for pickleball a lot, so search interest alone overstates league demand there.</li>
     </ul>
   </div>
@@ -247,7 +250,8 @@ function select(id,scroll){
     ${kv([["Leagues run",fmtN(m.leagues)],["Registrations",fmtN(m.orders)],["First-time players",fmtN(m.new)],["Leagues sold out",pct0(m.soRate)+(m.soRecent!=null?` <span class="muted">(${pct0(m.soRecent)} summer/fall)</span>`:"")],["Median days to sell out",m.medDays==null?"–":Math.round(m.medDays)],["Spots added after launch, per league",m.addedPer??"–"],["Waitlist signups after sell-out",fmtN(m.wl)+(m.wlPer!=null?` <span class="muted">(${m.wlPer}/league)</span>`:"")],["Registrations per league",m.ordPer??"–"]])}
     <h4>Marketing, Jan to Oct 2026</h4>
     ${kv([["Meta ad spend",fmt$(m.spend)],["Cost per new player",fmt$(m.costNew)],["Ad click-through rate",m.ctr==null?"–":(m.ctr*100).toFixed(2)+"%"]])}
-    ${m.pop?`<h4>Market (Census 2024)</h4>${kv([["Metro population",fmtN(m.pop)],["5-year growth",pct1(m.growth)],["Aged 25 to 44",pct0(m.y2544)],["Bachelor's degree or higher",pct0(m.ba)],["Median household income",fmt$(m.income)],["Pickleball search interest",m.trends==null?"–":Math.round(m.trends)+" / 100"],["Leagues per 100k aged 25 to 44",m.density==null?"–":m.density.toFixed(2)]])}`:`<p class="muted">Census data covers US metros only.</p>`}`;
+    ${m.pop?`<h4>Market (Census 2024)</h4>${kv([["Metro population",fmtN(m.pop)],["5-year growth",pct1(m.growth)],["Aged 25 to 44",pct0(m.y2544)],["Bachelor's degree or higher",pct0(m.ba)],["Median household income",fmt$(m.income)],["Aged 25 to 44 moving in from another state, per year",m.transplant==null?"–":(m.transplant*100).toFixed(1)+"%"+(m.milFlag?" (military base)":"")],["Change vs 2015 to 2019",m.tChange==null?"–":(m.tChange>=0?"+":"")+(m.tChange*100).toFixed(1)+" pts"],["Growth in residents aged 25 to 44",pct1(m.growth2544)],["Pickleball search interest",m.trends==null?"–":Math.round(m.trends)+" / 100"],["Leagues per 100k aged 25 to 44",m.density==null?"–":m.density.toFixed(2)]])}`:`<p class="muted">Census data covers US metros only.</p>`}
+    ${(m.news||[]).length?`<h4>In the news</h4><ul style="margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px">${m.news.map(n=>`<li>${n.dir==="in"?"Named as a destination":"Named as losing young adults"}: <a href="${n.url}" target="_blank" rel="noopener">${n.src}</a></li>`).join("")}</ul>`:""}`;
   if(scroll) document.getElementById("profile").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 select((M.filter(m=>m.verdict==="under"&&!m.intl).sort((a,b)=>b.orders-a.orders)[0]||M[0]).metro,false);
@@ -263,6 +267,8 @@ const cCols=[
   {k:"y",h:"Aged 25 to 44",v:c=>c.y2544,f:c=>pct0(c.y2544)},
   {k:"ba",h:"Bachelor's+",v:c=>c.ba,f:c=>pct0(c.ba)},
   {k:"inc",h:"Median HH income",v:c=>c.income,f:c=>fmt$(c.income)},
+  {k:"tp",h:"Transplants 25 to 44 / yr",v:c=>c.transplant,f:c=>c.transplant==null?"–":(c.transplant*100).toFixed(1)+"%"+(c.milFlag?` <span class="muted">military</span>`:"")},
+  {k:"g25",h:"25 to 44 growth",v:c=>c.growth2544,f:c=>pct1(c.growth2544)},
   {k:"tr",h:"Search interest",v:c=>c.trends,f:c=>c.trends==null?"–":Math.round(c.trends)},
   {k:"rq",h:"League requests",v:c=>c.req+c.host+c.notify,f:c=>fmtN(c.req+c.host+c.notify)},
   {k:"near",h:"Nearest league metro",cls:"l",v:c=>c.dist_mi,f:c=>`${c.nearest_footprint.split(",")[0]} <span class="muted">${c.dist_mi} mi</span>`,asc:true}

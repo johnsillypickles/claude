@@ -15,6 +15,18 @@ for r in csv.DictReader(open('census_cbsa.csv')):
     cb.append({'code':r['cbsa_code'],'name':re.sub(r' (Metro|Micro) Area$','',r['name']),'city':r['principal_city'].split('/')[0],'st':sts[0],'lat':xy[0],'lng':xy[1],
                'pop':int(r['pop']),'income':f('income'),'age':f('median_age'),'y2544':f('share_25_44'),'ba':f('share_ba_plus'),'growth':f('pop_growth_5y')})
 print('cbsa with coords',len(cb))
+RU=json.load(open('cbsa_county_rollup.json')); MG={r['code']:r for r in json.load(open('migration_cbsa.json'))}
+NEWS=json.load(open('news.json'))
+for c in cb:
+    ru=RU.get(c['code'],{}); mg=MG.get(c['code'],{})
+    c['growth']=ru.get('growth')            # rebuilt from the same counties in both years
+    c['growth2544']=ru.get('growth2544'); c['military']=ru.get('military')
+    c['milFlag']=(c['military'] or 0)>=0.03
+    c['transplant']=round(mg['transplant'],4) if mg.get('transplant') is not None else None
+    c['transplant19']=round(mg['transplant19'],4) if mg.get('transplant19') is not None else None
+    c['tChange']=round(c['transplant']-c['transplant19'],4) if c['transplant'] is not None and c['transplant19'] is not None else None
+    c['news']=[{'src':n['src'],'url':n['url'],'dir':'in' if c['city'] in n['in'] else 'out','note':n['note']} for n in NEWS if c['city'] in n['in'] or c['city'] in n['out']]
+
 # ---------- Trends DMA -> coords of named cities
 TR=collections.defaultdict(dict)
 for r in csv.DictReader(open('trends_dma.csv')): TR[r['dma']][r['term']]=int(r['score'])
@@ -85,7 +97,7 @@ for m in D['metros']:
              'fallLeagues':so['Fall 2026']['n']}
     c=CB.get(m['cbsa'])
     if c:
-        m['census']={k:c[k] for k in ('name','pop','income','age','y2544','ba','growth')}
+        m['census']={k:c[k] for k in ('name','pop','income','age','y2544','ba','growth','growth2544','military','milFlag','transplant','transplant19','tChange','news')}
         m['trends']=c['trends']; m['trendsDma']=c['dma']
         a=c['pop']*(c['y2544'] or 0.27)/1e5
         m['density']=round(m['so']['fallLeagues']/a,3) if a else None   # Fall leagues per 100k residents aged 25-44
@@ -105,7 +117,7 @@ for c in cb:
         if min(hav(x['lat'],x['lng'],*f) for f in foot)<=30: continue
         if hav(c['lat'],c['lng'],x['lat'],x['lng'])<=35:
             s['req']+=x['location_request']; s['host']+=x['host_applicant']; s['notify']+=x['notify_me']
-    cands.append({'city':c['city'],'st':c['st'],'name':c['name'],'lat':round(c['lat'],3),'lng':round(c['lng'],3),'pop':c['pop'],'income':c['income'],'growth':c['growth'],
+    cands.append({'city':c['city'],'st':c['st'],'name':c['name'],'lat':round(c['lat'],3),'lng':round(c['lng'],3),'pop':c['pop'],'income':c['income'],'growth':c['growth'],'growth2544':c['growth2544'],'military':c['military'],'milFlag':c['milFlag'],'transplant':c['transplant'],'transplant19':c['transplant19'],'tChange':c['tChange'],'news':c['news'],
                   'y2544':c['y2544'],'ba':c['ba'],'age':c['age'],'trends':c['trends'],'dma':c['dma'],'tr_pb':c['tr_raw'].get('pickleball'),'tr_near':c['tr_raw'].get('pickleball near me'),
                   'tr_league':c['tr_raw'].get('pickleball league'),'nearest_footprint':near[1],'dist_mi':round(near[0]),'req':s['req'],'host':s['host'],'notify':s['notify']})
 print('candidates',len(cands))
@@ -128,6 +140,9 @@ def prank(vals, v, invert=False):
     return round(100-r if invert else r,1)
 def mean(xs):
     xs=[x for x in xs if x is not None]; return round(sum(xs)/len(xs),1) if xs else None
+def move_score(x, peers):
+    tr=50 if x.get('milFlag') else prank([p.get('transplant') for p in peers if not p.get('milFlag')],x.get('transplant'))
+    return mean([tr, prank([p.get('tChange') for p in peers],x.get('tChange')), prank([p.get('growth2544') for p in peers],x.get('growth2544'))])
 # new players per league by quarter
 nl=collections.defaultdict(dict)
 for q in ['q1','q2','q3']:
@@ -157,7 +172,8 @@ for m in D['metros']:
                         prank([p['so']['medDays'] for p in peer],m['so']['medDays'],True) if m['so']['medDays'] is not None else 0,
                         prank([p['so']['addedPer'] for p in peer],m['so']['addedPer'])]),
           'mom': mean([prank([p['momentum'] for p in peer],m['momentum']), prank([p['nl'].get('q3',{}).get('newShare') for p in peer],m['nl'].get('q3',{}).get('newShare'))]),
-          'room': mean([prank([p['density'] for p in peer],m['density'],True), prank([p['trends'] for p in peer],m['trends'])]),
+          'room': mean([prank([p['density'] for p in peer],m['density'],True), prank([p['trends'] for p in peer],m['trends']), move_score(m['census'] or {}, [p['census'] or {} for p in peer])]),
+          'move': move_score(m['census'] or {}, [p['census'] or {} for p in peer]),
           'eff': prank([p['cacEst'] for p in peer],m['cacEst'],True),
           'wait': prank([p['wlPer'] for p in peer],m['wlPer'])}
     else: m['cmp']=None
@@ -167,6 +183,7 @@ for c in C2:
     c['cmp']={'pop':prank([math.log(x['pop']) for x in C2],math.log(c['pop'])),
               'search':prank([x['trends'] for x in C2],c['trends']),
               'demo':mean([prank([x['y2544'] for x in C2],c['y2544']),prank([x['ba'] for x in C2],c['ba']),prank([x['income'] for x in C2],c['income']),prank([x['growth'] for x in C2],c['growth'])]),
+              'move':move_score(c,C2),
               'ours':None}
     dsum=c['req']*3+c['host']*2+c['notify']
     c['demand']=dsum
@@ -180,7 +197,7 @@ def sc(m):
 print('\nADD-LEAGUES default ranking')
 for m in sorted(peer,key=lambda m:-sc(m)):
     print(f"{m['metro'][:22]:22} score={sc(m):5.1f} sell={m['cmp']['sell']} mom={m['cmp']['mom']} room={m['cmp']['room']} eff={m['cmp']['eff']}")
-WE={'pop':30,'search':25,'demo':25,'ours':20}
+WE={'pop':25,'search':10,'demo':25,'move':20,'ours':20}
 print('\nEXPANSION default ranking')
 for c in sorted(C2,key=lambda c:-sum((c['cmp'][k] or 0)*w for k,w in WE.items()))[:20]:
     print(c['city'],c['st'],round(sum((c['cmp'][k] or 0)*w for k,w in WE.items())/100,1),c['cmp'],c['dist_mi'])
