@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" font-family="Helvetica, Arial, sans-serif">
+  <!-- Silly Pickles W27 Meta safe zone overlay. Place as the top layer on a 1080x1920 artboard. Hide before export. -->
+
+  <!-- Reels UI: covered by profile, captions, CTA, buttons -->
+  <g fill="#E5484D" fill-opacity="0.35">
+    <rect x="0" y="0" width="1080" height="270"/>
+    <rect x="0" y="1250" width="1080" height="670"/>
+    <rect x="0" y="270" width="65" height="980"/>
+    <rect x="1015" y="270" width="65" height="980"/>
+  </g>
+
+  <!-- Cut in the 1:1 crop (inside Reels-safe band but outside center square) -->
+  <rect x="65" y="270" width="950" height="150" fill="#F5A623" fill-opacity="0.35"/>
+
+  <!-- Center 1080x1080 square (1:1 crop) -->
+  <rect x="0" y="420" width="1080" height="1080" fill="none" stroke="#000" stroke-width="6" stroke-dasharray="24 16"/>
+  <rect x="0" y="420" width="1080" height="1080" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="24 16"/>
+
+  <!-- 4:5 crop (1080x1350, centered) -->
+  <rect x="0" y="285" width="1080" height="1350" fill="none" stroke="#000" stroke-width="4" stroke-dasharray="6 10"/>
+  <rect x="0" y="285" width="1080" height="1350" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 10"/>
+
+  <!-- Text + logo safe zone -->
+  <rect x="65" y="420" width="950" height="830" fill="none" stroke="#000" stroke-width="10"/>
+  <rect x="65" y="420" width="950" height="830" fill="none" stroke="#30A46C" stroke-width="6"/>
+
+  <!-- Labels -->
+  <g font-size="30" font-weight="700">
+    <rect x="290" y="105" width="500" height="60" rx="8" fill="#000" fill-opacity="0.75"/>
+    <text x="540" y="146" fill="#fff" text-anchor="middle">REELS UI: TOP 270px</text>
+
+    <rect x="240" y="315" width="600" height="60" rx="8" fill="#000" fill-opacity="0.75"/>
+    <text x="540" y="356" fill="#fff" text-anchor="middle">CUT IN 1:1 CROP (TOP 420px)</text>
+
+    <rect x="215" y="465" width="650" height="60" rx="8" fill="#000" fill-opacity="0.75"/>
+    <text x="540" y="506" fill="#5FD39B" text-anchor="middle">TEXT + LOGO SAFE ZONE 950x830</text>
+
+    <rect x="175" y="1515" width="730" height="100" rx="8" fill="#000" fill-opacity="0.75"/>
+    <text x="540" y="1556" fill="#fff" text-anchor="middle">REELS UI: BOTTOM 670px</text>
+    <text x="540" y="1596" fill="#fff" text-anchor="middle" font-size="24" font-weight="400">captions, CTA button, like/comment/share</text>
+  </g>
+  <g font-size="22" fill="#fff">
+    <rect x="12" y="1440" width="320" height="44" rx="6" fill="#000" fill-opacity="0.75"/>
+    <text x="24" y="1470">- - 1:1 crop (1080x1080)</text>
+    <rect x="12" y="1645" width="320" height="44" rx="6" fill="#000" fill-opacity="0.75"/>
+    <text x="24" y="1675">· · 4:5 crop (1080x1350)</text>
+  </g>
+</svg>
