@@ -29,7 +29,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
 | Affiliate orders | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See the UpPromote section below |
-| Organic referrals | Organic Marketing Scoreboard (Fall 2026) vF, `1AnH2yBWuTUfeTT6xjAjaAM-2VKIzNbEUJe8dn0zFSsE` | If it can't be read, carry forward and mark `[Carried from last week, update]` |
+| Organic referrals | Organic Marketing Tracker, `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60` (Summary tab; see the organic-tracker skill). Replaced Nate's scoreboard on 10/12/26 | If it can't be read, carry forward and mark `[Carried from last week, update]` |
 | Facility | Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) plus Gmail threads John is copied on | See "Facility Marketing" below |
 
 ## Formulas
