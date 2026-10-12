@@ -41,7 +41,7 @@ It writes `affiliates.json` (`[name, email, program, joined, status, upline_emai
 - **Affiliates:** read A:I. For each pulled affiliate, match on email (column B). Existing row: update D (program), E (joined), F (status) and leave C and I alone. New row: append with C = the Marketer of the row whose email equals `upline_email`, if that row has one, else blank; I = "Marketer set from UpPromote upline" when set. Rows not in UpPromote stay (BixGrow-era accounts).
 - Set Summary B8 to the pull time, for example `'Mon 10/12/26, pulled 7:52 AM CT`.
 
-If the UpPromote server is unreachable or `UPPROMOTE_MCP_KEY` is missing, skip this step, still do Leagues, and say so in the reply.
+If `UPPROMOTE_MCP_KEY` is not set but the UpPromote connector tools (`list_affiliates`, `list_referrals`, `get_top_affiliates`) are available, make the same calls through the connector and build the same two lists with the same rules: dates as `YYYY-MM-DDTHH:MM:SSZ` for Central-time day boundaries, `per_page` 100 with `has_more` paging, `exclude_network_sales: true` on `get_top_affiliates`. If neither works, skip this step, still do Leagues, and say so in the reply.
 
 ## 2. Leagues
 
