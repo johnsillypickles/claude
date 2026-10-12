@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "uppromote-mcp": {
+      "type": "http",
+      "url": "https://mcp.uppromote.com/mcp",
+      "headers": {
+        "Authorization": "${UPPROMOTE_MCP_KEY}"
+      }
+    }
+  }
+}
