@@ -8,6 +8,9 @@ read tools (review_affiliate is blocked). Writes JSON to the output directory:
                    [name, email, program, joined (YYYY-MM-DD, CT), status, upline_email]
   weekly.json      one row per affiliate per period with any activity:
                    [period_start, period_end, email, clicks, signups]
+  referrals.json   one row per counted referral: [period_start, email, order_id]
+                   (order_id is blank for manually added referrals). add_spots.py
+                   uses it to count every league spot in a multi-spot order.
 
 Periods are Mon to Sun weeks in America/Chicago, from --start through today
 (the current week is partial). A week that crosses into a new month is split
@@ -28,8 +31,11 @@ from zoneinfo import ZoneInfo
 
 URL = "https://mcp.uppromote.com/mcp"
 CT = ZoneInfo("America/Chicago")
+# Facility marketing programs and test accounts; never credited to organic marketers.
 EXCLUDED_PROGRAMS = {"Facility Referral Program (External)", "Facility Referral Program",
-                     "Facility Affiliate Program", "Non-Affiliate Facilities"}
+                     "Facility Affiliate Program", "Non-Affiliate Facilities",
+                     "PickleBOS Summer Facility Referral Program", "Horizon's Edge",
+                     "Pickle & Pong", "BFF Indy", "megan test"}
 
 
 class Client:
@@ -115,6 +121,7 @@ def main():
 
     pers = periods(date.fromisoformat(a.start), today)
     signups = defaultdict(int)
+    counted = []
     refs = c.all_pages("list_referrals", {"from_date": iso_utc(pers[0][0]), "to_date": iso_utc(today, True)})
     for r in refs:
         if r["status"] == "denied" or r.get("refund_id") or "network" in (r.get("tracking_type") or "").lower():
@@ -124,6 +131,7 @@ def main():
         for s, e in pers:
             if s <= d <= e:
                 signups[(s, email)] += 1
+                counted.append([s.isoformat(), email, str(r.get("order_id") or "")])
                 break
 
     clicks = defaultdict(int)
@@ -143,6 +151,8 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     json.dump(aff_rows, open(os.path.join(a.out, "affiliates.json"), "w"))
     json.dump(weekly, open(os.path.join(a.out, "weekly.json"), "w"))
+    json.dump([x for x in counted if x[1] not in excluded],
+              open(os.path.join(a.out, "referrals.json"), "w"))
     print(f"affiliates={len(aff_rows)} referrals={len(refs)} weekly_rows={len(weekly)} "
           f"periods={pers[0][0]}..{pers[-1][1]} data_through={today}")
 
