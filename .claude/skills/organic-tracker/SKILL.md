@@ -64,5 +64,5 @@ If `UPPROMOTE_MCP_KEY` is not set but the UpPromote connector tools (`list_affil
 
 - Append a Data Sources row per pull (run time in CT, row counts, filters).
 - Read back Summary A1:J58 and one marketer tab; check for `#VALUE!`, `#REF!`, `#N/A`, that A1 still reads "Organic Marketing Summary", that A3 (stale banner) is blank, and that row 18 is the "Marketer" header. If Summary looks rearranged, stop writing to it and alert.
-- **Slack alert:** if the UpPromote pull failed, Shopify failed, A3 is not blank, or the Summary check failed, send a Slack DM to John (user `U083ZE57P60`) starting "Organic tracker refresh problem:" with what failed and the error text (never include keys). No DM when everything worked.
+- **Slack alert:** if the UpPromote pull failed, Shopify failed, A3 is not blank, or the Summary check failed, post in the private channel `#organic-tracker-alerts` (`C0C8HMX8V3M`, John and Megan) a message starting "Organic tracker refresh problem:" with what failed and the error text (never include keys). Post nothing when everything worked.
 - Reply with: leagues added (and any with a Suggested lead), announced but not live, new affiliates with no marketer, and team signups last week vs prior week.
