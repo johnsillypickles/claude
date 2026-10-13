@@ -16,9 +16,10 @@ Only data goes in. Every metric on Summary and the marketer tabs is a formula; n
 | Tab | Holds | Written by |
 |---|---|---|
 | Summary | Stale-data banner (A3), team last week / prior week / change / QTD, per-marketer table, 12-week team trend, monthly signups by marketer | Formulas. B8 = "UpPromote data through", a date-time (set each refresh) |
-| Leagues | One row per league. A (lead), F, I, J, O are formulas filled to row 600 | Refresh writes B:E, G:H, K:L, N. M = Lead Override (people) |
+| Leagues | One row per league. A (lead), F, I, J, O are formulas filled to row 600; P (Flag) and Q (Need / Day) are array formulas in row 1 | Refresh writes B:E, G:H, K:L, N. M = Lead Override (people) |
 | Assignments | One row per facility: Facility ID (Internal League Tracker ID), facility, city, state, region, sub region, global lead, Organic Lead, previous lead, Status (Confirmed / Suggested), notes | Megan / John. Refresh only appends new facilities as Suggested |
-| Jessica ... Julia | One per marketer; name in B1 drives every formula | Formulas |
+| Jessica ... Julia | One per marketer; name in B1 drives every formula. Leagues listed most urgent flag first | Formulas |
+| Team | Marketer names and tabs (A:D); flag thresholds in G2:G7 (goal 30, Critical 0.75/day or 14 days and 5 short, Push 0.5/day, Watch 0.25/day, same as Nate's) | Megan / John |
 | Affiliates | Every UpPromote affiliate (facility program excluded). C = Marketer (people). G:H formulas | Refresh upserts A, B, D, E, F, I |
 | Adjustments | Manual +/- signups by date and marketer, with reason | Megan / John |
 | History (May to Sep) | Final monthly signups by marketer from Nate's scoreboard (BixGrow + UpPromote). Frozen | Nobody |
@@ -37,7 +38,9 @@ Connector: the `uppromote-mcp` server in the repo's `.mcp.json`, authenticated w
 python3 -I .claude/skills/organic-tracker/scripts/uppromote_pull.py --start 2026-08-03 --out <scratch>/up
 ```
 
-It writes `affiliates.json` (`[name, email, program, joined, status, upline_email]`) and `weekly.json` (`[period_start, period_end, email, clicks, signups]`). Signups = referrals not denied, not refunded, not network credit. Clicks = `get_top_affiliates` total_clicks per period. Periods are Mon to Sun weeks in Central time, split where a week crosses into a new month.
+It writes `affiliates.json` (`[name, email, program, joined, status, upline_email]`), `weekly.json` (`[period_start, period_end, email, clicks, signups]`) and `referrals.json` (`[period_start, email, order_id]`). Signups = referrals not denied, not refunded, not network credit, counted per league spot (next paragraph). Clicks = `get_top_affiliates` total_clicks per period. Periods are Mon to Sun weeks in Central time, split where a week crosses into a new month.
+
+**Spots, not orders.** UpPromote has one referral per order, so a 2-spot order counts once. Before writing Weekly Data, look up every non-blank `order_id` in `referrals.json` with Shopify Admin GraphQL, 60 per call: `query($ids:[ID!]!){ nodes(ids:$ids){ ... on Order { legacyResourceId lineItems(first:20){ nodes{ quantity product{ tags } } } } } }` with ids `gid://shopify/Order/<order_id>`. Spots for an order = sum of `quantity` over line items whose product has a season tag (`Spring|Summer|Fall|Winter YYYY`, optionally prefixed Early/Late); 1 if none match. Save `{"<order_id>": spots}` as `spots.json`, then run `python3 -I .claude/skills/organic-tracker/scripts/add_spots.py --dir <scratch>/up --spots <scratch>/spots.json`. If Shopify fails, skip it (signups fall back to orders) and say so in the reply and the alert.
 
 - **Weekly Data:** clear `'Weekly Data'!A2:E` and write all of `weekly.json` (it re-pulls from 8/3, so late denials are reflected). Leave column F alone.
 - **Affiliates:** read A:I. For each pulled affiliate, match on email (column B). Existing row: update D (program), E (joined), F (status) and leave C and I alone. New row: append with C = the Marketer of the row whose email equals `upline_email`, if that row has one, else blank; I = "Marketer set from UpPromote upline" when set. Rows not in UpPromote stay (BixGrow-era accounts).
@@ -63,6 +66,6 @@ If `UPPROMOTE_MCP_KEY` is not set but the UpPromote connector tools (`list_affil
 ## 3. Finish
 
 - Append a Data Sources row per pull (run time in CT, row counts, filters).
-- Read back Summary A1:J58 and one marketer tab; check for `#VALUE!`, `#REF!`, `#N/A`, that A1 still reads "Organic Marketing Summary", that A3 (stale banner) is blank, and that row 18 is the "Marketer" header. If Summary looks rearranged, stop writing to it and alert.
+- Read back Summary A1:N59 and one marketer tab; check for `#VALUE!`, `#REF!`, `#N/A`, that A1 still reads "Organic Marketing Summary", that A3 (stale banner) is blank, and that row 19 is the "Marketer" header (row 16 is "Affiliates (total, as of period end)"; F = Month to date). If Summary looks rearranged, stop writing to it and alert.
 - **Slack alert:** if the UpPromote pull failed, Shopify failed, A3 is not blank, or the Summary check failed, post in the private channel `#organic-tracker-alerts` (`C0C8HMX8V3M`, John and Megan) a message starting "Organic tracker refresh problem:" with what failed and the error text (never include keys). Post nothing when everything worked.
 - Reply with: leagues added (and any with a Suggested lead), announced but not live, new affiliates with no marketer, and team signups last week vs prior week.
