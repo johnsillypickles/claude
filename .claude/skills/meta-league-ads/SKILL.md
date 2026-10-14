@@ -120,3 +120,5 @@ The `Fall26 League Status` tab compares Kameron's tracker (via `Kam import`) to 
 
 - `Fall26 Ad Sets`: add the row (see step 7).
 - New league that is not in the `Leagues` tabs yet: add it to the Meta map Leagues tab and the Email Ops Leagues tab with the Shopify details, or tell John so the Slack watch picks it up.
+- Never type over formula columns. Meta map `Leagues`: J and M to P (phase, campaign, ad set, live at launch) and V (ad copy line) are array formulas; to change phase use K (Phase override) and L (reason), to change the ad set change E/F/G. Meta map `Ad Sets`: F to J and Q are formulas (F pulls pin addresses from the Leagues tab, H counts leagues whose home is that ad set, so H and the number of addresses in F can differ). Email Ops `Leagues`: R and U to Y are formulas. Check with a grid read (`userEnteredValue.formulaValue`) before writing a column you have not written before.
+- Known exception: `Ad Sets` F4 (Houston P0) is typed text on John's call so it keeps the Bumpy Pickle pin.
