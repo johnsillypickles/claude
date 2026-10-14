@@ -86,7 +86,7 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 | AOV (paid orders) | | | | |
 | Share of blended net revenue | | | pts | |
 
-**C. Cost, ROAS and CAC (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Organic ROAS = organic net revenue / cost; organic CAC = cost / tracker signups. John adds these monthly, starting with September 2026. Use his figures as given; if the month isn't there yet, show `[pending: John adding <month> cost data]`. Never estimate hours, rates or commissions.
+**C. Cost, ROAS and CAC (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Organic ROAS = organic net revenue / cost; organic CAC = cost / tracker signups. John keeps the monthly cost data (starting September 2026) somewhere private, not on a tab the organic team can see, because hours could be back-calculated from it. [Location pending: ask John for the sheet link if it isn't recorded here.] Report team-level ROAS and CAC only, never per marketer. The weekly update doesn't go to the organic team, so team-level figures are fine there. Use his figures as given; if the month isn't there yet, show `[pending: John adding <month> cost data]`. Never estimate hours, rates or commissions.
 
 **Always flag:**
 
