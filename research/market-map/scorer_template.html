@@ -159,6 +159,9 @@ svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
           <div class="kpi"><b id="k-players">0</b><span id="k-players-l">Expected players</span></div>
           <div class="kpi"><b id="k-profit">$0</b><span id="k-profit-l">Profit after courts</span></div>
           <div class="kpi"><b id="k-min">0</b><span>Players to break even</span></div>
+          <div class="kpi"><b id="k-p1">$0</b><span id="k-p1-l">Expected Phase 1 ads</span></div>
+          <div class="kpi"><b id="k-net">$0</b><span>Profit after courts and Phase 1</span></div>
+          <div class="kpi"><b id="k-self">0%</b><span>Filled 80%+ with no Phase 1 ads</span></div>
         </div>
         <p class="math" id="math"></p>
         <ul class="checks" id="pchecks"></ul>
@@ -174,9 +177,9 @@ svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
   </section>
 
   <section class="notes">
-    <p><strong>What the score predicts.</strong> Whether a league here fills at least 80% of its spots. Hitting 30 players is rarely the problem: 96% of first-season leagues and 95% of all leagues got there. Facility size does not change fill, so a big facility is not penalized.</p>
+    <p><strong>What the score predicts.</strong> Whether a league here fills at least 80% of its spots, and how much Phase 1 ad spend it took to get there. Most leagues reach 30 players, but often with help: 132 of 339 leagues ran Phase 1 ads ($281,000 total), and leagues at venues scoring under 35 needed about $16 of Phase 1 spend per spot vs $7 to $8 elsewhere. Free and 50%-off launch codes added only 2 to 16 players per league. Facility size does not change fill, so a big facility is not penalized.</p>
     <p><strong>How the score works.</strong> Each factor is ranked against our 2026 venues (0 to 100), multiplied by its weight and summed. Weights: young adults aged 25 to 39 within 7 miles per Silly Pickles league already there 25%, few kids under 5 25%, pickleball search interest 20%, young adults' share of the population 15%, people moving in from out of state 10%, density 5%. Onsite bar and court count are shown as checks because neither predicted fill.</p>
-    <p><strong>Pricing.</strong> Price per player-hour = court cost ÷ (spots per court-hour × (1 − target margin)), times 0.95 below a score of 35, 1.05 from 55 to 65 and 1.10 at 65+. With a 60% target this matches what we charged in 2026 within 2% at the median, and our 2026 prices already ran about $18.50 per hour at weaker locations and $21 at strong ones. Break-even uses the expected fill for the score. Profit is after court cost only, before hosts, ads and merch.</p>
+    <p><strong>Pricing.</strong> Price per player-hour = court cost ÷ (spots per court-hour × (1 − target margin)), times 0.95 below a score of 35, 1.05 from 55 to 65 and 1.10 at 65+. With a 60% target this matches what we charged in 2026 within 2% at the median, and our 2026 prices already ran about $18.50 per hour at weaker locations and $21 at strong ones. Break-even uses the expected fill for the score. Expected Phase 1 spend is the average per spot for leagues at similar scores. Profit excludes hosts, Phase 0 ads and merch.</p>
     <p><strong>Sources.</strong> Census ACS 2020 to 2024 by ZIP, measured within 7 miles of the ZIP's center as a stand-in for a 15 minute drive. Google Trends for the nearest metro. Our league tracker and Shopify sales, Winter to Fall 2026.</p>
   </section>
 </div>
@@ -223,7 +226,7 @@ function render(inp){
   $('score').innerHTML=`${s}<span>/100</span>`;
   $('site').textContent=(inp.name?inp.name+' · ':'')+`${r.city} ${r.zip}`;
   const pill=$('pill');pill.textContent=lab;pill.style.color=col;
-  $('summary').textContent=`Leagues at venues scoring ${b.a} to ${b.b} filled 80%+ of their spots ${Math.round(100*b.healthy/b.n)}% of the time (${b.healthy} of ${b.n}) and reached 30 players ${Math.round(100*b.hit30/b.n)}% of the time. First-season leagues in this range: ${b.s1h} of ${b.s1n} filled 80%+.`;
+  $('summary').textContent=`Leagues at venues scoring ${b.a} to ${b.b} filled 80%+ of their spots ${Math.round(100*b.healthy/b.n)}% of the time (${b.healthy} of ${b.n}) and reached 30 players ${Math.round(100*b.hit30/b.n)}% of the time. First-season leagues in this range: ${b.s1h} of ${b.s1n} filled 80%+. ${Math.round(100*b.p1_share)}% needed Phase 1 ads, averaging ${usd(b.p1_spot,2)} per spot.`;
   $('rows').innerHTML=r.rows.map(x=>`<tr><td>${x.lab}</td><td><span class="d">${x.det}</span></td><td class="num">${x.w}%</td><td><span style="font-family:var(--mono);font-size:13px">${Math.round(x.p)}</span><div class="bar"><i style="width:${x.p}%"></i></div></td><td class="num">${x.pts.toFixed(1)}</td></tr>`).join('');
   $('tot').textContent=r.tot.toFixed(1);
   const ck=[];const c=parseInt(String(inp.fcourts).replace(/\D/g,''),10);
@@ -252,6 +255,8 @@ function price(){
   $('k-players').textContent=`${players} of ${spots}`;$('k-players-l').textContent=`Expected players (${Math.round(100*fill)}% fill)`;
   $('k-profit').textContent=usd(profit);$('k-profit-l').textContent=`Profit after courts (${rev?Math.round(100*profit/rev):0}% margin)`;
   $('k-min').textContent=minP;
+  const p1=b.p1_spot*spots;$('k-p1').textContent=usd(p1);$('k-p1-l').textContent=`Expected Phase 1 ads (${Math.round(100*b.p1_share)}% of similar leagues ran them)`;
+  $('k-net').textContent=usd(profit-p1);$('k-self').textContent=Math.round(100*b.self/b.n4)+'%';
   $('math').textContent=`${usd(cost)} ÷ (${pph} spots × ${Math.round(100*(1-m))}%) = ${usd(cost/(pph*(1-m)),2)}/hr${prem!==1?` × ${prem.toFixed(2)} demand adjustment = ${usd(hr,2)}/hr`:''}; × ${play} hr × ${weeks} weeks = ${usd(season)} per player. Courts: ${usd(cost)} × ${courts} × ${hrs} hr × ${weeks} wk = ${usd(courtSpend)}.`;
   const pc=[];const ph=season/(play*weeks);
   if(ph>E.price_hr_p90) pc.push(`Above 90% of our 2026 leagues (${usd(E.price_hr_p90,2)}/hr). Negotiate the court cost or add courts per hour before charging this.`);

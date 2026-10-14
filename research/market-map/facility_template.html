@@ -87,6 +87,15 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
 .notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink-2);font-size:15px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:560px){.wrap{padding-inline:16px}.panel{padding:14px}}
+.local{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.local{grid-template-columns:minmax(0,1fr)}}
+#lmap{width:100%;height:auto;display:block;background:var(--sunk);border-radius:10px}
+#lmap text{font:500 11px var(--mono);fill:var(--ink-2);paint-order:stroke;stroke:var(--sunk);stroke-width:3px}
+#lmap .ven{cursor:default}
+.ramp{display:inline-block;width:120px;height:9px;border-radius:5px;vertical-align:middle;background:linear-gradient(90deg,var(--z0),var(--z1),var(--z2))}
+:root{--z0:#d9e8ef;--z1:#5fa9c4;--z2:#0b4f6c;--fhi:#0ca30c;--fmid:#eda100;--flo:#d03b3b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--z0:#23404d;--z1:#3d8eae;--z2:#9fdcf2;--fhi:#3cc43c;--fmid:#f0b429;--flo:#e66767}}
+:root[data-theme="dark"]{--z0:#23404d;--z1:#3d8eae;--z2:#9fdcf2;--fhi:#3cc43c;--fmid:#f0b429;--flo:#e66767}
 </style>
 
 <div class="wrap">
@@ -103,6 +112,7 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
     <h2 id="map-h">Demand by metro</h2>
     <div class="controls" role="group" aria-label="Map layers">
       <button class="tog" id="togM" aria-pressed="true"><i class="sw" style="background:var(--under)"></i>Current league metros</button>
+      <button class="tog" id="togV" aria-pressed="false"><i class="sw" style="background:var(--ink)"></i>Venues</button>
       <button class="tog" id="togC" aria-pressed="true"><i class="sw" style="border:2px dashed var(--cand)"></i>New-market candidates</button>
     </div>
   </div>
@@ -125,6 +135,24 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
     <div class="tablewrap"><table id="mt"></table></div>
   </div>
   <aside class="panel profile" id="profile" aria-live="polite"></aside>
+</section>
+
+<section class="panel" aria-labelledby="loc-h">
+  <div class="row-between"><h2 id="loc-h">Inside the metro</h2><span class="muted" id="loc-name"></span></div>
+  <p class="sub">A metro's totals can hide very different neighborhoods. Diamonds are venues where we ran leagues in 2026, colored by how full their leagues got. Circles are ZIP codes where our players live, sized by players and shaded by players per 1,000 residents aged 25 to 39. Pick a metro on the map or in the table above.</p>
+  <div class="local">
+    <div>
+      <svg id="lmap" viewBox="0 0 640 460" role="img" aria-label="Venues and player home ZIP codes in the selected metro"></svg>
+      <div class="legend" style="margin-top:8px"><span><i class="sw" style="background:var(--fhi)"></i>Filled 95%+</span><span><i class="sw" style="background:var(--fmid)"></i>80 to 95%</span><span><i class="sw" style="background:var(--flo)"></i>Under 80%</span><span>Players per 1,000 aged 25 to 39 <i class="ramp"></i></span></div>
+    </div>
+    <div style="display:grid;gap:14px;min-width:0">
+      <h4 style="margin:0;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)">Venues</h4>
+      <div class="tablewrap" style="max-height:260px"><table id="vt"></table></div>
+      <h4 style="margin:0;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)">Where players live</h4>
+      <div class="tablewrap" style="max-height:260px"><table id="zt"></table></div>
+    </div>
+  </div>
+  <p class="muted" style="font-size:13px">Players: 2026 registrations, Jan to Oct, by billing ZIP; ZIPs with fewer than 3 players are left out. Venue fill is the median across its 2026 leagues (players divided by spots offered). Waitlist counts signups after a league sold out.</p>
 </section>
 
 <section class="panel" aria-labelledby="new-h">
@@ -212,6 +240,51 @@ const dots=gM.selectAll("circle").data(us.sort((a,b)=>b.orders-a.orders)).join("
 [["togM",gM],["togC",gC]].forEach(([id,g])=>{const b=document.getElementById(id);b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);g.attr("display",on?null:"none");});});
 document.getElementById("legend").innerHTML=Object.entries(V).map(([k,v])=>`<span><i class="sw" style="background:${v.color}"></i>${v.label}</span>`).join("")+`<span><i class="sw" style="border:1.5px dashed var(--cand)"></i>New-market candidate (top 60, size = population)</span>`;
 
+/* venues layer */
+const VEN=DATA.venues||[], ZIPS=DATA.zips||[];
+const fillCol=f=>f>=.95?"var(--fhi)":f>=.8?"var(--fmid)":"var(--flo)";
+const gV=svg.append("g").attr("display","none");
+gV.selectAll("rect").data(VEN.filter(v=>proj([v.lng,v.lat]))).join("rect").attr("width",6).attr("height",6)
+  .attr("x",v=>proj([v.lng,v.lat])[0]-3).attr("y",v=>proj([v.lng,v.lat])[1]-3).attr("transform",v=>{const p=proj([v.lng,v.lat]);return `rotate(45 ${p[0]} ${p[1]})`;})
+  .attr("fill",v=>fillCol(v.fill)).attr("stroke","var(--surface)").attr("stroke-width",.8)
+  .on("mousemove",(ev,v)=>showTip(ev,`<b>${v.name}</b><br>${v.city}<br>${v.leagues} leagues · ${Math.round(v.fill*100)}% median fill · ${fmtN(v.wl)} waitlisted`)).on("mouseleave",hide)
+  .on("click",(ev,v)=>select(v.metro,true));
+{const b=document.getElementById("togV");b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);gV.attr("display",on?null:"none");});}
+function renderLocal(id){
+  document.getElementById("loc-name").textContent=id;
+  const vs=VEN.filter(v=>v.metro===id), zs=ZIPS.filter(z=>z.metro===id);
+  const L=d3.select("#lmap");L.selectAll("*").remove();
+  const pts=[...vs,...zs].map(p=>[p.lng,p.lat]);
+  if(!pts.length){L.append("text").attr("x",320).attr("y",230).attr("text-anchor","middle").text("No venue or player data for this metro yet");}
+  else{
+    const pr=d3.geoMercator().fitExtent([[30,30],[610,430]],{type:"MultiPoint",coordinates:pts.length>1?pts:[pts[0],[pts[0][0]+.05,pts[0][1]+.05]]});
+    const vals=ZIPS.map(z=>z.per1k).filter(v=>v!=null).sort((a,b)=>a-b), q=p=>vals[Math.floor(p*(vals.length-1))];
+    const col=d3.scaleLinear().domain([q(.1),q(.5),q(.95)]).range(["--z0","--z1","--z2"].map(k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim())).clamp(true);
+    const rr=d3.scaleSqrt().domain([0,d3.max(zs,z=>z.n)||1]).range([2,22]);
+    L.append("g").selectAll("circle").data(zs.sort((a,b)=>b.n-a.n)).join("circle").attr("cx",z=>pr([z.lng,z.lat])[0]).attr("cy",z=>pr([z.lng,z.lat])[1]).attr("r",z=>rr(z.n))
+      .attr("fill",z=>z.per1k==null?"var(--early)":col(z.per1k)).attr("fill-opacity",.85).attr("stroke","var(--surface)").attr("stroke-width",.7)
+      .append("title").text(z=>`${z.zip} ${z.city}: ${z.n} players${z.per1k!=null?`, ${z.per1k} per 1,000 aged 25 to 39`:""}`);
+    const byCity=d3.rollups(zs,v=>({n:d3.sum(v,z=>z.n),lng:d3.sum(v,z=>z.lng*z.n)/d3.sum(v,z=>z.n),lat:d3.sum(v,z=>z.lat*z.n)/d3.sum(v,z=>z.n)}),z=>z.city).sort((a,b)=>b[1].n-a[1].n).slice(0,6);
+    L.append("g").selectAll("text").data(byCity).join("text").attr("x",d=>pr([d[1].lng,d[1].lat])[0]).attr("y",d=>pr([d[1].lng,d[1].lat])[1]-26).attr("text-anchor","middle").style("font-weight","600").style("fill","var(--ink-3)").text(d=>d[0].toUpperCase());
+    const g=L.append("g").selectAll("g").data(vs).join("g").attr("class","ven").attr("transform",v=>`translate(${pr([v.lng,v.lat])})`);
+    g.append("rect").attr("x",-7).attr("y",-7).attr("width",14).attr("height",14).attr("transform","rotate(45)").attr("fill",v=>fillCol(v.fill)).attr("stroke","var(--ink)").attr("stroke-width",1.2);
+    g.append("title").text(v=>`${v.name}, ${v.city}: ${v.leagues} leagues, ${v.players} players, ${Math.round(v.fill*100)}% median fill, ${v.wl} waitlisted`);
+    g.append("text").attr("x",11).attr("y",4).text(v=>v.name.length>26?v.name.slice(0,25)+"…":v.name);
+  }
+  const vRows=vs.map(v=>({...v,_id:v.name}));
+  makeTable(document.getElementById("vt"),[
+    {k:"name",h:"Venue",cls:"l",v:v=>v.name,f:v=>`<i class="sw" style="background:${fillCol(v.fill)};margin-right:6px"></i>${v.name}<br><span class="muted" style="font-size:12px">${v.city}</span>`,asc:true},
+    {k:"fill",h:"Fill",v:v=>v.fill,f:v=>Math.round(v.fill*100)+"%"},
+    {k:"pl",h:"Players",v:v=>v.players,f:v=>fmtN(v.players)},
+    {k:"wl",h:"Waitlist",v:v=>v.wl,f:v=>fmtN(v.wl)},
+    {k:"lg",h:"Leagues",v:v=>v.leagues}],()=>vRows,"fill","desc",null);
+  const zRows=zs.map(z=>({...z,_id:z.zip}));
+  makeTable(document.getElementById("zt"),[
+    {k:"zip",h:"ZIP",cls:"l",v:z=>z.zip,f:z=>`${z.zip} <span class="muted">${z.city}</span>`,asc:true},
+    {k:"n",h:"Players",v:z=>z.n},
+    {k:"p",h:"Per 1,000 aged 25 to 39",v:z=>z.per1k,f:z=>z.per1k==null?"–":z.per1k.toFixed(1)}],()=>zRows,"n","desc",null);
+}
+
 /* sortable table */
 function makeTable(el,cols,getRows,key,dir,onRow){
   let k=key,d=dir;
@@ -258,6 +331,7 @@ function select(id,scroll){
     ${kv([["Meta ad spend",fmt$(m.spend)],["Cost per new player",fmt$(m.costNew)],["Ad click-through rate",m.ctr==null?"–":(m.ctr*100).toFixed(2)+"%"]])}
     ${m.pop?`<h4>Market (Census 2024)</h4>${kv([["Metro population",fmtN(m.pop)],["5-year growth",pct1(m.growth)],["Aged 25 to 44",pct0(m.y2544)],["Bachelor's degree or higher",pct0(m.ba)],["Median household income",fmt$(m.income)],["Aged 25 to 44 moving in from another state, per year",m.transplant==null?"–":(m.transplant*100).toFixed(1)+"%"+(m.milFlag?" (military base)":"")],["Change vs 2015 to 2019",m.tChange==null?"–":(m.tChange>=0?"+":"")+(m.tChange*100).toFixed(1)+" pts"],["Growth in residents aged 25 to 44",pct1(m.growth2544)],["Pickleball search interest",m.trends==null?"–":Math.round(m.trends)+" / 100"],["Leagues per 100k aged 25 to 44",m.density==null?"–":m.density.toFixed(2)]])}`:`<p class="muted">Census data covers US metros only.</p>`}
     ${(m.news||[]).length?`<h4>In the news</h4><ul style="margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px">${m.news.map(n=>`<li>${n.dir==="in"?"Named as a destination":"Named as losing young adults"}: <a href="${n.url}" target="_blank" rel="noopener">${n.src}</a></li>`).join("")}</ul>`:""}`;
+  renderLocal(m.metro);
   if(scroll) document.getElementById("profile").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 select((M.filter(m=>m.verdict==="under"&&!m.intl).sort((a,b)=>b.orders-a.orders)[0]||M[0]).metro,false);
