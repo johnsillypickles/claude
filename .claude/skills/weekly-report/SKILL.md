@@ -43,8 +43,9 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 ## Targets
 
 - Q3 2026: Net revenue $1,800,000, Ad spend $566,000, Blended ROAS 3.18x, Spend-to-revenue 31.5%. Final: $1,966,440 net, $635,893 spend, 3.09x.
-- Q4 2026: net revenue up 30% vs Q3 actual = $1,966,440 x 1.30 = **$2,556,372**. Ad spend at about 30% of revenue = **$766,912** budget, which implies **3.33x** blended ROAS (1 / 0.30). "Vs Q3" is read as Q3 actual, not the Q3 target; confirm with John if unsure.
+- Q4 2026: net revenue up 30% vs Q3 actual = $1,966,440 x 1.30 = **$2,556,372**. Ad spend at about 30% of revenue = **$766,912** budget, which implies **3.33x** blended ROAS (1 / 0.30). "Vs Q3" is read as Q3 actual, not the Q3 target. As of 10/14/26 John marks these targets **(PENDING)** in the doc: label the target column and bullet that way until he says they are final.
 - For pacing, compare QTD against the target prorated by days elapsed (Q4 has 92 days).
+- Early in a quarter, spend-to-revenue runs high because spend leads revenue. Next to the QTD figure, give context with real numbers, not softer wording: the same days of the prior quarter and where that quarter finished (Q3 2026: 42.7% after 7/1 to 7/11, finished 32.3%), and spend-to-revenue excluding Phase 1 (Meta + TikTok Problem Children spend and its platform-attributed revenue). Always report the headline number unchanged.
 - For any other quarter, ask John for targets. Never invent them.
 
 ## Section order
@@ -146,6 +147,6 @@ Sources:
 Section layout:
 1. Coverage line from the Dashboard (leagues starting in 30 days, how many have outreach started, coverage %, follow-ups due, unassigned).
 2. **Activity this week** (from email): facility, who reached out, what was asked or sent, the facility's response, and the league's current fill %.
-3. **At-risk leagues**: start within 14 days and under 60% full, with outreach status (flag any with no outreach).
+3. **At-risk leagues**: start within 14 days and under 30 players signed up (John's rule from 10/14/26), with outreach status (flag any with no outreach).
 4. **Tracker updates needed**: leagues where email activity isn't reflected in the tracker.
 - Don't present "avg fill, contacted vs not contacted" from the Dashboard as an effect of outreach: the team targets struggling leagues, so contacted leagues are lower-fill by selection.
