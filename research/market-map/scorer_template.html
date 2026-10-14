@@ -54,7 +54,7 @@ tfoot td{font-weight:600;border-bottom:0}
 h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 4px}
 .sub{color:var(--muted);margin:0 0 12px;font-size:14px;max-width:72ch}
 svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
-.bands{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}
+.bands{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
 @media (max-width:620px){.bands{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .band{border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px}
 .band b{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:500}
@@ -65,13 +65,24 @@ svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
 .ex{display:flex;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--muted);align-items:center}
 .ex button{background:transparent;color:var(--court);padding:4px 9px;font-weight:500;font-size:13px}
 @media (prefers-reduced-motion:no-preference){.bar i{transition:width .35s ease}}
+.prow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:620px){.prow{grid-template-columns:1fr 1fr}}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:6px}
+.kpi{background:var(--panel);padding:12px 14px;display:grid;gap:2px}
+.kpi b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12.5px;color:var(--muted)}
+.kpi.hero b{color:var(--court);font-size:30px}
+.math{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.7;overflow-wrap:anywhere}
+.two{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:820px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
 <div class="wrap">
   <header>
     <div class="eyebrow">Silly Pickles league scouting</div>
     <h1>Venue Scorer</h1>
-    <p>Enter a facility's address to see how its location compares with the 442 venues where we ran leagues in 2026, and how leagues at similar scores performed.</p>
+    <p>Should we run a league here? Enter a facility's address to compare its location with the venues where we ran 339 US leagues in 2026, see how well leagues in similar spots filled, and get a price per hour from your court cost.</p>
   </header>
 
   <div class="grid">
@@ -85,14 +96,14 @@ svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
         <div class="row2">
           <label for="bar">Onsite bar
             <select id="bar"><option value="unknown">Unknown</option><option value="yes">Yes</option><option value="no">No</option></select></label>
-          <label for="courts">Courts
-            <input id="courts" inputmode="numeric" placeholder="12"></label>
+          <label for="fcourts">Courts at facility
+            <input id="fcourts" inputmode="numeric" placeholder="12"></label>
         </div>
         <label for="ig">Instagram followers <small>optional, not scored</small>
           <input id="ig" inputmode="numeric" placeholder="4,200"></label>
         <button type="submit">Score this venue</button>
         <p class="err" id="err" hidden></p>
-        <div class="ex">Try: <button type="button" data-ex="0">Centerline 33</button><button type="button" data-ex="1">Brooklyn ZIP 11211</button><button type="button" data-ex="2">Plano ZIP 75024</button></div>
+        <div class="ex">Try: <button type="button" data-ex="0">Centerline 33</button><button type="button" data-ex="1">Lincoln Park</button><button type="button" data-ex="2">Highland Park</button><button type="button" data-ex="3">Brooklyn</button></div>
       </form>
     </section>
 
@@ -114,36 +125,79 @@ svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
     </section>
   </div>
 
+  <section class="panel" aria-labelledby="pr-h">
+    <h2 id="pr-h">Pricing</h2>
+    <p class="sub">Enter what the facility charges us. The price covers court cost with our target margin if the league fills, then moves with demand: 5% lower at weak locations, 5% to 10% higher at strong ones. Expected fill for this score drives the projected players and profit.</p>
+    <div class="two">
+      <form id="pf" novalidate style="display:grid;gap:12px">
+        <label for="cost">Court cost <small>$ per court per hour</small>
+          <input id="cost" inputmode="decimal" value="35"></label>
+        <div class="row2">
+          <label for="ncourts">Courts for us <small>per week</small>
+            <input id="ncourts" inputmode="numeric" value="4"></label>
+          <label for="nhours">League hours <small>per week</small>
+            <input id="nhours" inputmode="decimal" value="3"></label>
+        </div>
+        <div class="row2">
+          <label for="weeks">Weeks
+            <input id="weeks" inputmode="numeric" value="8"></label>
+          <label for="playhrs">Play hours <small>per player per week</small>
+            <input id="playhrs" inputmode="decimal" value="1"></label>
+        </div>
+        <div class="row2">
+          <label for="margin">Target margin <small>if full, after courts, %</small>
+            <input id="margin" inputmode="numeric" value="60"></label>
+          <label for="pph">Spots per court-hour
+            <input id="pph" inputmode="decimal" value="4.2"></label>
+        </div>
+      </form>
+      <div>
+        <div class="kpis">
+          <div class="kpi hero"><b id="k-hr">$0</b><span>Price per player-hour</span></div>
+          <div class="kpi"><b id="k-season">$0</b><span>Season price per player</span></div>
+          <div class="kpi"><b id="k-be">$0</b><span>Break-even per player-hour</span></div>
+          <div class="kpi"><b id="k-players">0</b><span id="k-players-l">Expected players</span></div>
+          <div class="kpi"><b id="k-profit">$0</b><span id="k-profit-l">Profit after courts</span></div>
+          <div class="kpi"><b id="k-min">0</b><span>Players to break even</span></div>
+        </div>
+        <p class="math" id="math"></p>
+        <ul class="checks" id="pchecks"></ul>
+      </div>
+    </div>
+  </section>
+
   <section class="panel">
-    <h2>How leagues at each score performed</h2>
-    <p class="sub">Each dot is one 2026 league, placed by its venue's score. Filled dots sold out. The line marks this site.</p>
-    <div style="overflow-x:auto"><svg id="strip" viewBox="0 0 1000 150" style="width:100%;min-width:520px;height:auto" role="img" aria-label="League scores and sell-outs"></svg></div>
+    <h2>How leagues at each score filled</h2>
+    <p class="sub">Each dot is one 2026 league, placed by its venue's score. Filled dots filled at least 80% of their spots. The line marks this site. Fill is players divided by spots offered, so big and small facilities are compared fairly.</p>
+    <div style="overflow-x:auto"><svg id="strip" viewBox="0 0 1000 150" style="width:100%;min-width:520px;height:auto" role="img" aria-label="League scores and fill"></svg></div>
     <div class="bands" id="bands"></div>
   </section>
 
   <section class="notes">
-    <p><strong>How the score works.</strong> Each factor is ranked against our 2026 league venues (0 to 100), multiplied by its weight, and summed. Weights: young adults per existing league 25%, pickleball search 15%, people moving in 15%, density 15%, few young kids 15%, onsite bar 15%.</p>
-    <p><strong>Sources.</strong> Census ACS 2020 to 2024 by ZIP (ages 25 to 39, kids under 5, out-of-state movers, population and land area) within 7 miles of the ZIP's center, as a stand-in for a 15 minute drive. Google Trends search interest for the nearest metro. Our league results Winter to Fall 2026, with sell-outs counted only when inventory sold through, not when registration was closed by hand.</p>
-    <p><strong>Limits.</strong> The score ranks locations, not individual venues: about 60% of the difference between venues comes from the venue itself (prime-time courts, the host, promotion). Court count is shown as a check, not scored: venues with 6 or fewer courts drew more demand per spot than bigger ones in the same metro. New venues often improve in season 2.</p>
+    <p><strong>What the score predicts.</strong> Whether a league here fills at least 80% of its spots. Hitting 30 players is rarely the problem: 96% of first-season leagues and 95% of all leagues got there. Facility size does not change fill, so a big facility is not penalized.</p>
+    <p><strong>How the score works.</strong> Each factor is ranked against our 2026 venues (0 to 100), multiplied by its weight and summed. Weights: young adults aged 25 to 39 within 7 miles per Silly Pickles league already there 25%, few kids under 5 25%, pickleball search interest 20%, young adults' share of the population 15%, people moving in from out of state 10%, density 5%. Onsite bar and court count are shown as checks because neither predicted fill.</p>
+    <p><strong>Pricing.</strong> Price per player-hour = court cost ÷ (spots per court-hour × (1 − target margin)), times 0.95 below a score of 35, 1.05 from 55 to 65 and 1.10 at 65+. With a 60% target this matches what we charged in 2026 within 2% at the median, and our 2026 prices already ran about $18.50 per hour at weaker locations and $21 at strong ones. Break-even uses the expected fill for the score. Profit is after court cost only, before hosts, ads and merch.</p>
+    <p><strong>Sources.</strong> Census ACS 2020 to 2024 by ZIP, measured within 7 miles of the ZIP's center as a stand-in for a 15 minute drive. Google Trends for the nearest metro. Our league tracker and Shopify sales, Winter to Fall 2026.</p>
   </section>
 </div>
 
 <script>
 const D=__DATA__;
-const R=7, W=D.W;
+const R=7, W=D.W, E=D.econ;
 const ZIP=new Map(D.zips.map(r=>[r[0],r]));
 const $=id=>document.getElementById(id);
 const hav=(a,b,c,d)=>{const r=Math.PI/180,p1=a*r,p2=c*r,dp=p2-p1,dl=(d-b)*r;return 2*3958.8*Math.asin(Math.sqrt(Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2));};
 function feat(lat,lng){let pop=0,y=0,k=0,mv=0,y2=0,area=0;
   for(const r of D.zips){if(Math.abs(r[1]-lat)>0.12||Math.abs(r[2]-lng)>0.16)continue;
     if(hav(lat,lng,r[1],r[2])>R)continue;area+=r[3];pop+=r[4];y+=r[5];k+=r[6];mv+=r[7];y2+=r[8];}
-  return {y,density:area?pop/area:null,kids:y?k/y:null,movers:y2?mv/y2:null};}
+  return {y,share:pop?y/pop:null,density:area?pop/area:null,kids:y?k/y:null,movers:y2?mv/y2:null};}
 function pct(key,x){if(x==null)return 50;const v=D.ref[key];let lo=0,eq=0;for(const y of v){if(y<x)lo++;else if(y===x)eq++;}return 100*(lo+0.5*eq)/v.length;}
 function nearestTrends(lat,lng){let b=null;for(const t of D.trends){const d=hav(lat,lng,t[0],t[1]);if(!b||d<b.d)b={d,v:t[2],n:t[3]};}return b;}
 const fmt=n=>Math.round(n).toLocaleString('en-US');
-const BANDS=[[0,35],[35,45],[45,55],[55,65],[65,101]];
-const bandStats=BANDS.map(([a,b])=>{const L=D.pts.filter(p=>p[0]>=a&&p[0]<b);return {a,b,n:L.length,so:L.filter(p=>p[1]).length};});
-function label(s){return s>=65?['Strong yes','var(--good)']:s>=55?['Worth pursuing','var(--good)']:s>=45?['Maybe','var(--mid)']:['Needs a special reason','var(--bad)'];}
+const usd=(n,dp=0)=>(n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});
+const band=s=>D.bands.find(b=>s>=b.a&&s<(b.b===100?101:b.b));
+function label(s){return s>=65?['Strong yes','var(--good)']:s>=55?['Good bet','var(--good)']:s>=35?['Workable','var(--mid)']:['Risky','var(--bad)'];}
+let last=null;
 
 function score(inp){
   const m=(inp.addr||'').match(/\b(\d{5})(?:-\d{4})?\b(?!.*\b\d{5}\b)/);
@@ -152,54 +206,76 @@ function score(inp){
   const [,lat,lng]=z, f=feat(lat,lng);
   const own=D.own.filter(o=>hav(lat,lng,o[0],o[1])<=7);
   const t=nearestTrends(lat,lng);
-  const barV={yes:1,no:0}[inp.bar]??0.5;
   const C=[
-    ['young_per_league','Young adults per league nearby',`${fmt(f.y)} aged 25 to 39 within 7 mi; ${own.length} of our Fall 2026 leagues within 7 mi`,f.y/(1+own.length)],
-    ['pickleball_popular','Pickleball search interest',`Score ${Math.round(t.v)} in ${t.n} (${Math.round(t.d)} mi away)`,t.v],
+    ['y_per','Young adults per league nearby',`${fmt(f.y)} aged 25 to 39 within 7 mi; ${own.length} of our Fall 2026 leagues within 7 mi`,f.y/(1+own.length)],
+    ['nkids','Few young kids',f.kids==null?'No data':`${Math.round(100*f.kids)} kids under 5 per 100 adults aged 25 to 39`,f.kids==null?null:-f.kids],
+    ['trends','Pickleball search interest',`Score ${Math.round(t.v)} in ${t.n} (${Math.round(t.d)} mi away)`,t.v],
+    ['y_share','Young adult share',f.share==null?'No data':`${(100*f.share).toFixed(1)}% of residents are 25 to 39`,f.share],
     ['movers','People moving in',f.movers==null?'No data':`${(100*f.movers).toFixed(1)}% of 25 to 39s moved from another state or abroad last year`,f.movers],
-    ['density','Density',f.density==null?'No data':`${fmt(f.density)} people per sq mi`,f.density],
-    ['few_kids','Few young kids',f.kids==null?'No data':`${Math.round(100*f.kids)} kids under 5 per 100 adults aged 25 to 39`,f.kids==null?null:-f.kids],
-    ['bar','Onsite bar',{yes:'Yes',no:'No'}[inp.bar]||'Unknown (scored as middle)',barV]];
+    ['density','Density',f.density==null?'No data':`${fmt(f.density)} people per sq mi`,f.density]];
   let tot=0;const rows=C.map(([k,lab,det,val])=>{const p=pct(k,val),pts=W[k]*p/100;tot+=pts;return {k,lab,det,p,pts,w:W[k]};});
   return {zip:m[1],city:`${z[9]}, ${z[10]}`,rows,tot,own,t};
 }
 function render(inp){
   const r=score(inp);const e=$('err');
-  if(r.err){e.textContent=r.err;e.hidden=false;return;} e.hidden=true;
-  const s=Math.round(r.tot),[lab,col]=label(r.tot);
+  if(r.err){e.textContent=r.err;e.hidden=false;return;} e.hidden=true;last=r;
+  const s=Math.round(r.tot),[lab,col]=label(r.tot),b=band(r.tot);
   $('score').innerHTML=`${s}<span>/100</span>`;
   $('site').textContent=(inp.name?inp.name+' · ':'')+`${r.city} ${r.zip}`;
   const pill=$('pill');pill.textContent=lab;pill.style.color=col;
-  const beats=D.pts.filter(p=>p[0]<r.tot).length/D.pts.length;
-  const b=bandStats.find(x=>r.tot>=x.a&&r.tot<x.b);
-  $('summary').textContent=`Scores higher than ${Math.round(100*beats)}% of our 2026 leagues. Leagues in the ${b.a} to ${Math.min(b.b,100)} range sold out ${b.so} of ${b.n} times (${Math.round(100*b.so/b.n)}%).`;
-  $('rows').innerHTML=r.rows.map(x=>`<tr><td>${x.lab}</td><td><span class="d">${x.det}</span></td><td class="num">${x.w}%</td><td><span class="num" style="font-family:var(--mono);font-size:13px">${Math.round(x.p)}</span><div class="bar"><i style="width:${x.p}%"></i></div></td><td class="num">${x.pts.toFixed(1)}</td></tr>`).join('');
+  $('summary').textContent=`Leagues at venues scoring ${b.a} to ${b.b} filled 80%+ of their spots ${Math.round(100*b.healthy/b.n)}% of the time (${b.healthy} of ${b.n}) and reached 30 players ${Math.round(100*b.hit30/b.n)}% of the time. First-season leagues in this range: ${b.s1h} of ${b.s1n} filled 80%+.`;
+  $('rows').innerHTML=r.rows.map(x=>`<tr><td>${x.lab}</td><td><span class="d">${x.det}</span></td><td class="num">${x.w}%</td><td><span style="font-family:var(--mono);font-size:13px">${Math.round(x.p)}</span><div class="bar"><i style="width:${x.p}%"></i></div></td><td class="num">${x.pts.toFixed(1)}</td></tr>`).join('');
   $('tot').textContent=r.tot.toFixed(1);
-  const ck=[];const c=parseInt(String(inp.courts).replace(/\D/g,''),10);
-  if(c) ck.push(c<=6?`${c} courts. In our data, venues with 6 or fewer courts drew about 1.4x the demand per spot of bigger venues in the same metro.`:`${c} courts. More courts did not mean more demand in our data; check that they can give us prime-time courts on a Sunday evening or weeknight.`);
-  if(r.own.length) ck.push(`Our leagues within 7 miles: ${[...new Set(r.own.map(o=>o[2]))].slice(0,5).join(', ')}${r.own.length>5?' and more':''}. Five or more nearby leagues sold out 29% of the time, vs 48% with 1 to 4.`);
-  else ck.push('None of our Fall 2026 leagues are within 7 miles, so there is no overlap with existing leagues.');
+  const ck=[];const c=parseInt(String(inp.fcourts).replace(/\D/g,''),10);
+  if(c) ck.push(`${c} courts at the facility. Facility size did not change fill in our data, so it is not scored. Confirm they can give us prime-time courts.`);
+  ck.push(inp.bar==='yes'?'Onsite bar: yes. Nice for the social side, but it did not predict fill, so it is not scored.':inp.bar==='no'?'Onsite bar: no. Did not predict fill in our data; plan a nearby spot for socials.':'Onsite bar: unknown. Not scored.');
+  if(r.own.length) ck.push(`Our leagues within 7 miles: ${[...new Set(r.own.map(o=>o[2]))].slice(0,5).join(', ')}${r.own.length>5?' and more':''}.`);
+  else ck.push('None of our Fall 2026 leagues are within 7 miles.');
   const ig=parseInt(String(inp.ig).replace(/\D/g,''),10);
   if(ig) ck.push(`Instagram: ${ig.toLocaleString('en-US')} followers. Not scored yet; we have not collected this for past venues.`);
-  if(r.t.v>=90) ck.push('Very high pickleball search. Retirement-heavy metros also search a lot, so check the young adult count before leaning on this.');
+  if(r.t.v>=90) ck.push('Very high pickleball search. Retirement-heavy metros also search a lot, so check the young adult numbers above.');
   $('checks').innerHTML=ck.map(x=>`<li>${x}</li>`).join('');
   drawStrip(r.tot);
-  $('bands').innerHTML=bandStats.map(x=>`<div class="band${r.tot>=x.a&&r.tot<x.b?' on':''}"><b>Score ${x.a} to ${Math.min(x.b,100)}</b><strong>${Math.round(100*x.so/x.n)}%</strong> sold out<br><span style="color:var(--muted)">${x.so} of ${x.n} leagues</span></div>`).join('');
+  $('bands').innerHTML=D.bands.map(x=>`<div class="band${x===b?' on':''}"><b>Score ${x.a} to ${x.b}</b><strong>${Math.round(100*x.healthy/x.n)}%</strong> filled 80%+<br><span style="color:var(--muted)">${x.healthy} of ${x.n} leagues · median fill ${Math.round(100*x.fill)}%</span></div>`).join('');
+  price();
+}
+const val=(id,d)=>{const v=parseFloat(String($(id).value).replace(/[^0-9.]/g,''));return isFinite(v)&&v>0?v:d;};
+function price(){
+  if(!last) return;
+  const cost=val('cost',E.cost_med),courts=val('ncourts',4),hrs=val('nhours',3),weeks=val('weeks',8),play=val('playhrs',1),pph=val('pph',E.pph);
+  const m=Math.min(val('margin',60),90)/100, b=band(last.tot), fill=Math.min(b.fill,1);
+  const prem=last.tot>=65?1.10:last.tot>=55?1.05:last.tot>=35?1:0.95;
+  const be=cost/(pph*fill), hr=cost/(pph*(1-m))*prem, season=Math.round(hr*play*weeks);
+  const spots=Math.round(courts*hrs*pph/play), players=Math.round(spots*fill);
+  const courtSpend=cost*courts*hrs*weeks, rev=players*season, profit=rev-courtSpend, minP=Math.ceil(courtSpend/season);
+  $('k-hr').textContent=usd(season/(play*weeks),2);$('k-season').textContent=usd(season);$('k-be').textContent=usd(be,2);
+  $('k-players').textContent=`${players} of ${spots}`;$('k-players-l').textContent=`Expected players (${Math.round(100*fill)}% fill)`;
+  $('k-profit').textContent=usd(profit);$('k-profit-l').textContent=`Profit after courts (${rev?Math.round(100*profit/rev):0}% margin)`;
+  $('k-min').textContent=minP;
+  $('math').textContent=`${usd(cost)} ÷ (${pph} spots × ${Math.round(100*(1-m))}%) = ${usd(cost/(pph*(1-m)),2)}/hr${prem!==1?` × ${prem.toFixed(2)} demand adjustment = ${usd(hr,2)}/hr`:''}; × ${play} hr × ${weeks} weeks = ${usd(season)} per player. Courts: ${usd(cost)} × ${courts} × ${hrs} hr × ${weeks} wk = ${usd(courtSpend)}.`;
+  const pc=[];const ph=season/(play*weeks);
+  if(ph>E.price_hr_p90) pc.push(`Above 90% of our 2026 leagues (${usd(E.price_hr_p90,2)}/hr). Negotiate the court cost or add courts per hour before charging this.`);
+  else if(ph<E.price_hr_p10) pc.push(`Below 90% of our 2026 leagues (${usd(E.price_hr_p10,2)}/hr). Room to charge more if the market supports it.`);
+  else pc.push(`Within our usual range: ${usd(E.price_hr_p10,2)} to ${usd(E.price_hr_p90,2)} per player-hour, median ${usd(E.price_hr_med,2)}.`);
+  if(minP>=30) pc.push(`Needs ${minP} players to cover courts, above the 30-player minimum.`);
+  $('pchecks').innerHTML=pc.map(x=>`<li>${x}</li>`).join('');
 }
 function drawStrip(at){
   const sv=$('strip'),x=v=>40+v*9.2;let h='';
   for(let v=0;v<=100;v+=20)h+=`<line x1="${x(v)}" x2="${x(v)}" y1="18" y2="118" stroke="var(--line)"/><text x="${x(v)}" y="138" text-anchor="middle">${v}</text>`;
   let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
-  for(const [s,so] of D.pts){const y=28+rnd()*80;h+=so?`<circle cx="${x(s)}" cy="${y}" r="3.6" fill="var(--court)"/>`:`<circle cx="${x(s)}" cy="${y}" r="3.2" fill="var(--panel)" stroke="var(--dot)" stroke-width="1.2"/>`;}
+  for(const [s,ok] of D.pts){const y=28+rnd()*80;h+=ok?`<circle cx="${x(s)}" cy="${y}" r="3.6" fill="var(--court)"/>`:`<circle cx="${x(s)}" cy="${y}" r="3.2" fill="var(--panel)" stroke="var(--dot)" stroke-width="1.2"/>`;}
   h+=`<line x1="${x(at)}" x2="${x(at)}" y1="10" y2="122" stroke="var(--ball-ink)" stroke-width="2.5"/><rect x="${x(at)-26}" y="0" width="52" height="16" rx="8" fill="var(--ball)"/><text x="${x(at)}" y="12" text-anchor="middle" style="fill:var(--ball-ink);font-weight:500">${Math.round(at)}</text>`;
   sv.innerHTML=h;
 }
-const EX=[{name:'Centerline 33',addr:'555 Rohnert Park Expressway, Rohnert Park, CA 94928',bar:'unknown',courts:'33',ig:''},
-  {name:'Example: Williamsburg',addr:'Brooklyn, NY 11211',bar:'yes',courts:'6',ig:''},
-  {name:'Example: West Plano',addr:'Plano, TX 75024',bar:'yes',courts:'12',ig:''}];
+const EX=[{name:'Centerline 33',addr:'555 Rohnert Park Expressway, Rohnert Park, CA 94928',bar:'unknown',fcourts:'33',ig:''},
+  {name:'SPF Lincoln Park',addr:'Chicago, IL 60614',bar:'yes',fcourts:'',ig:''},
+  {name:'Dinx Social Club',addr:'Highland Park, IL 60035',bar:'yes',fcourts:'',ig:''},
+  {name:'Example: Williamsburg',addr:'Brooklyn, NY 11211',bar:'yes',fcourts:'6',ig:''}];
 function fill(e){for(const k in e)$(k).value=e[k];render(e);}
-const read=()=>({name:$('name').value.trim(),addr:$('addr').value,bar:$('bar').value,courts:$('courts').value,ig:$('ig').value});
+const read=()=>({name:$('name').value.trim(),addr:$('addr').value,bar:$('bar').value,fcourts:$('fcourts').value,ig:$('ig').value});
 $('f').addEventListener('submit',ev=>{ev.preventDefault();render(read());});
+$('pf').addEventListener('input',price);$('pf').addEventListener('submit',ev=>ev.preventDefault());
 document.querySelectorAll('[data-ex]').forEach(b=>b.addEventListener('click',()=>fill(EX[+b.dataset.ex])));
 fill(EX[0]);
 </script>
