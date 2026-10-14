@@ -90,3 +90,13 @@ Both are private until shared from the page's **Share** menu. Both are owned by 
 Paste this as the first message (or as Claude Code project instructions):
 
 > We're continuing the Silly Pickles League Market Map work. Read `research/market-map/HANDOFF.md` on branch `claude/exciting-goldberg-croh9s` in `johnsillypickles/claude` first. Work on that branch. The published pages are https://claude.ai/artifact/JUbi7isVxbhVFCw3WXaSq9 (internal) and https://claude.ai/artifact/8c53FYjzeAo6DH1ADQV8YK (Tommy's facility page); republish to those same links. Never commit raw Klaviyo events or anything with customer emails. No em dashes or en dashes in anything you write.
+
+## Venue scoring (added 2026-10-14)
+
+Question from Tommy: how to judge a new partner facility. Tested against 474 US leagues (Fall 2025 to Fall 2026, 200 sold out = 42%).
+
+- Features are measured within 7 miles of the venue (stand-in for a 15 minute drive) from Census ACS 2024 ZIP data (`external/zcta_a.json`, `external/zcta_m.json`). Venue location is the ZIP from the Shopify description (359 leagues) or the title city (115).
+- Score parts are percentiles. **Proposed:** young adults (25 to 39) per Silly Pickles league already within 7 mi 35%, population density 20%, metro pickleball search 20%, few kids under 5 per young adult 15%, young movers 10%.
+- Sell-out AUC: proposed 0.66, Tommy 60/20/20 0.64, young adults alone 0.62. In-sample, so the real edge is smaller.
+- Files: `venue_features.py` (features), `venue_test.py` (single-feature tests), `venue_score.py` (schemes), `venue_scores.csv` (one row per venue), `venues.jsonl` (parsed venue address/day/time, 250 products).
+- Not yet in data: facility and court counts (need Pickleheads or Places2Play), indoor vs outdoor for all leagues, play time.
