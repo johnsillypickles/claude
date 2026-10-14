@@ -1,6 +1,6 @@
 ---
 name: weekly-report
-description: Build the Silly Pickles Weekly Marketing Update (blended and paid performance, channels, Meta and TikTok phases, email, affiliate orders via UpPromote, organic, facility). Use when John asks to pull, build, refresh or draft the weekly report or weekly update, or asks for last week vs quarter-to-date marketing performance.
+description: Build the Silly Pickles Weekly Marketing Update (blended and paid performance, channels, Meta and TikTok phases, email, organic marketing via UpPromote, facility). Use when John asks to pull, build, refresh or draft the weekly report or weekly update, or asks for last week vs quarter-to-date marketing performance.
 ---
 
 # Silly Pickles: Weekly Marketing Update
@@ -28,8 +28,8 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
-| Affiliate orders | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See the UpPromote section below |
-| Organic referrals | Organic Marketing Tracker, `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60` (Summary tab; see the organic-tracker skill). Replaced Nate's scoreboard on 10/12/26 | If it can't be read, carry forward and mark `[Carried from last week, update]` |
+| Organic marketing (activity) | Organic Marketing Tracker (JC), `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, Summary tab, first table ("Team totals"). Replaced Nate's scoreboard on 10/12/26; never use the scoreboard | If it can't be read, carry forward and mark `[Carried from last week, update]` |
+| Organic marketing (revenue) | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See "Organic Marketing (UpPromote)" below |
 | Facility | Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) plus Gmail threads John is copied on | See "Facility Marketing" below |
 
 ## Formulas
@@ -56,15 +56,16 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 5. **By Campaign Type: Meta (last week)**: Phase 0 and Phase 1: Spend, Purchases, Revenue, ROAS (Meta), ROAS (Le Pixel), CAC.
 6. **By Campaign Type: TikTok (last week)**
 7. **Email (Klaviyo)**
-8. **Affiliate Orders (UpPromote)**: see below.
-9. **Organic Marketing**
-10. **Facility Marketing**
+8. **Organic Marketing (UpPromote)**: see below. One section; affiliates, UpPromote and organic marketing are the same program.
+9. **Facility Marketing**
 
-## Affiliate Orders (UpPromote)
+## Organic Marketing (UpPromote)
 
-UpPromote replaced BixGrow as the affiliate platform. The first tagged order is 2026-08-14, and tracking only took hold the week of 8/24. It's the primary affiliate source from Q4 2026 on.
+Affiliates, UpPromote and organic marketing are one program, reported in one section. The organic team are internal part-time marketers. Each is paid an hourly rate plus a bonus for signups from the affiliates they recruit, and also posts their own UpPromote link for a bonus. UpPromote replaced BixGrow (first tagged order 2026-08-14; tracking took hold the week of 8/24).
 
-**Pull.** Shopify Admin GraphQL, 50 per page, paginated on `endCursor` until `hasNextPage` is false:
+**A. Activity: tracker table (primary).** Copy the first table on the Summary tab of the Organic Marketing Tracker (JC) as-is: rows "Affiliates onboarded", "Clicks", "Signups", "Conversion rate (signups / clicks)", "Affiliates (total, as of period end)" with columns Last week, Prior week, WoW Change, Quarter to date, Month to date. Read `Summary!A1:F16`; check that the "Last week starts" cell matches the report week before copying, and note the "UpPromote data through" timestamp. Tracker signups are league spots from UpPromote referrals minus denied referrals (a 2-spot order counts 2), plus manual adjustments. Bullets can draw on the "By marketer" table on the same tab (top marketers by signups, clicks without signups).
+
+**B. Revenue: Shopify tagged orders.** Pull orders tagged `UpPromote_order`, 50 per page, paginated on `endCursor` until `hasNextPage` is false:
 
 ```graphql
 query($q:String!,$after:String){ orders(first:50, after:$after, query:$q, sortKey:CREATED_AT){
@@ -72,37 +73,27 @@ query($q:String!,$after:String){ orders(first:50, after:$after, query:$q, sortKe
   nodes{ name createdAt cancelledAt tags currentSubtotalPriceSet{shopMoney{amount}} } } }
 ```
 
-Use `q = "tag:UpPromote_order AND created_at:>=<quarter start>"`. Write each order as one line, `name createdAt amount flag`, with flag `BIX` if tags include `Referral-Bixgrow`, else `-`. Then run `scripts/uppromote_weekly.py <file> <week_end YYYY-MM-DD> <qtd_start YYYY-MM-DD>`, which buckets by Central-time Mon to Sun week.
+Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter start, whichever is earlier>"`. Write each order as one line, `name createdAt amount flag`, with flag `BIX` if tags include `Referral-Bixgrow`, else `-`. Then run `scripts/uppromote_weekly.py <file> <week_end YYYY-MM-DD> <qtd_start YYYY-MM-DD>`, which buckets by Central-time Mon to Sun week.
 
-**Definitions.**
-
-- Orders = every tagged order, excluding cancelled ones.
-- Paid orders = orders with a subtotal above $0. Test and free codes such as `johntest100` and `SOCIALHOST-FREELEAGUE` come through as $0.
-- Net revenue = sum of `currentSubtotalPriceSet`, which is after discounts and refunds, before tax and shipping. Label it as close to net sales.
-- AOV = Net revenue / Paid orders.
-- Share of blended net revenue = UpPromote net / `reporting_net_sales` for the same period. Share of signups = UpPromote orders / `total_orders`.
-
-**Table.**
+- Orders = tagged orders, excluding cancelled. Paid orders = subtotal above $0 (test and free codes such as `johntest100` and `SOCIALHOST-FREELEAGUE` are $0).
+- Net revenue = sum of `currentSubtotalPriceSet` (after discounts and refunds, before tax and shipping). AOV = Net revenue / Paid orders.
+- Share of blended net revenue = organic net / `reporting_net_sales`; share of signups = tagged orders / `total_orders`.
 
 | Metric | Week Ending [date] | Prior Week | WoW | Quarter to Date |
 |---|---|---|---|---|
-| Orders | | | | |
-| Paid orders (excl. $0) | | | | |
+| Tagged orders | | | | |
 | Net revenue | | | | |
 | AOV (paid orders) | | | | |
 | Share of blended net revenue | | | pts | |
-| Share of signups | | | pts | |
 
-Then add a weekly trend table (Week Ending, Orders, Net Revenue) for the quarter, followed by 2 to 4 bullets.
+**C. Cost, ROAS and CAC (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Organic ROAS = organic net revenue / cost; organic CAC = cost / tracker signups. John adds these monthly, starting with September 2026. Use his figures as given; if the month isn't there yet, show `[pending: John adding <month> cost data]`. Never estimate hours, rates or commissions.
 
 **Always flag:**
 
-- Tagged orders that don't match the Organic Marketing scoreboard's referral signups. The scoreboard applies eligibility and facility filters. Say which definition you used.
-- The number of $0 orders.
-- Orders tagged for both UpPromote and BixGrow, so they aren't counted twice if BixGrow is also reported.
-- Commission cost, which isn't in Shopify. It's in UpPromote and the scoreboard's `DATA_UP_Referrals` tab. If you can't get it, write `[commission pending]` and leave affiliate ROAS and CAC out.
-- Known outages. For example, 9/22 to 9/25/2026: promo codes were deleted, attribution broke, and Megan made manual commission fixes. Search Slack for "UpPromote" in the report week before writing bullets.
-- Q3 2026 only: UpPromote wasn't live before 8/14, so QTD share understates the channel. Also give the share from 8/24 onward.
+- Tracker signups (spots, minus denied, plus adjustments) vs Shopify tagged orders (orders) will differ. Say which number each line uses.
+- The number of $0 orders and any orders tagged for both UpPromote and BixGrow.
+- Commission rule changes and outages. Search Slack for "UpPromote" in the report week (e.g. 10/8/26: commission changed from per order to per league item; 9/22 to 9/25/26: promo codes deleted, attribution broke).
+- Refund restatements of prior weeks' revenue.
 
 ## Style
 
