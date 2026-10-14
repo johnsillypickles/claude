@@ -100,3 +100,5 @@ Question from Tommy: how to judge a new partner facility. Tested against 474 US 
 - Sell-out AUC: proposed 0.66, Tommy 60/20/20 0.64, young adults alone 0.62. In-sample, so the real edge is smaller.
 - Files: `venue_features.py` (features), `venue_test.py` (single-feature tests), `venue_score.py` (schemes), `venue_scores.csv` (one row per venue), `venues.jsonl` (parsed venue address/day/time, 250 products).
 - Not yet in data: facility and court counts (need Pickleheads or Places2Play), indoor vs outdoor for all leagues, play time.
+- Venue attributes (courts, indoor/outdoor, onsite bar, ownership, price) come from the "2. Active Facility Info" tab of the facility Google Sheet (id 12rKw_tjrxTrAtQ07EI2eBLDw7BRvBYYF0EiMMe7TksM). `fac_join.py` matches 442 of 463 leagues by name and city; `fac_test.py` tests them. Contact columns are never extracted or committed.
+- Results (same metro and season comparisons): 6 or fewer courts 1.41x demand vs 7+ (higher in 32 of 43); onsite bar sells out 54% vs 31%; outdoor 59% vs 46% (mostly better locations). Adding venue traits lifts Fall 2026 holdout rho from 0.27 to 0.30.
