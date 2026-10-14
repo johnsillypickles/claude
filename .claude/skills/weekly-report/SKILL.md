@@ -102,6 +102,7 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 - Money is whole dollars in summary tables and 2 decimals for CAC in the weekly table. ROAS is 2 decimals with an "x".
 - Bullets lead with the number and the reason. Mark inferences as such.
 - Put missing data in brackets, like `[pending]`. Never estimate it.
+- **Dollar signs in the Google Doc.** The doc is created by uploading HTML with Drive `create_file` (`contentMimeType: text/html`). Google turns text between two `$` signs in one paragraph into an equation (Cambria Math italics, spaces removed). Before uploading, wrap every `$` in `<span style="color:#000000">$</span>`; tested 10/14/26, and HTML entities, zero-width spaces and plain spans do not work. After creating the doc, export it as PDF and check that no text uses Cambria Math.
 - Before sharing, check that the Lebesgue QTD net revenue matches the doc and that the weekly rows add up to the QTD totals.
 
 ## Creative report (HTML attachment)
