@@ -32,9 +32,9 @@ for name,w in S.items():
     print(f"{name:20} AUC all {a:.2f}  within-metro {wi:.2f} ({pairs} pairs)  sell-out by quintile: "+' '.join(f"{sum(o['soldout'] for o in g)/len(g):.0%}" for g in q))
 # seasonal robustness for proposed
 for o in O: o['s']=sum(o['p_'+k]*v for k,v in S['Proposed'].items())
-for o in O: o['t']=sum(o['p_'+k]*v for k,v in S['Tommy 60/20/20'].items())
+for o in O: o['tommy']=sum(o['p_'+k]*v for k,v in S['Tommy 60/20/20'].items())
 by=collections.defaultdict(list)
 for o in O: by[o['season']].append(o)
 for s,L in sorted(by.items()):
-    if len(L)>30: print(s,len(L),f"proposed {auc([o['s'] for o in L],[o['soldout'] for o in L]):.2f} tommy {auc([o['t'] for o in L],[o['soldout'] for o in L]):.2f}")
+    if len(L)>30: print(s,len(L),f"proposed {auc([o['s'] for o in L],[o['soldout'] for o in L]):.2f} tommy {auc([o['tommy'] for o in L],[o['soldout'] for o in L]):.2f}")
 json.dump(O,open('venue_scored.json','w'))
