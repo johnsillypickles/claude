@@ -50,6 +50,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 
 ## Section order
 
+0. **Executive summary** (first thing in the doc, before any table): 3 to 5 plain-English bullets for Tommy: how it's going vs pace and targets, the 1 to 3 biggest reasons, what's working, and next steps with owners. No tables, no jargon, every bullet has a number.
 1. **Quarter-to-Date**: Metric / Value / Target (net revenue, ad spend, blended ROAS, spend-to-revenue, signups, blended CAC, shop revenue gross), plus 2 pacing bullets.
 2. **Quarter-to-Date By Channel**: Meta, Google, TikTok, Total paid: Spend, Share of Spend, Purchases, Revenue, ROAS (Platform), CAC.
 3. **Weekly: Blended and Paid (last 10 weeks)**: Week Ending, Total Ad Spend, Signups, Net Revenue, Blended CAC, Blended ROAS, then paid Spend, Purchases, Revenue, CAC, ROAS (platform). Bullets on the week and on restatements.
@@ -59,6 +60,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 7. **Email (Klaviyo)**
 8. **Organic Marketing (UpPromote)**: see below. One section; affiliates, UpPromote and organic marketing are the same program.
 9. **Facility Marketing**
+Last. **Ideas and experiments to improve** (Tommy, 10/14/26): a ranked table of what would bring ad spend down as a share of revenue: # / Idea / Why (evidence with numbers) / Effort / Owner / Priority or status. Carry the list forward week to week and update each item's status and result. Always consider: league selection and fill priority (Mar's Monday field), longer lead times with pre-registration lead forms (Fort Wayne and Little Rock: $27 and $32 per signup), creative (fewer, stronger concepts; see the creative report), waitlist / Notify-me email capture, Google search expansion, referrals, localized ads, new channels. Rank by expected savings vs effort, and mark untested ideas as our assumption.
 
 ## Organic Marketing (UpPromote)
 
