@@ -1,16 +1,34 @@
-# Early Winter 2027 landing page: install steps
+# Winter 2027 ad landing page: install steps for Mar
 
-The collection already exists: https://sillypickles.com/collections/early-winter-pickleball-leagues-2027
-(a smart collection: every product with "Early Winter 2027" and "Pickleball" in the title, so new December leagues join automatically).
+**Page:** https://sillypickles.com/collections/winter-pickleball-leagues-2027
+**Preview (staging theme, already built and checked by John):** https://sillypickles.com/collections/winter-pickleball-leagues-2027?preview_theme_id=167439302914&view=winter-finder
 
-Shopify does not let Claude write code to the live theme, so these two files get pasted in by hand. Adding new files does not change any existing page.
+Every file below already sits in the staging theme "STAGING Early Winter finder (Claude, do not publish)". Copy each one from there (Themes > that theme > ... > Edit code) or from this folder in the repo. About 10 minutes.
 
-1. Shopify admin > Online Store > Themes > on **shopify/main**, click ... > **Edit code**.
-2. Under **sections**, click **Add a new section**, name it `MM-season-league-finder`, delete the starter code, and paste in all of `sections/MM-season-league-finder.liquid`. Save.
-3. Under **templates**, click **Add a new template** > type **collection** > name it `early-winter-finder` > JSON. Delete the starter code, paste in all of `templates/collection.early-winter-finder.json`. Save.
-4. Products > Collections > **Early Winter Pickleball Leagues 2027** > Theme template (right side) > pick **early-winter-finder**. Save.
-5. Open the collection URL and test: type a zip (for example 60060 for Mundelein, 75075 for Plano) and pick a state from the dropdown.
+## Files
 
-Page order: header banner, then the league finder (zip search + state dropdown + a collapsible list per state, each league links to its product page), then the same "how it works", stats, reviews and CTA blocks as the existing ad landing page.
+| # | File | New or changed | What it does |
+|---|---|---|---|
+| 1 | `sections/MM-season-league-finder.liquid` | New | Zip/city/state search, state dropdown, Learn more button, collapsible state list, "Starts in December" tag |
+| 2 | `templates/collection.winter-finder.json` | New | The page layout: header, finder, then the same blocks as the current ad landing page |
+| 3 | `sections/MM-collection-header.liquid` | **Changed** | Adds one optional setting, "Image override", under Image & fallback. It is blank by default, so every page that already uses this header looks exactly the same. The winter page uses it to show the homepage hero photo without changing the collection's own image. |
 
-To tweak text or the distance radius (default 40 miles), use the theme editor on that template; the section has settings for all of it.
+The only existing file that changes is #3. The diff is two things: four lines near the top (`if section.settings.image_override != blank ... assign img = section.settings.image_override`) and one new `image_picker` line in the schema.
+
+## Steps
+
+1. Online Store > Themes > **shopify/main** > ... > **Edit code**.
+2. **sections > Add a new section** `MM-season-league-finder`. Replace the starter code with file #1. Save.
+3. **sections > MM-collection-header.liquid**. Replace the whole file with file #3. Save. Spot-check one existing state collection page; it should look unchanged.
+4. **templates > Add a new template** > collection > JSON > name `winter-finder`. Replace the starter code with file #2. Save.
+5. Products > Collections > **Winter Pickleball Leagues 2027** > Theme template > **winter-finder** > Save.
+6. Open the page and test: type a zip (60060 Mundelein, 75075 Plano), type a state ("NJ" or "New Jersey"), pick from the dropdown, tap Learn more.
+7. Delete the staging theme once the live page looks right.
+
+## Optional
+
+`templates/collection.early-winter-finder.json` is a December-only version for `collections/early-winter-pickleball-leagues-2027`. No ads point there right now, so skip it unless John asks.
+
+## Undo
+
+Set the Winter Pickleball Leagues 2027 collection back to its old template. The new section and template files do nothing unless a page uses them.
