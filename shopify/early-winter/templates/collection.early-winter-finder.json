@@ -38,7 +38,9 @@
     "FINDER": {
       "type": "MM-season-league-finder",
       "settings": {
-        "more_url": "shopify://collections/winter-pickleball-leagues-2027"
+        "more_url": "shopify://collections/winter-pickleball-leagues-2027",
+        "heading": "<strong>Find your early winter league</strong>",
+        "subheading": "Signups are now open for leagues starting in December!"
       }
     },
     "mm_value_props_QaigXf": {
