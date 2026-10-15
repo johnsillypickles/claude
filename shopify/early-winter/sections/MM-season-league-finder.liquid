@@ -16,6 +16,7 @@
   e.g. "Vancouver, Canada: ..." becomes "Canada".
 {% endcomment %}
 
+{%- paginate collection.products by 250 -%}
 {%- liquid
   assign seen = ''
   assign states_list = ''
@@ -62,6 +63,7 @@
   #shopify-section-{{ section.id }} .lf__meta { font-size: 13px; color: #55728F; line-height: 1.45; }
   #shopify-section-{{ section.id }} .lf__tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: #FFE4E5; color: #B3261E; }
   #shopify-section-{{ section.id }} .lf__tag--out { background: #eee; color: #666; }
+  #shopify-section-{{ section.id }} .lf__tag--soon { background: #DFF3EC; color: #00664F; margin-right: 4px; }
   #shopify-section-{{ section.id }} .lf__dist { float: right; font-size: 12px; font-weight: 700; color: #00664F; }
   #shopify-section-{{ section.id }} .lf__geo-row { text-align: center; margin: -6px 0 10px; }
   #shopify-section-{{ section.id }} .lf__geo { background: none; border: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: #00664F; text-decoration: underline; text-underline-offset: 3px; }
@@ -131,7 +133,7 @@
               assign towns = towns | append: town_key
             endunless
           -%}
-          <a class="lf__card" href="{{ product.url }}" data-lf-card data-coords="{{ coords | escape }}" data-city="{{ city | downcase | escape }}" data-fac="{{ fac | downcase | escape }}">
+          <a class="lf__card" href="{{ product.url }}" data-lf-card data-coords="{{ coords | escape }}" data-city="{{ city | downcase | escape }}" data-fac="{{ fac | downcase | escape }}" data-start="{{ start | date: '%Y-%m-%d' }}">
             <span class="lf__dist" data-lf-dist></span>
             <div class="lf__city">{{ city | escape }}</div>
             <div class="lf__name">{{ fac | escape }}</div>
@@ -139,6 +141,10 @@
               {%- if day != blank -%}{{ day }}{%- endif -%}{%- if timing != blank -%}, {{ timing }}{%- endif -%}<br>
               {%- if start != blank -%}Starts {{ start | date: '%a %b %-d' }}{%- endif -%}
             </div>
+            {%- assign start_month = start | date: '%Y-%m' -%}
+            {%- if section.settings.soon_month != blank and start_month == section.settings.soon_month and product.available -%}
+              <span class="lf__tag lf__tag--soon">{{ section.settings.soon_label | escape }}</span>
+            {%- endif -%}
             {%- if product.available == false -%}
               <span class="lf__tag lf__tag--out">Sold out, join the waitlist</span>
             {%- elsif left <= section.settings.low_stock and left > 0 -%}
@@ -157,6 +163,7 @@
     </details>
   {%- endfor -%}
   </div>
+{%- endpaginate -%}
 
   {%- if section.settings.more_url != blank -%}
     <p class="lf__more">{{ section.settings.more_text | escape }} <a href="{{ section.settings.more_url }}">{{ section.settings.more_link | escape }}</a></p>
@@ -175,6 +182,12 @@
   var select = root.querySelector('[data-lf-state-select]');
 
   function say(m) { status.textContent = m || ''; }
+
+  root.querySelectorAll('.lf__state .lf__grid').forEach(function (grid) {
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('[data-lf-card]'));
+    cards.sort(function (a, b) { return (a.getAttribute('data-start') || '9999').localeCompare(b.getAttribute('data-start') || '9999'); });
+    cards.forEach(function (c) { grid.appendChild(c); });
+  });
 
   function openState(handle) {
     if (!handle) return;
@@ -270,7 +283,7 @@
       nearGrid.innerHTML = '';
       if (!close.length) {
         near.hidden = true;
-        say(found.length ? 'No early winter league within ' + MAX_MILES + ' miles yet. The closest is ' + Math.round(found[0].d) + ' miles away. Pick a state below to browse.' : 'Pick a state below to browse.');
+        say(found.length ? 'No league within ' + MAX_MILES + ' miles yet. The closest is ' + Math.round(found[0].d) + ' miles away. Pick a state below to browse.' : 'Pick a state below to browse.');
         return;
       }
       showList(close, true);
@@ -288,6 +301,8 @@
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>Find your winter league</strong>" },
     { "type": "text", "id": "subheading", "label": "Subheading", "default": "Early signups are open for early winter leagues starting in December. Search your zip, city or state, or pick from the list." },
     { "type": "text", "id": "learn_label", "label": "Learn more button", "info": "Scrolls to the next section on the page. Clear to hide.", "default": "Learn more" },
+    { "type": "text", "id": "soon_month", "label": "Highlight leagues starting in (YYYY-MM)", "info": "e.g. 2026-12. Leave blank to turn off.", "default": "" },
+    { "type": "text", "id": "soon_label", "label": "Highlight tag text", "default": "Starts in December" },
     { "type": "text", "id": "zip_placeholder", "label": "Zip placeholder", "default": "Zip code, city or state" },
     { "type": "range", "id": "max_miles", "label": "Max distance for 'Closest to you'", "min": 10, "max": 100, "step": 5, "unit": "mi", "default": 40 },
     { "type": "range", "id": "low_stock", "label": "Show 'spots left' at or below", "min": 0, "max": 40, "step": 1, "default": 15 },

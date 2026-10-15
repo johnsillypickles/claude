@@ -1,0 +1,709 @@
+{
+  "sections": {
+    "mm_collection_header_FkgbrK": {
+      "type": "MM-collection-header",
+      "name": "Collection header",
+      "settings": {
+        "collection": "",
+        "title_prefix": "",
+        "use_display_font": false,
+        "tagline": "Sign ups are open for winter leagues 🥒",
+        "cities_prefix": "Pickleball leagues for every skill level. Beginners welcome! Join solo or with friends, and we'll handle the rest.",
+        "cta_label": "Find your league",
+        "cta_bg": "#ffffff",
+        "cta_text": "#201747",
+        "cta_size": 13,
+        "fallback_bg": "#201747",
+        "focal_desktop": "center top",
+        "focal_mobile": "center top",
+        "height_desktop": 480,
+        "height_mobile": 260,
+        "corner_radius": 0,
+        "overlay_color": "#140f32",
+        "scrim_opacity": 65,
+        "text_color": "#ffffff",
+        "tagline_color": "#8fd6bd",
+        "content_left": 48,
+        "copy_max_width": 560,
+        "title_size_desktop": 44,
+        "title_size_mobile": 30,
+        "tagline_size_desktop": 18,
+        "tagline_size_mobile": 15,
+        "cities_size_desktop": 14,
+        "cities_size_mobile": 13,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "FINDER": {
+      "type": "MM-season-league-finder",
+      "settings": {
+        "heading": "<strong>Find your winter league</strong>",
+        "subheading": "Signups are open for leagues starting in December and January!",
+        "soon_month": "2026-12",
+        "soon_label": "Starts in December"
+      }
+    },
+    "mm_value_props_QaigXf": {
+      "type": "MM-value-props",
+      "blocks": {
+        "prop_t6id6h": {
+          "type": "prop",
+          "settings": {
+            "emoji": "🙌",
+            "title": "Join solo or with friends",
+            "text": "Most players come solo!"
+          }
+        },
+        "prop_MU76xg": {
+          "type": "prop",
+          "settings": {
+            "emoji": "🏓",
+            "title": "All skill levels welcome",
+            "text": "Enjoy skill-based games, every week."
+          }
+        },
+        "prop_G8Fp6x": {
+          "type": "prop",
+          "settings": {
+            "emoji": "🗓️",
+            "title": "We'll handle it all",
+            "text": "Courts, matchups, & schedules delivered."
+          }
+        },
+        "prop_xFxz7f": {
+          "type": "prop",
+          "settings": {
+            "emoji": "🤪",
+            "title": "New friends included",
+            "text": "Socials, group chats, & a whole lot of silly."
+          }
+        }
+      },
+      "block_order": [
+        "prop_t6id6h",
+        "prop_MU76xg",
+        "prop_G8Fp6x",
+        "prop_xFxz7f"
+      ],
+      "name": "Value props",
+      "settings": {
+        "eyebrow": "How it works",
+        "heading": "<strong>Recess vibes, grown up calendar.</strong>",
+        "heading_size": "h2",
+        "heading_tag": "h2",
+        "enable_highlight": false,
+        "highlight_style": "squiggle",
+        "heading_align": "center",
+        "eyebrow_color": "#201747",
+        "eyebrow_size": 12,
+        "heading_max_width": 640,
+        "heading_gap": 28,
+        "full_width": false,
+        "box_bg": "#ffffff",
+        "box_radius": 24,
+        "box_padding": 40,
+        "divider_color": "#201747",
+        "circle_bg": "#e1f3ec",
+        "circle_size": 96,
+        "title_color": "#201747",
+        "title_size": 16,
+        "title_lines": 2,
+        "title_gap": 12,
+        "text_color": "#55728f",
+        "text_size": 16,
+        "swipe_on_mobile": true,
+        "columns_mobile": "1",
+        "padding_top": 0,
+        "padding_bottom": 20
+      }
+    },
+    "mm_stats_bar_tVTqpc": {
+      "type": "MM-stats-bar",
+      "blocks": {
+        "stat_TKtTDW": {
+          "type": "stat",
+          "settings": {
+            "icon": "👥",
+            "stat": "30,000+",
+            "label": "Players nationwide"
+          }
+        },
+        "stat_UAi9DK": {
+          "type": "stat",
+          "settings": {
+            "icon": "💚",
+            "stat": "180,000",
+            "label": "GAMES PLAYED"
+          }
+        },
+        "stat_ewtdHB": {
+          "type": "stat",
+          "settings": {
+            "icon": "📍",
+            "stat": "65+",
+            "label": "Cities & growing"
+          }
+        },
+        "stat_7rJtgF": {
+          "type": "stat",
+          "settings": {
+            "icon": "🤠",
+            "stat": "COUNTLESS",
+            "label": "friendships"
+          }
+        },
+        "stat_3BVFTw": {
+          "type": "stat",
+          "settings": {
+            "icon": "🤪",
+            "stat": "0",
+            "label": "BENCHWARMERS"
+          }
+        }
+      },
+      "block_order": [
+        "stat_TKtTDW",
+        "stat_UAi9DK",
+        "stat_ewtdHB",
+        "stat_7rJtgF",
+        "stat_3BVFTw"
+      ],
+      "name": "Stats Bar",
+      "settings": {
+        "use_section_bg": false,
+        "section_bg": "#ffffff",
+        "bar_background": "#e1f3ec",
+        "bar_bg_opacity": 15,
+        "bar_border_color": "#201747",
+        "bar_border_width": 1.5,
+        "bar_radius": 0,
+        "bar_padding": 10,
+        "bar_padding_mobile": 12,
+        "show_dividers": false,
+        "divider_color": "#201747",
+        "stat_font": "poppins_n7",
+        "stat_size": 19,
+        "stat_size_mobile": 22,
+        "stat_color": "#201747",
+        "label_font": "poppins_n5",
+        "label_size": 11,
+        "label_size_mobile": 10,
+        "label_color": "#201747",
+        "label_opacity": 100,
+        "label_tracking": 9,
+        "label_gap": 4,
+        "show_icons": false,
+        "icon_size": 26,
+        "icon_size_mobile": 22,
+        "icon_gap": 10,
+        "icon_gap_mobile": 8,
+        "text_align": "center",
+        "columns_tablet": "auto",
+        "columns_mobile": "3",
+        "item_padding": 14,
+        "item_padding_mobile": 6,
+        "full_width": true,
+        "content_width": 1400,
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "padding_top_mobile": 24,
+        "padding_bottom_mobile": 24
+      }
+    },
+    "mm_step_strip_n3LgJF": {
+      "type": "MM-step-strip",
+      "blocks": {
+        "step_TVWaMk": {
+          "type": "step",
+          "settings": {
+            "emoji": "1",
+            "label": "Find your city",
+            "link": ""
+          }
+        },
+        "step_hLqn8T": {
+          "type": "step",
+          "settings": {
+            "emoji": "2",
+            "label": "Pick your league",
+            "link": ""
+          }
+        },
+        "step_wXGMfU": {
+          "type": "step",
+          "settings": {
+            "emoji": "3",
+            "label": "Show up & play",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "step_TVWaMk",
+        "step_hLqn8T",
+        "step_wXGMfU"
+      ],
+      "name": "Step strip",
+      "settings": {
+        "circle_bg": "#e5e8f2",
+        "circle_size": 56,
+        "label_color": "#201747",
+        "label_size": 17,
+        "connector_color": "#8fd6bd",
+        "connector_width": 56,
+        "gap": 20,
+        "mobile_align": "center",
+        "circle_size_mobile": 46,
+        "label_size_mobile": 14,
+        "mobile_icon_gap": 12,
+        "connector_height_mobile": 20,
+        "mobile_step_gap": 5,
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "mm_new_quotes_w733zX": {
+      "type": "MM-NEW-quotes",
+      "blocks": {
+        "testimonial_d6QC8M": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "\"I moved to Atlanta for work, knowing no one. Silly Pickles introduced me to my new friend group.\"",
+            "name": "- Sarah R.",
+            "city": "Atlanta, GA",
+            "stars": 5
+          }
+        },
+        "testimonial_EUytz4": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Sooooooooooooooooo much fun. I don’t regret it. It’s a lovely way to spend a Sunday afternoon/evening. The place that my league plays at is amazing.",
+            "name": "- Amber K.",
+            "city": "Raleigh, NC",
+            "stars": 5
+          }
+        },
+        "testimonial_xwGPtc": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "\"I'm 3 seasons in and I still look forward to league night every week!\"",
+            "name": "- Mike D.",
+            "city": "Austin, TX",
+            "stars": 5
+          }
+        },
+        "testimonial_6GxrEa": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Silly Pickles is a fun way to play pickleball. The league matches players of similar skill levels, making games enjoyable and welcoming. The socials are also fun after the games. Highly recommend!",
+            "name": "- Krystal D.",
+            "city": "Miami, FL",
+            "stars": 5
+          }
+        },
+        "testimonial_t9AYf7": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I joined a league and had a great time. Silly pickles is so much fun and a great way to meet people!",
+            "name": "- Ryan C.",
+            "city": "Orlando, FL",
+            "stars": 5
+          }
+        },
+        "testimonial_jXmchN": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I've played in a lot of adult rec leagues over the years, and Silly Pickles is my favorite by a longgggg shot. I'm a lifer!",
+            "name": "- Rachel T.",
+            "city": "Philadelphia, PA",
+            "stars": 5
+          }
+        },
+        "testimonial_8NJFdz": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Making new friends in your 30s isn't exactly something that happens every day, but Silly Pickles somehow makes it feel easy. I'm on my 5th season, and I absolutely love it!!!!",
+            "name": "- Jess L.",
+            "city": "Houston, TX",
+            "stars": 5
+          }
+        },
+        "testimonial_3ddzTi": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "NYC is a tough place to meet people. This format's great because you see the same crew every week, and can actually make friends.\"",
+            "name": "- Dave M.",
+            "city": "Brooklyn, NY",
+            "stars": 5
+          }
+        },
+        "testimonial_RMNGd9": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I started as a total newbie and totally get the hype! This is a great, social league to learn the ropes and meet people!",
+            "name": "- Alexa T.",
+            "city": "Denver, CO",
+            "stars": 5
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_d6QC8M",
+        "testimonial_EUytz4",
+        "testimonial_xwGPtc",
+        "testimonial_6GxrEa",
+        "testimonial_t9AYf7",
+        "testimonial_jXmchN",
+        "testimonial_8NJFdz",
+        "testimonial_3ddzTi",
+        "testimonial_RMNGd9"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "eyebrow": "Hear from the pickles 🥒",
+        "heading": "<strong>What our players say</strong>",
+        "heading_size": "h2",
+        "heading_tag": "h2",
+        "enable_highlight": false,
+        "highlight_style": "squiggle",
+        "subheading": "Real people, real experiences!",
+        "eyebrow_size": 16,
+        "sub_size": 14,
+        "show_arrows": true,
+        "heading_col_width": 300,
+        "column_gap": 32,
+        "show_slider_nav": true,
+        "card_width_mobile": 40,
+        "bar_track_color": "#d6e7e0",
+        "bar_thumb_color": "#2f9e77",
+        "bar_height": 4,
+        "nav_gap": 12,
+        "card_size": 248,
+        "card_padding": 20,
+        "card_gap": 16,
+        "photo_size": 56,
+        "quote_size": 14,
+        "full_width": false,
+        "band_bg": "#dff3ec",
+        "band_radius": 20,
+        "band_padding": 36,
+        "eyebrow_color": "#201747",
+        "sub_color": "#55728f",
+        "card_bg": "#ffffff",
+        "card_border": "#dff3ec",
+        "quote_color": "#201747",
+        "name_color": "#201747",
+        "city_color": "#55728f",
+        "pin_color": "#f25f66",
+        "star_color": "#ffb81c",
+        "photo_ring": "#201747",
+        "arrow_bg": "#ffffff",
+        "arrow_icon": "#201747",
+        "arrow_border": "#201747",
+        "arrow_border_hover": "#8fd6bd",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "mm_custom_details_section_4gXxWg": {
+      "type": "MM-custom-details-section",
+      "blocks": {
+        "feature_xfNf6r": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "emoji",
+            "line_icon": "calendar",
+            "icon": "🪜",
+            "title": "Move up as you improve",
+            "text": "Win more points and climb"
+          }
+        },
+        "feature_AaVLqg": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "emoji",
+            "line_icon": "calendar",
+            "icon": "🤝",
+            "title": "Never get stuck",
+            "text": "Each week brings new teammates and partners"
+          }
+        },
+        "feature_hJWBrk": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "emoji",
+            "line_icon": "calendar",
+            "icon": "😎",
+            "title": "Play your way",
+            "text": "Compete hard or just enjoy the vibes"
+          }
+        },
+        "feature_D4BfJg": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "emoji",
+            "line_icon": "calendar",
+            "icon": "🎯",
+            "title": "Dynamic updates",
+            "text": "Our system reranks automatically, so you can focus on the fun"
+          }
+        },
+        "feature_pGThCk": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "emoji",
+            "line_icon": "calendar",
+            "icon": "🔄",
+            "title": "Sub out in 2 clicks!",
+            "text": "Our system makes it easy as pickles."
+          }
+        }
+      },
+      "block_order": [
+        "feature_xfNf6r",
+        "feature_AaVLqg",
+        "feature_hJWBrk",
+        "feature_D4BfJg",
+        "feature_pGThCk"
+      ],
+      "name": "We Handle The Adulting",
+      "settings": {
+        "background": "#dff3ec",
+        "image_position": "left",
+        "vertical_align": "top",
+        "text_column_ratio": 1,
+        "media_column_ratio": 1,
+        "column_gap": 40,
+        "column_gap_mobile": 24,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 32,
+        "padding_bottom_mobile": 32,
+        "padding_horizontal": 60,
+        "padding_horizontal_mobile": 20,
+        "eyebrow": "No admin required",
+        "eyebrow_color": "#00664f",
+        "eyebrow_size": 11,
+        "heading": "<strong>Always play at your level!</strong>",
+        "heading_size": "h2",
+        "heading_size_mobile": 26,
+        "heading_color": "",
+        "heading_gap": 16,
+        "subheading": "Our ladder format is low-pressure for our beginner pickles, and competitive for our advanced pickles 🤪",
+        "subheading_size": 16,
+        "subheading_size_mobile": 15,
+        "subheading_color": "",
+        "subheading_gap": 22,
+        "text_color": "#201747",
+        "enable_highlight": true,
+        "highlight_style": "squiggle",
+        "highlight_color": "#ffcb4d",
+        "show_icon_circle": true,
+        "circle_bg": "#8fd6bd",
+        "icon_color": "#201747",
+        "icon_stroke": 1.8,
+        "icon_scale": 52,
+        "circle_size": 34,
+        "circle_size_mobile": 30,
+        "feature_icon_size": 22,
+        "feature_icon_size_mobile": 16,
+        "icon_align": "first_line",
+        "icon_gap": 13,
+        "feature_title_size": 16,
+        "feature_title_size_mobile": 14,
+        "feature_title_color": "",
+        "feature_text_size": 14,
+        "feature_text_size_mobile": 13,
+        "feature_text_color": "",
+        "feature_gap": 15,
+        "features_gap_below": 20,
+        "footnote": "",
+        "footnote_size": 14,
+        "footnote_size_mobile": 13,
+        "footnote_color": "#201747",
+        "button_label": "",
+        "button_link": "",
+        "button_color": "#ffcb4d",
+        "button_text_color": "#201747",
+        "button_size": 15,
+        "image": "shopify://shop_images/20251001_202930_bdb0dff9-5ad4-4a80-b87c-b97b97da1918.jpg",
+        "image_ratio": "landscape",
+        "image_ratio_mobile": "landscape",
+        "image_radius": 16,
+        "mobile_image_first": true
+      }
+    },
+    "mm_custom_details_section_nGCdtR": {
+      "type": "MM-custom-details-section",
+      "blocks": {
+        "feature_mhh9wi": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "line",
+            "line_icon": "calendar",
+            "icon": "🤝",
+            "title": "Meet new friends",
+            "text": "Each game day, you'll play with different people at your skill level. Our rotating partner format makes it easy to meet people naturally"
+          }
+        },
+        "feature_UdQYhF": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "line",
+            "line_icon": "calendar",
+            "icon": "🎯",
+            "title": "All skill levels welcome",
+            "text": "Pick your level when you sign up - from \"never played and unathletic\" (lol) to \"advanced (DUPR 4.0).\" We'll adjust your ranking automatically after each league night."
+          }
+        },
+        "feature_MBrBBm": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "line",
+            "line_icon": "calendar",
+            "icon": "😎",
+            "title": "Social Events",
+            "text": "Every season has planned socials off the courts... a great way to meet players that are way better than you (or way worser 🤪)"
+          }
+        },
+        "feature_NdyggG": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "line",
+            "line_icon": "calendar",
+            "icon": "🤗",
+            "title": "Fun Exercise",
+            "text": "Our games are a great way to move and stay active... so fun, you forget it's a workout."
+          }
+        },
+        "feature_KVqkLC": {
+          "type": "feature",
+          "settings": {
+            "icon_source": "line",
+            "line_icon": "calendar",
+            "icon": "🗓️",
+            "title": "Need to miss a week?",
+            "text": "No problem - just reply \"no\" to our weekly RSVP, or find a sub with a couple clicks through our system. We make it super easy!"
+          }
+        }
+      },
+      "block_order": [
+        "feature_mhh9wi",
+        "feature_UdQYhF",
+        "feature_MBrBBm",
+        "feature_NdyggG",
+        "feature_KVqkLC"
+      ],
+      "name": "Why People Love Our Leagues",
+      "settings": {
+        "background": "#c4e7d7",
+        "image_position": "right",
+        "vertical_align": "top",
+        "text_column_ratio": 1,
+        "media_column_ratio": 1,
+        "column_gap": 40,
+        "column_gap_mobile": 24,
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 32,
+        "padding_bottom_mobile": 32,
+        "padding_horizontal": 60,
+        "padding_horizontal_mobile": 20,
+        "eyebrow": "No admin required",
+        "eyebrow_color": "#00664f",
+        "eyebrow_size": 11,
+        "heading": "<strong>Why People Love Our Pickleball Leagues</strong>",
+        "heading_size": "h2",
+        "heading_size_mobile": 26,
+        "heading_color": "",
+        "heading_gap": 16,
+        "subheading": "🤪Our ladder format is low-pressure for our beginner pickles, and competitive for our advanced pickles!",
+        "subheading_size": 16,
+        "subheading_size_mobile": 15,
+        "subheading_color": "",
+        "subheading_gap": 22,
+        "text_color": "#201747",
+        "enable_highlight": true,
+        "highlight_style": "squiggle",
+        "highlight_color": "#ffcb4d",
+        "show_icon_circle": true,
+        "circle_bg": "#8fd6bd",
+        "icon_color": "#201747",
+        "icon_stroke": 1.8,
+        "icon_scale": 52,
+        "circle_size": 34,
+        "circle_size_mobile": 30,
+        "feature_icon_size": 22,
+        "feature_icon_size_mobile": 16,
+        "icon_align": "first_line",
+        "icon_gap": 13,
+        "feature_title_size": 16,
+        "feature_title_size_mobile": 14,
+        "feature_title_color": "",
+        "feature_text_size": 14,
+        "feature_text_size_mobile": 13,
+        "feature_text_color": "",
+        "feature_gap": 15,
+        "features_gap_below": 20,
+        "footnote": "",
+        "footnote_size": 14,
+        "footnote_size_mobile": 13,
+        "footnote_color": "#201747",
+        "button_label": "",
+        "button_link": "",
+        "button_color": "#ffcb4d",
+        "button_text_color": "#201747",
+        "button_size": 15,
+        "image": "shopify://shop_images/4D0572B3-53A9-4C58-9AF9-7F4DC62EA97E_1_102_o.jpg",
+        "image_ratio": "portrait",
+        "image_ratio_mobile": "landscape",
+        "image_radius": 16,
+        "mobile_image_first": true
+      }
+    },
+    "mm_end_cta_banner_APxiUt": {
+      "type": "MM-end-CTA-banner",
+      "name": "End CTA banner",
+      "settings": {
+        "collection": "",
+        "mascot": "shopify://shop_images/SillyPickles_PrimaryLogo_RGB_3.png",
+        "mascot_size": 120,
+        "heading": "Ready to meet your new favorite people?",
+        "subtext": "Winter leagues start in December and January, and spots go quick! 🏃",
+        "text_align": "left",
+        "button_label": "Find my league",
+        "show_arrow": true,
+        "button_action": "scroll",
+        "button_url": "",
+        "open_new_tab": false,
+        "scroll_target": "league-finder",
+        "full_width": false,
+        "band_bg": "#dff3ec",
+        "heading_color": "#201747",
+        "sub_color": "#55728f",
+        "button_bg": "#ffffff",
+        "button_text": "#201747",
+        "band_radius": 20,
+        "band_padding": 32,
+        "gap": 32,
+        "heading_size": 26,
+        "sub_size": 14,
+        "button_size": 14,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "mm_collection_header_FkgbrK",
+    "FINDER",
+    "mm_value_props_QaigXf",
+    "mm_stats_bar_tVTqpc",
+    "mm_step_strip_n3LgJF",
+    "mm_new_quotes_w733zX",
+    "mm_custom_details_section_4gXxWg",
+    "mm_custom_details_section_nGCdtR",
+    "mm_end_cta_banner_APxiUt"
+  ]
+}
