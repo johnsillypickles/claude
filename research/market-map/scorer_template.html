@@ -217,7 +217,7 @@ function score(inp){
     ['movers','People moving in',f.movers==null?'No data':`${(100*f.movers).toFixed(1)}% of 25 to 39s moved from another state or abroad last year`,f.movers],
     ['density','Density',f.density==null?'No data':`${fmt(f.density)} people per sq mi`,f.density]];
   let tot=0;const rows=C.map(([k,lab,det,val])=>{const p=pct(k,val),pts=W[k]*p/100;tot+=pts;return {k,lab,det,p,pts,w:W[k]};});
-  return {zip:m[1],city:`${z[9]}, ${z[10]}`,rows,tot,own,t};
+  return {zip:m[1],city:`${z[9]}, ${z[10]}`,rows,tot,own,t,lat,lng};
 }
 function render(inp){
   const r=score(inp);const e=$('err');
@@ -226,7 +226,7 @@ function render(inp){
   $('score').innerHTML=`${s}<span>/100</span>`;
   $('site').textContent=(inp.name?inp.name+' · ':'')+`${r.city} ${r.zip}`;
   const pill=$('pill');pill.textContent=lab;pill.style.color=col;
-  $('summary').textContent=`Leagues at venues scoring ${b.a} to ${b.b} filled 80%+ of their spots ${Math.round(100*b.healthy/b.n)}% of the time (${b.healthy} of ${b.n}) and reached 30 players ${Math.round(100*b.hit30/b.n)}% of the time. First-season leagues in this range: ${b.s1h} of ${b.s1n} filled 80%+. ${Math.round(100*b.p1_share)}% needed Phase 1 ads, averaging ${usd(b.p1_spot,2)} per spot.`;
+  $('summary').textContent=`Leagues at venues scoring ${b.a} to ${b.b} filled 80%+ of their spots ${Math.round(100*b.healthy/b.n)}% of the time (${b.healthy} of ${b.n}) and reached 30 players ${Math.round(100*b.hit30/b.n)}% of the time. First-season leagues in this range: ${b.s1h} of ${b.s1n} filled 80%+. ${Math.round(100*b.p1_share)}% needed Phase 1 ads, averaging ${usd(b.p1_spot,2)} per spot, or ${usd(b.p1_new,2)} of Phase 1 spend per first-time player.`;
   $('rows').innerHTML=r.rows.map(x=>`<tr><td>${x.lab}</td><td><span class="d">${x.det}</span></td><td class="num">${x.w}%</td><td><span style="font-family:var(--mono);font-size:13px">${Math.round(x.p)}</span><div class="bar"><i style="width:${x.p}%"></i></div></td><td class="num">${x.pts.toFixed(1)}</td></tr>`).join('');
   $('tot').textContent=r.tot.toFixed(1);
   const ck=[];const c=parseInt(String(inp.fcourts).replace(/\D/g,''),10);
@@ -248,7 +248,10 @@ function price(){
   const cost=val('cost',E.cost_med),courts=val('ncourts',4),hrs=val('nhours',3),weeks=val('weeks',8),play=val('playhrs',1),pph=val('pph',E.pph);
   const m=Math.min(val('margin',60),90)/100, b=band(last.tot), fill=Math.min(b.fill,1);
   const prem=last.tot>=65?1.10:last.tot>=55?1.05:last.tot>=35?1:0.95;
-  const be=cost/(pph*fill), hr=cost/(pph*(1-m))*prem, season=Math.round(hr*play*weeks);
+  const loc=D.mk.filter(p=>hav(last.lat,last.lng,p[0],p[1])<=25).map(p=>p[2]).sort((a,b)=>a-b);
+  const cap=loc.length>=3?loc[Math.min(loc.length-1,Math.floor(0.9*loc.length))]:E.price_hr_p90;
+  const hrCP=cost/(pph*(1-m))*prem, capped=hrCP>cap;
+  const be=cost/(pph*fill), hr=Math.min(hrCP,cap), season=Math.round(hr*play*weeks);
   const spots=Math.round(courts*hrs*pph/play), players=Math.round(spots*fill);
   const courtSpend=cost*courts*hrs*weeks, rev=players*season, profit=rev-courtSpend, minP=Math.ceil(courtSpend/season);
   $('k-hr').textContent=usd(season/(play*weeks),2);$('k-season').textContent=usd(season);$('k-be').textContent=usd(be,2);
@@ -257,9 +260,11 @@ function price(){
   $('k-min').textContent=minP;
   const p1=b.p1_spot*spots;$('k-p1').textContent=usd(p1);$('k-p1-l').textContent=`Expected Phase 1 ads (${Math.round(100*b.p1_share)}% of similar leagues ran them)`;
   $('k-net').textContent=usd(profit-p1);$('k-self').textContent=Math.round(100*b.self/b.n4)+'%';
-  $('math').textContent=`${usd(cost)} ÷ (${pph} spots × ${Math.round(100*(1-m))}%) = ${usd(cost/(pph*(1-m)),2)}/hr${prem!==1?` × ${prem.toFixed(2)} demand adjustment = ${usd(hr,2)}/hr`:''}; × ${play} hr × ${weeks} weeks = ${usd(season)} per player. Courts: ${usd(cost)} × ${courts} × ${hrs} hr × ${weeks} wk = ${usd(courtSpend)}.`;
+  $('math').textContent=`${usd(cost)} ÷ (${pph} spots × ${Math.round(100*(1-m))}%) = ${usd(cost/(pph*(1-m)),2)}/hr${prem!==1?` × ${prem.toFixed(2)} demand adjustment = ${usd(hrCP,2)}/hr`:''}${capped?`, capped at ${usd(cap,2)}/hr (top of what ${loc.length>=3?'our leagues within 25 miles':'our leagues overall'} charge)`:''}; × ${play} hr × ${weeks} weeks = ${usd(season)} per player. Courts: ${usd(cost)} × ${courts} × ${hrs} hr × ${weeks} wk = ${usd(courtSpend)}.`;
   const pc=[];const ph=season/(play*weeks);
-  if(ph>E.price_hr_p90) pc.push(`Above 90% of our 2026 leagues (${usd(E.price_hr_p90,2)}/hr). Negotiate the court cost or add courts per hour before charging this.`);
+  if(capped) pc.push(`Court cost is high for this market. Hitting a ${Math.round(100*m)}% margin would take ${usd(hrCP,2)}/hr, above the ${usd(cap,2)}/hr ${loc.length>=3?'nearby leagues':'our leagues'} top out at. At ${usd(ph,2)}/hr the margin if full is ${Math.round(100*(1-cost/(pph*ph)))}%. Negotiate court cost to about ${usd(cap*pph*(1-m)/prem)} per court-hour to reach target.`);
+  if(capped){}
+  else if(ph>E.price_hr_p90) pc.push(`Above 90% of our 2026 leagues (${usd(E.price_hr_p90,2)}/hr). Negotiate the court cost or add courts per hour before charging this.`);
   else if(ph<E.price_hr_p10) pc.push(`Below 90% of our 2026 leagues (${usd(E.price_hr_p10,2)}/hr). Room to charge more if the market supports it.`);
   else pc.push(`Within our usual range: ${usd(E.price_hr_p10,2)} to ${usd(E.price_hr_p90,2)} per player-hour, median ${usd(E.price_hr_med,2)}.`);
   if(minP>=30) pc.push(`Needs ${minP} players to cover courts, above the 30-player minimum.`);

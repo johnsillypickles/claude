@@ -148,11 +148,9 @@ tbody tr{cursor:pointer} tbody tr:hover,tbody tr.sel{background:var(--sunk)}
     <div style="display:grid;gap:14px;min-width:0">
       <h4 style="margin:0;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)">Venues</h4>
       <div class="tablewrap" style="max-height:260px"><table id="vt"></table></div>
-      <h4 style="margin:0;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)">Where players live</h4>
-      <div class="tablewrap" style="max-height:260px"><table id="zt"></table></div>
     </div>
   </div>
-  <p class="muted" style="font-size:13px">Players: 2026 registrations, Jan to Oct, by billing ZIP; ZIPs with fewer than 3 players are left out. Venue fill is the median across its 2026 leagues (players divided by spots offered). Waitlist counts signups after a league sold out.</p>
+  <p class="muted" style="font-size:13px">Player home areas: 2026 registrations by billing ZIP, shown as relative circle sizes; ZIPs with fewer than 3 players are left out. Venue fill is the median across its 2026 leagues (players divided by spots offered). Waitlist counts signups after a league sold out.</p>
 </section>
 
 <section class="panel" aria-labelledby="new-h">
@@ -263,7 +261,7 @@ function renderLocal(id){
     const rr=d3.scaleSqrt().domain([0,d3.max(zs,z=>z.n)||1]).range([2,22]);
     L.append("g").selectAll("circle").data(zs.sort((a,b)=>b.n-a.n)).join("circle").attr("cx",z=>pr([z.lng,z.lat])[0]).attr("cy",z=>pr([z.lng,z.lat])[1]).attr("r",z=>rr(z.n))
       .attr("fill",z=>z.per1k==null?"var(--early)":col(z.per1k)).attr("fill-opacity",.85).attr("stroke","var(--surface)").attr("stroke-width",.7)
-      .append("title").text(z=>`${z.zip} ${z.city}: ${z.n} players${z.per1k!=null?`, ${z.per1k} per 1,000 aged 25 to 39`:""}`);
+      .append("title").text(z=>`${z.zip} ${z.city}${z.per1k!=null?`: ${z.per1k} players per 1,000 residents aged 25 to 39`:""}`);
     const byCity=d3.rollups(zs,v=>({n:d3.sum(v,z=>z.n),lng:d3.sum(v,z=>z.lng*z.n)/d3.sum(v,z=>z.n),lat:d3.sum(v,z=>z.lat*z.n)/d3.sum(v,z=>z.n)}),z=>z.city).sort((a,b)=>b[1].n-a[1].n).slice(0,6);
     L.append("g").selectAll("text").data(byCity).join("text").attr("x",d=>pr([d[1].lng,d[1].lat])[0]).attr("y",d=>pr([d[1].lng,d[1].lat])[1]-26).attr("text-anchor","middle").style("font-weight","600").style("fill","var(--ink-3)").text(d=>d[0].toUpperCase());
     const g=L.append("g").selectAll("g").data(vs).join("g").attr("class","ven").attr("transform",v=>`translate(${pr([v.lng,v.lat])})`);
@@ -278,11 +276,6 @@ function renderLocal(id){
     {k:"pl",h:"Players",v:v=>v.players,f:v=>fmtN(v.players)},
     {k:"wl",h:"Waitlist",v:v=>v.wl,f:v=>fmtN(v.wl)},
     {k:"lg",h:"Leagues",v:v=>v.leagues}],()=>vRows,"fill","desc",null);
-  const zRows=zs.map(z=>({...z,_id:z.zip}));
-  makeTable(document.getElementById("zt"),[
-    {k:"zip",h:"ZIP",cls:"l",v:z=>z.zip,f:z=>`${z.zip} <span class="muted">${z.city}</span>`,asc:true},
-    {k:"n",h:"Players",v:z=>z.n},
-    {k:"p",h:"Per 1,000 aged 25 to 39",v:z=>z.per1k,f:z=>z.per1k==null?"–":z.per1k.toFixed(1)}],()=>zRows,"n","desc",null);
 }
 
 /* sortable table */

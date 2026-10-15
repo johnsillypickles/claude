@@ -8,9 +8,16 @@ L={l['product'].strip():l for l in json.load(open('leagues.json'))}
 WL=json.load(open('waitlist_agg.json'))['byLeague']
 ORD=['Fall 2025','Winter 2026','Spring 2026','Summer 2026','Fall 2026']
 done=set(ORD[1:])
+L={l['product'].strip():l for l in json.load(open('leagues.json'))}
 R=[r for r in T if r['season'] in done and 'Pickleball' in r['name'] and not re.search(r'Canada|Australia|AUS|, ON|, BC|, AB',r['name'])]
 # dedupe by name
-seen={};[seen.setdefault(r['name'].strip(),r) for r in R];R=list(seen.values())
+# dedupe: when a name appears twice, keep the row whose spots best match Shopify units sold (two tracker rows are mislabeled copies)
+seen={}
+for r in R:
+    k=r['name'].strip();sold=(L.get(k) or {}).get('sold')
+    fit=lambda x:abs((x.get('spots') or 0)-(sold or 0)) if sold else 0
+    if k not in seen or fit(r)<fit(seen[k]): seen[k]=r
+R=list(seen.values())
 # season number per facility
 first={}
 for f in FI.values():
