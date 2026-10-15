@@ -1,0 +1,284 @@
+{% comment %}
+  MM-season-league-finder: zip search plus a state picker for the leagues
+  inside ONE collection (built for the Early Winter 2027 ad landing page).
+
+  Unlike the site-wide search bar, nothing here leaves the page:
+    - Zip search: looks the zip up in assets/us_zips.json (the same offline
+      table the other search sections use), measures the distance to each
+      league in this collection (custom.facility_coordinates) and shows the
+      closest ones first.
+    - State picker: a dropdown plus a collapsible list per state. Picking a
+      state opens it and scrolls to it. Every league card links to its
+      product page.
+
+  State comes from the product's custom.state metafield. Products without one
+  (Canada) fall back to the text between the comma and the colon in the title,
+  e.g. "Vancouver, Canada: ..." becomes "Canada".
+{% endcomment %}
+
+{%- liquid
+  assign seen = ''
+  assign states_list = ''
+  for product in collection.products
+    assign st = product.metafields.custom.state.value
+    if st == blank
+      assign st = product.title | split: ':' | first | split: ',' | last | strip
+    endif
+    assign key = '|' | append: st | append: '|'
+    unless seen contains key
+      assign seen = seen | append: key
+      assign states_list = states_list | append: st | append: '~~'
+    endunless
+  endfor
+  assign states = states_list | split: '~~' | sort
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .lf { max-width: {{ section.settings.content_width }}px; margin: 0 auto; padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px; font-family: var(--font-body-family); color: #201747; }
+  #shopify-section-{{ section.id }} .lf__heading { text-align: center; margin: 0 0 6px; }
+  #shopify-section-{{ section.id }} .lf__sub { text-align: center; color: #55728F; font-size: 15px; margin: 0 0 22px; }
+  #shopify-section-{{ section.id }} .lf__tools { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 18px; }
+  #shopify-section-{{ section.id }} .lf__zip { display: flex; gap: 6px; background: #fff; border: 1.5px solid #201747; border-radius: 100px; padding: 5px 5px 5px 18px; flex: 1 1 300px; max-width: 420px; }
+  #shopify-section-{{ section.id }} .lf__zip input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-size: 15px; color: #201747; padding: 10px 0; }
+  #shopify-section-{{ section.id }} .lf__btn { border: 0; cursor: pointer; border-radius: 100px; padding: 11px 22px; font-weight: 600; font-size: 15px; background: #F25F66; color: #fff; }
+  #shopify-section-{{ section.id }} .lf__select { flex: 1 1 220px; max-width: 280px; border: 1.5px solid #201747; border-radius: 100px; padding: 12px 18px; font-size: 15px; color: #201747; background: #fff; }
+  #shopify-section-{{ section.id }} .lf__status { text-align: center; color: #55728F; font-size: 14px; min-height: 1em; margin: 0 0 14px; }
+  #shopify-section-{{ section.id }} .lf__near { background: #DFF3EC; border-radius: 16px; padding: 18px; margin-bottom: 22px; }
+  #shopify-section-{{ section.id }} .lf__near[hidden] { display: none; }
+  #shopify-section-{{ section.id }} .lf__near h3 { margin: 0 0 12px; font-size: 18px; }
+  #shopify-section-{{ section.id }} .lf__state { border: 2px solid #8FD6BD; border-radius: 16px; margin-bottom: 12px; background: #fff; overflow: hidden; }
+  #shopify-section-{{ section.id }} .lf__state summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-weight: 700; font-size: 17px; background: #DFF3EC; }
+  #shopify-section-{{ section.id }} .lf__state summary::-webkit-details-marker { display: none; }
+  #shopify-section-{{ section.id }} .lf__state summary::after { content: '+'; font-size: 22px; line-height: 1; }
+  #shopify-section-{{ section.id }} .lf__state[open] summary::after { content: '\2212'; }
+  #shopify-section-{{ section.id }} .lf__count { font-weight: 500; font-size: 13px; color: #55728F; margin-left: 8px; }
+  #shopify-section-{{ section.id }} .lf__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; padding: 14px; }
+  #shopify-section-{{ section.id }} .lf__card { display: block; text-decoration: none; color: #201747; border: 1.5px solid #e5e8f2; border-radius: 12px; padding: 14px 16px; background: #fff; transition: border-color .15s ease, transform .15s ease; }
+  #shopify-section-{{ section.id }} .lf__card:hover { border-color: #201747; transform: translateY(-2px); }
+  #shopify-section-{{ section.id }} .lf__city { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #00664F; }
+  #shopify-section-{{ section.id }} .lf__name { font-size: 17px; font-weight: 700; margin: 4px 0 6px; line-height: 1.25; }
+  #shopify-section-{{ section.id }} .lf__meta { font-size: 14px; color: #55728F; line-height: 1.45; }
+  #shopify-section-{{ section.id }} .lf__tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: #FFE4E5; color: #B3261E; }
+  #shopify-section-{{ section.id }} .lf__tag--out { background: #eee; color: #666; }
+  #shopify-section-{{ section.id }} .lf__dist { float: right; font-size: 12px; font-weight: 700; color: #00664F; }
+  #shopify-section-{{ section.id }} .lf__geo-row { text-align: center; margin: -6px 0 10px; }
+  #shopify-section-{{ section.id }} .lf__geo { background: none; border: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: #00664F; text-decoration: underline; text-underline-offset: 3px; }
+  #shopify-section-{{ section.id }} .lf__towns { display: block; font-weight: 500; font-size: 13px; color: #55728F; margin-top: 3px; }
+  #shopify-section-{{ section.id }} .lf__more { text-align: center; margin-top: 18px; font-size: 14px; }
+  #shopify-section-{{ section.id }} .lf__more a { color: #00664F; font-weight: 600; }
+{%- endstyle -%}
+
+<div class="lf" id="league-finder">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="lf__heading h2">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+  {%- if section.settings.subheading != blank -%}
+    <p class="lf__sub">{{ section.settings.subheading | escape }}</p>
+  {%- endif -%}
+
+  <div class="lf__tools">
+    <form class="lf__zip" data-lf-zip>
+      <input type="search" autocomplete="postal-code" placeholder="{{ section.settings.zip_placeholder | escape }}" aria-label="{{ section.settings.zip_placeholder | escape }}" data-lf-zip-input>
+      <button type="submit" class="lf__btn">Search</button>
+    </form>
+    <select class="lf__select" aria-label="Choose a state" data-lf-state-select>
+      <option value="">Or pick a state…</option>
+      {%- for st in states -%}
+        <option value="{{ st | handleize }}">{{ st }}</option>
+      {%- endfor -%}
+    </select>
+  </div>
+
+  <p class="lf__geo-row"><button type="button" class="lf__geo" data-lf-geo>📍 Use my location</button></p>
+  <p class="lf__status" data-lf-status role="status" aria-live="polite"></p>
+
+  <div class="lf__near" data-lf-near hidden>
+    <h3>Closest to you</h3>
+    <div class="lf__grid" style="padding:0" data-lf-near-grid></div>
+  </div>
+
+  {%- for st in states -%}
+    {%- assign towns = '' -%}
+    {%- capture cards -%}
+      {%- assign n = 0 -%}
+      {%- for product in collection.products -%}
+        {%- liquid
+          assign pst = product.metafields.custom.state.value
+          if pst == blank
+            assign pst = product.title | split: ':' | first | split: ',' | last | strip
+          endif
+        -%}
+        {%- if pst == st -%}
+          {%- assign n = n | plus: 1 -%}
+          {%- liquid
+            assign city = product.title | split: ':' | first | split: ',' | first | strip
+            assign fac = product.metafields.custom.facility_name.value | default: product.title
+            assign day = product.metafields.custom.league_day_of_week.value
+            assign timing = product.metafields.custom.timing.value
+            assign start = product.metafields.custom.start_date.value
+            assign coords = product.metafields.custom.facility_coordinates.value | default: ''
+            assign left = product.selected_or_first_available_variant.inventory_quantity
+            assign town_key = '|' | append: city | append: '|'
+            unless towns contains town_key
+              assign towns = towns | append: town_key
+            endunless
+          -%}
+          <a class="lf__card" href="{{ product.url }}" data-lf-card data-coords="{{ coords | escape }}" data-city="{{ city | downcase | escape }}" data-fac="{{ fac | downcase | escape }}">
+            <span class="lf__dist" data-lf-dist></span>
+            <div class="lf__city">{{ city | escape }}</div>
+            <div class="lf__name">{{ fac | escape }}</div>
+            <div class="lf__meta">
+              {%- if day != blank -%}{{ day }}{%- endif -%}{%- if timing != blank -%}, {{ timing }}{%- endif -%}<br>
+              {%- if start != blank -%}Starts {{ start | date: '%a %b %-d' }}{%- endif -%}
+            </div>
+            {%- if product.available == false -%}
+              <span class="lf__tag lf__tag--out">Sold out, join the waitlist</span>
+            {%- elsif left <= section.settings.low_stock and left > 0 -%}
+              <span class="lf__tag">Only {{ left }} spots left</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    <details class="lf__state" id="lf-{{ st | handleize }}" data-lf-state="{{ st | handleize }}">
+      <summary>
+        <span>{{ st }}<span class="lf__count">{{ n }} {% if n == 1 %}league{% else %}leagues{% endif %}</span>
+          <span class="lf__towns">{{ towns | remove_first: '|' | remove_last: '|' | split: '||' | join: ', ' }}</span></span>
+      </summary>
+      <div class="lf__grid">{{ cards }}</div>
+    </details>
+  {%- endfor -%}
+
+  {%- if section.settings.more_url != blank -%}
+    <p class="lf__more">{{ section.settings.more_text | escape }} <a href="{{ section.settings.more_url }}">{{ section.settings.more_link | escape }}</a></p>
+  {%- endif -%}
+</div>
+
+<script>
+(function () {
+  var root = document.querySelector('#shopify-section-{{ section.id }} .lf');
+  if (!root) return;
+  var ZIPS_URL = {{ 'us_zips.json' | asset_url | json }};
+  var MAX_MILES = {{ section.settings.max_miles }};
+  var status = root.querySelector('[data-lf-status]');
+  var near = root.querySelector('[data-lf-near]');
+  var nearGrid = root.querySelector('[data-lf-near-grid]');
+  var select = root.querySelector('[data-lf-state-select]');
+
+  function say(m) { status.textContent = m || ''; }
+
+  function openState(handle) {
+    if (!handle) return;
+    var el = root.querySelector('[data-lf-state="' + handle + '"]');
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  select.addEventListener('change', function () { openState(select.value); });
+
+  function miles(a, b) {
+    var R = 3958.8, r = Math.PI / 180;
+    var dLat = (b[0] - a[0]) * r, dLng = (b[1] - a[1]) * r;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  var ABBR = { al:'alabama', ak:'alaska', az:'arizona', ar:'arkansas', ca:'california', co:'colorado', ct:'connecticut', de:'delaware', dc:'washington-dc', fl:'florida', ga:'georgia', hi:'hawaii', id:'idaho', il:'illinois', 'in':'indiana', ia:'iowa', ks:'kansas', ky:'kentucky', la:'louisiana', me:'maine', md:'maryland', ma:'massachusetts', mi:'michigan', mn:'minnesota', ms:'mississippi', mo:'missouri', mt:'montana', ne:'nebraska', nv:'nevada', nh:'new-hampshire', nj:'new-jersey', nm:'new-mexico', ny:'new-york', nc:'north-carolina', nd:'north-dakota', oh:'ohio', ok:'oklahoma', or:'oregon', pa:'pennsylvania', ri:'rhode-island', sc:'south-carolina', sd:'south-dakota', tn:'tennessee', tx:'texas', ut:'utah', vt:'vermont', va:'virginia', wa:'washington', wv:'west-virginia', wi:'wisconsin', wy:'wyoming', bc:'canada', on:'canada', ab:'canada' };
+
+  function showList(items, withDist) {
+    nearGrid.innerHTML = '';
+    items.forEach(function (f) {
+      var c = f.card.cloneNode(true);
+      c.querySelector('[data-lf-dist]').textContent = withDist ? Math.round(f.d) + ' mi' : '';
+      nearGrid.appendChild(c);
+    });
+    near.hidden = false;
+    say('');
+    near.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function textSearch(text) {
+    var q = text.trim().toLowerCase();
+    var handle = q.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (ABBR[q]) handle = ABBR[q];
+    if (root.querySelector('[data-lf-state="' + handle + '"]')) { near.hidden = true; say(''); select.value = handle; openState(handle); return; }
+    var hits = [];
+    root.querySelectorAll('.lf__state [data-lf-card]').forEach(function (card) {
+      if ((card.getAttribute('data-city') || '').indexOf(q) !== -1 || (card.getAttribute('data-fac') || '').indexOf(q) !== -1) hits.push({ card: card });
+    });
+    if (hits.length) { showList(hits, false); return; }
+    near.hidden = true;
+    say("We couldn't find “" + text.trim() + "”. Try your zip code or pick your state.");
+  }
+
+  var geoBtn = root.querySelector('[data-lf-geo]');
+  if (geoBtn) {
+    geoBtn.addEventListener('click', function () {
+      if (!navigator.geolocation) { say('Your browser can’t share location. Enter your zip instead.'); return; }
+      say('Finding you…');
+      navigator.geolocation.getCurrentPosition(
+        function (pos) { nearest([pos.coords.latitude, pos.coords.longitude]); },
+        function () { say('No problem, just enter your zip or pick your state.'); },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+      );
+    });
+  }
+
+  root.querySelector('[data-lf-zip]').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var raw = root.querySelector('[data-lf-zip-input]').value || '';
+    var zip = raw.replace(/\s/g, '');
+    if (!raw.trim()) { say('Enter your zip, city or state.'); return; }
+    if (!/^\d{5}$/.test(zip)) { textSearch(raw); return; }
+    say('Finding leagues near you…');
+    fetch(ZIPS_URL).then(function (r) { return r.json(); }).then(function (zips) {
+      var here = zips[zip];
+      if (!here || here.length !== 2) { say("We couldn't find that zip. Try picking your state instead."); return; }
+      nearest(here);
+    }).catch(function () { say('Something went wrong. Pick your state below instead.'); });
+  });
+
+  function nearest(here) {
+      var found = [];
+      root.querySelectorAll('.lf__state [data-lf-card]').forEach(function (card) {
+        var p = (card.getAttribute('data-coords') || '').split(',');
+        var la = parseFloat(p[0]), lo = parseFloat(p[1]);
+        if (isNaN(la) || isNaN(lo)) return;
+        found.push({ card: card, d: miles(here, [la, lo]) });
+      });
+      found.sort(function (x, y) { return x.d - y.d; });
+      var close = found.filter(function (f) { return f.d <= MAX_MILES; }).slice(0, 6);
+      nearGrid.innerHTML = '';
+      if (!close.length) {
+        near.hidden = true;
+        say(found.length ? 'No early winter league within ' + MAX_MILES + ' miles yet. The closest is ' + Math.round(found[0].d) + ' miles away. Pick a state below to browse.' : 'Pick a state below to browse.');
+        return;
+      }
+      showList(close, true);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Season league finder",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "paragraph", "content": "Zip search and a state picker for the leagues in this collection. Zip search uses the offline us_zips.json table, so it never leaves the page." },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>Find your winter league</strong>" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Early signups are open for early winter leagues starting in December. Search your zip, city or state, or pick from the list." },
+    { "type": "text", "id": "zip_placeholder", "label": "Zip placeholder", "default": "Zip code, city or state" },
+    { "type": "range", "id": "max_miles", "label": "Max distance for 'Closest to you'", "min": 10, "max": 100, "step": 5, "unit": "mi", "default": 40 },
+    { "type": "range", "id": "low_stock", "label": "Show 'spots left' at or below", "min": 0, "max": 40, "step": 1, "default": 15 },
+    { "type": "text", "id": "more_text", "label": "Footer text", "default": "Not seeing your city?" },
+    { "type": "text", "id": "more_link", "label": "Footer link text", "default": "See all winter leagues" },
+    { "type": "url", "id": "more_url", "label": "Footer link" },
+    { "type": "range", "id": "content_width", "label": "Content width", "min": 600, "max": 1400, "step": 20, "unit": "px", "default": 1100 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 40 }
+  ],
+  "presets": [ { "name": "Season league finder" } ]
+}
+{% endschema %}
