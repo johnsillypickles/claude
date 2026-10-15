@@ -46,12 +46,14 @@
   #shopify-section-{{ section.id }} .lf__near { background: #DFF3EC; border-radius: 16px; padding: 18px; margin-bottom: 22px; }
   #shopify-section-{{ section.id }} .lf__near[hidden] { display: none; }
   #shopify-section-{{ section.id }} .lf__near h3 { margin: 0 0 12px; font-size: 18px; }
-  #shopify-section-{{ section.id }} .lf__state { border: 1.5px solid #8FD6BD; border-radius: 12px; margin-bottom: 8px; background: #fff; overflow: hidden; }
-  #shopify-section-{{ section.id }} .lf__state summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-weight: 700; font-size: 15px; background: #DFF3EC; }
+  #shopify-section-{{ section.id }} .lf__states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; align-items: start; }
+  #shopify-section-{{ section.id }} .lf__state { border: 1.5px solid #8FD6BD; border-radius: 10px; background: #fff; overflow: hidden; min-width: 0; }
+  #shopify-section-{{ section.id }} .lf__state[open] { grid-column: 1 / -1; }
+  #shopify-section-{{ section.id }} .lf__state summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; font-weight: 700; font-size: 14px; background: #DFF3EC; gap: 6px; }
   #shopify-section-{{ section.id }} .lf__state summary::-webkit-details-marker { display: none; }
-  #shopify-section-{{ section.id }} .lf__state summary::after { content: '+'; font-size: 18px; line-height: 1; }
+  #shopify-section-{{ section.id }} .lf__state summary::after { content: '+'; font-size: 16px; line-height: 1; flex-shrink: 0; }
   #shopify-section-{{ section.id }} .lf__state[open] summary::after { content: '\2212'; }
-  #shopify-section-{{ section.id }} .lf__count { font-weight: 500; font-size: 12px; color: #55728F; margin-left: 8px; }
+  #shopify-section-{{ section.id }} .lf__count { font-weight: 500; font-size: 11px; color: #55728F; margin-left: 6px; }
   #shopify-section-{{ section.id }} .lf__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 10px; }
   #shopify-section-{{ section.id }} .lf__card { display: block; text-decoration: none; color: #201747; border: 1.5px solid #e5e8f2; border-radius: 10px; padding: 10px 12px; background: #fff; transition: border-color .15s ease, transform .15s ease; }
   #shopify-section-{{ section.id }} .lf__card:hover { border-color: #201747; transform: translateY(-2px); }
@@ -63,7 +65,11 @@
   #shopify-section-{{ section.id }} .lf__dist { float: right; font-size: 12px; font-weight: 700; color: #00664F; }
   #shopify-section-{{ section.id }} .lf__geo-row { text-align: center; margin: -6px 0 10px; }
   #shopify-section-{{ section.id }} .lf__geo { background: none; border: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: #00664F; text-decoration: underline; text-underline-offset: 3px; }
-  #shopify-section-{{ section.id }} .lf__towns { display: block; font-weight: 500; font-size: 12px; color: #55728F; margin-top: 2px; }
+  #shopify-section-{{ section.id }} .lf__towns { display: block; font-weight: 500; font-size: 11px; color: #55728F; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #shopify-section-{{ section.id }} .lf__state summary > span { min-width: 0; }
+  #shopify-section-{{ section.id }} .lf__state[open] .lf__towns { white-space: normal; }
+  #shopify-section-{{ section.id }} .lf__learn { border: 1.5px solid #201747; border-radius: 100px; padding: 9px 16px; font-size: 14px; font-weight: 600; color: #201747; background: #fff; cursor: pointer; }
+  #shopify-section-{{ section.id }} .lf__learn:hover { background: #DFF3EC; }
   #shopify-section-{{ section.id }} .lf__more { text-align: center; margin-top: 18px; font-size: 14px; }
   #shopify-section-{{ section.id }} .lf__more a { color: #00664F; font-weight: 600; }
 {%- endstyle -%}
@@ -87,6 +93,7 @@
         <option value="{{ st | handleize }}">{{ st }}</option>
       {%- endfor -%}
     </select>
+    {%- if section.settings.learn_label != blank -%}<button type="button" class="lf__learn" data-lf-learn>{{ section.settings.learn_label | escape }}</button>{%- endif -%}
   </div>
 
   <p class="lf__geo-row"><button type="button" class="lf__geo" data-lf-geo>📍 Use my location</button></p>
@@ -97,6 +104,7 @@
     <div class="lf__grid" style="padding:0" data-lf-near-grid></div>
   </div>
 
+  <div class="lf__states">
   {%- for st in states -%}
     {%- assign towns = '' -%}
     {%- capture cards -%}
@@ -148,6 +156,7 @@
       <div class="lf__grid">{{ cards }}</div>
     </details>
   {%- endfor -%}
+  </div>
 
   {%- if section.settings.more_url != blank -%}
     <p class="lf__more">{{ section.settings.more_text | escape }} <a href="{{ section.settings.more_url }}">{{ section.settings.more_link | escape }}</a></p>
@@ -176,6 +185,15 @@
   }
 
   select.addEventListener('change', function () { openState(select.value); });
+
+  var learn = root.querySelector('[data-lf-learn]');
+  if (learn) {
+    learn.addEventListener('click', function () {
+      var wrap = document.getElementById('shopify-section-{{ section.id }}');
+      var target = wrap && wrap.nextElementSibling;
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 
   function miles(a, b) {
     var R = 3958.8, r = Math.PI / 180;
@@ -269,6 +287,7 @@
     { "type": "paragraph", "content": "Zip search and a state picker for the leagues in this collection. Zip search uses the offline us_zips.json table, so it never leaves the page." },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "<strong>Find your winter league</strong>" },
     { "type": "text", "id": "subheading", "label": "Subheading", "default": "Early signups are open for early winter leagues starting in December. Search your zip, city or state, or pick from the list." },
+    { "type": "text", "id": "learn_label", "label": "Learn more button", "info": "Scrolls to the next section on the page. Clear to hide.", "default": "Learn more" },
     { "type": "text", "id": "zip_placeholder", "label": "Zip placeholder", "default": "Zip code, city or state" },
     { "type": "range", "id": "max_miles", "label": "Max distance for 'Closest to you'", "min": 10, "max": 100, "step": 5, "unit": "mi", "default": 40 },
     { "type": "range", "id": "low_stock", "label": "Show 'spots left' at or below", "min": 0, "max": 40, "step": 1, "default": 15 },
