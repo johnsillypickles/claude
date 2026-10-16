@@ -62,6 +62,14 @@ table.m .k{text-align:left;color:var(--muted)}
 .note .rec{font-weight:700}
 .tthumb{width:40px;height:40px;object-fit:cover;border-radius:4px;vertical-align:middle;margin-right:8px;background:#eee}
 .intro{color:var(--muted);font-size:12.5px;margin:0 0 12px;max-width:840px}
+.v{font-weight:800;font-family:Poppins;padding:2px 9px;border-radius:12px;font-size:11.5px;display:inline-block;white-space:nowrap}
+.v-Fatigued{background:#fde8e8;color:#c92a2a}.v-Watch{background:#fff3db;color:#b35c00}.v-Fresh{background:#e6f4ea;color:#237a3d}.v-New,.v-Notlive{background:#eef0ee;color:#6b7a6b}
+td.sig{white-space:normal!important;text-align:left!important;min-width:220px;font-size:12px}
+td.ctx,th.ctx{color:var(--muted);background:#fafaf4}
+.ev{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 14px}
+.ev div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:12.5px}
+.ev b{display:block;font-family:Poppins;font-size:22px;font-weight:800}
+@media(max-width:720px){.ev{grid-template-columns:1fr 1fr}}
 .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.6}
 .pos{color:var(--green)} .neg{color:var(--red)}
 @media(max-width:720px){.kpis{grid-template-columns:1fr}}
@@ -75,7 +83,7 @@ table.m .k{text-align:left;color:var(--muted)}
 <h2 class="sec">🎨 Creative Detail</h2>
 <div class="filters" id="filters"></div>
 <div class="cards" id="cards"></div>
-<div id="testsec"></div><div id="ttsec"></div>
+<div id="fatsec"></div><div id="testsec"></div><div id="ttsec"></div>
 <div class="foot" id="foot"></div>
 </div>
 <script>
@@ -119,6 +127,34 @@ function card(r,rows){const n=r.note,low=n.status_key==='lowspend'||n.status_key
  return `<div class="card${low?' low':''}"><div class="thumb">${r.dimg?`<img loading="lazy" src="${r.dimg}" alt="" style="width:100%;height:100%;object-fit:contain">`:`<div class="ph">${r.thumb_note||'no preview'}</div>`}${isv?'<span class="vid">▶ video</span>':''}<span class="badge g-${n.status_key}">${n.status_label}</span></div><div class="body"><div class="nm">${esc(r.name)}</div>${ds}<table class="m"><thead><tr><th class="k">Metric</th><th>Total</th><th>P0</th><th>P1</th></tr></thead><tbody>${mt}</tbody></table><div class="note"><span class="st g-${n.status_key}">${n.status_label}</span><ul>${n.bullets.map(b=>'<li>'+esc(b)+'</li>').join('')}</ul>${n.rec?`<div class="rec">→ ${esc(n.rec)}</div>`:''}</div></div></div>`;}
 function renderCards(){let list=[...D.creatives].sort((a,b)=>b.total.spend-a.total.spend);if(filt!=='all')list=list.filter(r=>r.note.status_key===filt);document.getElementById('cards').innerHTML=list.map(r=>card(r,mrows)).join('');}
 renderTable();renderCards();
+if(D.fatigue){const F=D.fatigue,E=F.evidence,R=F.rules,pc=x=>x==null?'n/a':Math.round(x*100)+'%',chg=x=>x==null?'':(x>=1?'+':'')+Math.round((x-1)*100)+'%',wk=a=>a?(a[0]===a[1]?'wk of '+dfmt(a[0]):dfmt(a[0])+' &amp; '+dfmt(a[1])):'';
+ const SIG={age:`${R.age}+ weeks live`,ctr:'click rate down',roas:'return per $1 down vs its best',conv:'purchases per click down'};
+ const img={};D.creatives.forEach(c=>{if(c.dimg)img[c.name]=c.dimg});
+ const by={};F.rows.forEach(r=>{const k=r.verdict;by[k]=by[k]||[0,0,0];by[k][0]++;by[k][1]+=r.spend;by[k][2]+=r.spend*(r.roas||0)});
+ const tot=F.rows.reduce((a,r)=>a+r.spend,0);
+ let h=`<h2 class="sec" style="margin-top:36px">🔁 Creative Fatigue Check</h2><p class="intro">Each Meta creative's own week-by-week history since it launched (Monday to Sunday weeks; a week counts once the creative spends ${fmtM(R.active)}+ across all ad sets). Return per $1 is compared with the whole Meta account in the same weeks, so a seasonal dip doesn't look like fatigue.</p>`;
+ h+=`<div class="take" style="margin-bottom:14px"><b>What our own history says</b> (${dfmt(E.span[0])}, ${E.span[0].slice(0,4)} to ${dfmt(E.span[1])}, ${E.span[1].slice(0,4)}; ${E.creatives_tested} creatives with 6+ live weeks and $3k+ spend):<ul>
+<li>${E.onsets} of ${E.creatives_tested} wore out. Median: around week ${Math.round(E.median_weeks_to_fatigue)} of real spend (range ${E.weeks_range[0]} to ${E.weeks_range[1]}). The rest never clearly wore out while they ran.</li>
+<li>After wearing out, those ads kept running and spent ${fmtM(E.post_spend)} at ${fmtR(E.post_roas)} vs ${fmtR(E.post_acct_roas)} for the account in the same weeks.</li>
+<li>The <b>Watch</b> rule below flagged ${E.watch_1wk_before_pct}% of wear-outs one week early and ${E.watch_2wk_before_pct}% two weeks early. It also flags ${E.watch_healthy_pct}% of healthy weeks, so treat Watch as "check this", not "kill this".</li>
+<li>Rising cost per 1,000 views was <b>not</b> a warning sign in our history, and neither was lifetime spend or lifetime views. Views per person and Meta's quality rank are shown for context only: there isn't enough history to test them.</li></ul></div>`;
+ h+=`<div class="ev">${['Fatigued','Watch','Fresh','New'].map(k=>{const b=by[k]||[0,0,0];return `<div><span class="v v-${k}">${k}</span><b>${b[0]} ads</b>${fmtM(b[1])} (${tot?Math.round(b[1]/tot*100):0}% of spend) · ${b[1]?fmtR(b[2]/b[1]):'n/a'}</div>`}).join('')}</div>`;
+ h+=`<p class="intro"><b>Fatigued</b> = return per $1 over the last 2 live weeks is at or below ${pc(R.fatigued)} of its best 2-week stretch (season-adjusted). <b>Watch</b> = 2 or more of: ${R.age}+ weeks live; click rate down ${Math.round((1-R.ctr)*100)}%+ vs its first 2 live weeks; return per $1 down ${Math.round((1-R.roas)*100)}%+ vs its best 2 weeks; purchases per click down ${Math.round((1-R.conv)*100)}%+ vs its first 2 live weeks. <b>New</b> = under 3 live weeks. <b>Not live</b> = no ${fmtM(R.active)}+ week in the last 2 weeks. Rows under $1,000 spend this window are greyed out.</p>`;
+ h+=`<div class="tablewrap"><table class="sum"><thead><tr><th class="name">Creative</th><th>Verdict</th><th>Spend (window)</th><th>Weeks live</th><th>Click rate: first 2 wks → last 2</th><th>Return per $1: best 2 wks → last 2</th><th>vs best (season-adj.)</th><th>Purchases per click: first 2 → last 2</th><th class="ctx">Views per person (14d)</th><th class="ctx">Meta quality</th><th style="text-align:left">Warning signs</th></tr></thead><tbody>`;
+ const ord={Fatigued:0,Watch:1,Fresh:2,New:3,'Not live':4};
+ [...F.rows].sort((a,b)=>(ord[a.verdict]-ord[b.verdict])||(b.spend-a.spend)).forEach(r=>{const p=r.p||{};const low=r.spend<1000;
+  h+=`<tr class="${low?'low':''}"><td class="name">${img[r.name]?`<img class="tthumb" loading="lazy" src="${img[r.name]}" alt="">`:''}${esc(r.name)}</td><td><span class="v v-${r.verdict.replace(' ','')}">${r.verdict}</span></td><td>${fmtM(r.spend)}</td>
+<td>${r.history_weeks}${r.launch?`<br><small style="color:var(--muted)">since wk of ${dfmt(r.launch)}</small>`:''}</td>
+<td>${r.p?`${fmtP(p.ctr0)} → ${fmtP(p.ctr1)}<br><small style="color:var(--muted)">${wk(p.first)} → ${wk(p.now)}</small>`:'n/a'}</td>
+<td>${r.p?`${fmtR(p.roas_best)} → ${fmtR(p.roas_now)}<br><small style="color:var(--muted)">${wk(p.best)} → ${wk(p.now)}</small>`:'n/a'}</td>
+<td class="${p.ix_ratio!=null&&p.ix_ratio<=R.fatigued?'neg':''}">${r.p?chg(p.ix_ratio):'n/a'}</td>
+<td>${r.p?`${fmtP(p.conv0)} → ${fmtP(p.conv1)}`:'n/a'}</td>
+<td class="ctx">${r.freq==null?'n/a':r.freq.toFixed(1)}</td><td class="ctx">${esc(r.quality||'n/a')}</td>
+<td class="sig">${r.signals.map(x=>SIG[x]).join('; ')||'-'}</td></tr>`});
+ h+='</tbody></table></div>';
+ if(F.themes&&F.themes.length){h+=`<h2 class="sec">By theme</h2><p class="intro">Theme tags are ours, based on each ad's concept.</p><div class="tablewrap"><table class="sum" style="min-width:600px"><thead><tr><th class="name">Theme</th><th>Ads</th><th>Spend</th><th>ROAS</th><th class="lp">LP ROAS</th><th>Fatigued ads</th></tr></thead><tbody>`+F.themes.map(t=>`<tr><td class="name">${esc(t.theme)}</td><td>${t.ads}</td><td>${fmtM(t.spend)}</td><td>${fmtR(t.roas)}</td><td class="lp">${fmtR(t.pixel_roas)}</td><td>${t.fatigued}</td></tr>`).join('')+'</tbody></table></div>';}
+ if(F.groups&&F.groups.length){h+=`<h2 class="sec">Near-duplicate groups</h2><p class="intro">Ads that share one concept or look. They split budget and data instead of reaching new people (our read; Meta doesn't publish how it groups similar ads).</p><div class="tablewrap"><table class="sum" style="min-width:700px"><thead><tr><th class="name">Group</th><th>Ads</th><th>Spend</th><th>ROAS</th><th style="text-align:left">Note</th></tr></thead><tbody>`+F.groups.map(g=>`<tr><td class="name">${esc(g.group)}</td><td>${g.ads}</td><td>${fmtM(g.spend)}</td><td>${fmtR(g.roas)}</td><td style="text-align:left;white-space:normal">${esc(g.note||'')}</td></tr>`).join('')+'</tbody></table></div>';}
+ document.getElementById('fatsec').innerHTML=h;}
 if(D.test&&D.test.themes.length){const T=D.test;
  let h=`<h2 class="sec" style="margin-top:36px">🧪 Creative Test: New Customer (individual ads)</h2><p class="intro">The New Customer creative-test campaign, grouped by ad set theme with each ad shown individually. It is <b>excluded from the Phase 0 grading benchmark</b>. Ads at or above the ${fmtR(T.benchmark)} Meta Phase 0 average are flagged <b>✅ Rotate in</b>; under $200 spend is low-signal.</p><div class="tablewrap"><table class="sum"><thead><tr><th class="name">Ad / Theme</th><th>Spend</th><th>ROAS Meta</th><th class="lp">ROAS LP</th><th>CPP</th><th>CVR</th><th>Purch</th><th style="text-align:left">Rec</th></tr></thead><tbody>`;
  T.themes.forEach(g=>{const t=g.total;h+=`<tr class="themehdr"><td class="name">▸ ${esc(g.theme)}</td><td>${fmtM(t.spend)}</td><td>${fmtR(t.roas)}</td><td class="lp">${fmtR(t.pixel_roas)}</td><td>${fmtM(t.cpp)}</td><td>${fmtP(t.cvr)}</td><td>${fmtN(t.purch)}</td><td></td></tr>`;

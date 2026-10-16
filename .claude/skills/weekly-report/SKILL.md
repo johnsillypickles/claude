@@ -111,7 +111,7 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 
 ## Creative report (HTML attachment)
 
-Template: `assets/creative_report_template.html` (a cleaned copy of John's `template.html` from Drive). Fill `__DATA__` with JSON, `__GEN__` with the generated date and `__TAKE__` with 4 to 6 `<li>` takeaways. Optional data keys: `sources` (header source line), `tiktok.source` and `tiktok.note` (shown when `tiktok.creatives` is empty).
+Template: `assets/creative_report_template.html` (a cleaned copy of John's `template.html` from Drive). Fill `__DATA__` with JSON, `__GEN__` with the generated date and `__TAKE__` with 4 to 6 `<li>` takeaways. Optional data keys: `sources` (header source line), `tiktok.source` and `tiktok.note` (shown when `tiktok.creatives` is empty), and `fatigue` (the fatigue check section, see "Creative fatigue check").
 
 **Window:** last 14 days ending on the report Sunday.
 
@@ -141,28 +141,43 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
   4. No spend threshold: low-spend and test ads get thumbnails too. Use Drive when a small file exists. Otherwise use the Meta preview, which is often quicker for test ads.
 - Render it in Chromium before sending and check there are no script errors. Python Playwright isn't preinstalled: `pip install playwright`, then `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')` (never `playwright install`). Collect `pageerror` and console errors, force `loading='eager'` on images, then count `img` elements where `naturalWidth` is 0 and list the `.ph` placeholders with their card names. The `.ph` list must be empty, and the count of `#testsec img.tthumb` must equal the count of `#testsec tr.adrow`.
 
-## Creative fatigue check (companion to the creative report)
+## Creative fatigue check (section of the creative report)
 
-Started 10/16/26 because Tommy is worried about ad fatigue. Ship it every week next to the creative report, as `fall26_fatigue_check_MM.DD.html`, using the same 14-day window and the same Meta creatives (test campaigns excluded). Meta's own fatigue, similarity and theme metrics are not in John's Ads Manager and aren't in Windsor or Lebesgue (checked 10/16/26), so build our own:
+Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue`, rendered after the Meta cards), not a separate page. Meta's own fatigue, similarity and theme metrics aren't in John's Ads Manager, Windsor or Lebesgue (checked 10/16/26), so we use our own rules, back-tested on our Meta history.
 
-- **History per creative:** Lebesgue ad-level `all` pulls in 1 to 2 week buckets back to early August (the same pulls used for launch dates). For each bucket with $300+ spend, compute click rate, cost per 1,000 views and return per $1.
-- **This window:** Windsor `facebook` ad level for the 14 days, fields `campaign, adset_name, ad_name, spend, impressions, reach, frequency, link_clicks, actions_omni_purchase, action_values_omni_purchase, quality_ranking, engagement_rate_ranking`, filter spend > 100.
-- **Warning signs:**
-  - click rate down 25% or more vs the first $300+ week
-  - cost per 1,000 views up 20% or more
-  - return per $1 down 40% or more
-  - Meta quality rank bottom 10% (spend-weighted)
-  - 3 or more views per person over the 14 days (sum of impressions / sum of reach, which understates true frequency)
-- **Verdict:** 2 or more signs = Fatigued, 1 = Watch, 0 = Fresh. Under $300 spend, or under 2 weeks of history with no signs = New / low data.
-- **Tags:** tag each creative with a theme (e.g. nostalgia/gameplay, beginner reassurance, phrase statics, social proof, urgency, identity humor, founder video, localized announcement, volleyball, how it works). Also group near-duplicates (cuts or versions of one concept, e.g. the Boo cuts or the localized v1 to v3).
-- **Page layout:**
-  - KPI row: ads, spend share and return per $1 by verdict.
-  - 4 to 5 takeaways.
-  - Side-by-side table: thumbnail, verdict, grade from the creative report, spend, ROAS, LP ROAS, theme, group, first week, click rate then to now, cost per 1,000 views then to now, views per person, quality rank, warning signs.
-  - Theme summary table and near-duplicate group table.
-  - Reuse the creative report's CSS and thumbnails. Render-check it like the creative report.
-- **Feed the results** into the weekly doc's improvement-ideas section, e.g. which ads to retire or refresh and which themes to brief Moodyboy on.
-- If Meta's metrics later show up in Ads Manager or Windsor fields, add them as columns next to ours.
+**History store.** Weekly Meta ad-level results live in the private Google Sheet "Meta weekly ad history (fatigue check)" (`<SHEET_ID>`). Never commit it: this repo is public. Columns: `week` (Monday), `key` (normalized ad name, see `norm()` in the script), spend, impressions, clicks, purchases, purchases_conversion_value, add_to_cart. One `__account__` row per week holds the whole Meta account; other rows are creative-weeks with $250+ spend (only those count as "live" weeks). Ad names are normalized so " - Copy" duplicates, `AllGeos_Pickleball_` prefixes and format suffixes (`_Static`, `_Video`, `_1080x1920`, ...) roll up to one creative across ad sets and relaunches.
+
+**Each week** (script: `scripts/fatigue.py`):
+1. Read the Sheet with `get_values` (range `A:H`; the result is usually saved to a file) and run `fatigue.py from-sheet <values file> history.json`.
+2. Pull the report week from Lebesgue: `get_advertising_data_table`, source `facebook`, account `1346441932978787`, level `ad`, Monday to Sunday, `period_type=all`. If it's over the 50k-token limit, split it into Mon-Wed and Thu-Sun (then single days). Pulls must not cross a Monday. If last week is missing from the Sheet too, pull it as well.
+3. `fatigue.py add history.json <pull files>`: it refuses a day that's already in the history.
+4. `fatigue.py to-rows history.json new_rows.json --weeks <new Mondays>`, then append those rows to the Sheet with `append_values`.
+5. `fatigue.py score history.json --report data.json --end <Monday of the report's last week> --out fatigue.json`, then add context fields and set `D.fatigue`:
+   - per row, `freq` (views per person over the 14 days: sum of impressions / sum of reach, from Windsor `facebook` ad level) and `quality` (spend-weighted Meta quality rank). Both are context only: there's no history to test them.
+   - `themes` (theme, ads, spend, roas, pixel_roas, fatigued count) and `groups` (near-duplicate group, ads, spend, roas, note). Tag themes and near-duplicates by concept, e.g. nostalgia/gameplay, beginner reassurance, phrase statics, social proof, urgency, identity humor, founder video, localized announcement, volleyball, how it works; groups like the Boo cuts or Localized v1 to v3.
+
+**Rules** (from the Jan 2025 to Oct 2026 study, 58 creatives with 6+ live weeks and $3k+ spend):
+- **Season-adjusted ROAS index** = the creative's ROAS divided by the whole Meta account's ROAS in the same weeks, pooled over 2 live weeks.
+- **Fatigued:** the last 2 live weeks' index is at or below 60% of the creative's best 2-week index.
+- **Watch:** 2 or more of:
+  - 8+ live weeks
+  - click rate down 15%+ vs its first 2 live weeks
+  - index down 25%+ vs its best 2 weeks
+  - purchases per click down 40%+ vs its first 2 live weeks
+- **Fresh:** neither. **New:** under 3 live weeks. **Not live:** no $250+ week in the last 2 weeks.
+- What the study found:
+  - 36 of 58 creatives wore out, around live week 8 or 9 (median; range 3 to 31).
+  - After wearing out they kept running: $342k at 1.73x vs 2.08x for the account in the same weeks.
+  - The Watch rule caught 56% of wear-outs a week early and 34% two weeks early, but also flags 18% of healthy weeks. So Watch means "check it", not "pause it".
+  - Rising cost per 1,000 views was NOT a warning sign (it rose more often in healthy weeks). Neither was lifetime spend or lifetime views, so don't use them.
+  - Our old guesses (CPM up 20%, 3+ views per person, bottom-10% quality) are retired as scored signals.
+- `score` re-runs this back-test on the full history every week. The report's evidence box shows the fresh numbers, so they update as history grows.
+- **Caveat to state when it applies:** a creative moved into weaker ad sets (e.g. Problem Children) can look fatigued because of where it ran, not because people are tired of it. Say so in the takeaway when most of its spend moved phases.
+
+**In the report:**
+- One takeaway bullet on fatigue (spend share and ROAS of Fatigued vs Fresh, and the biggest cases).
+- Feed the results into the weekly doc's improvement-ideas section: which ads to retire or refresh, and which themes to brief Moodyboy on.
+- If Meta's own metrics later show up in Ads Manager or Windsor fields, add them as context columns.
 
 ## Facility Marketing
 
