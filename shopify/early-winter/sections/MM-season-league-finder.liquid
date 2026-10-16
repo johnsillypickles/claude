@@ -47,24 +47,27 @@
   #shopify-section-{{ section.id }} .lf__near { background: #DFF3EC; border-radius: 16px; padding: 18px; margin-bottom: 22px; }
   #shopify-section-{{ section.id }} .lf__near[hidden] { display: none; }
   #shopify-section-{{ section.id }} .lf__near h3 { margin: 0 0 12px; font-size: 18px; }
-  #shopify-section-{{ section.id }} .lf__states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; align-items: start; }
+  #shopify-section-{{ section.id }} .lf__states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; align-items: stretch; }
   #shopify-section-{{ section.id }} .lf__state { border: 1.5px solid #8FD6BD; border-radius: 10px; background: #fff; overflow: hidden; min-width: 0; }
   #shopify-section-{{ section.id }} .lf__state[open] { grid-column: 1 / -1; }
+  #shopify-section-{{ section.id }} .lf__state:not([open]) summary { height: 100%; box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .lf__st { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #shopify-section-{{ section.id }} .lf__state summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; font-weight: 700; font-size: 14px; background: #DFF3EC; gap: 6px; }
   #shopify-section-{{ section.id }} .lf__state summary::-webkit-details-marker { display: none; }
   #shopify-section-{{ section.id }} .lf__state summary::after { content: '+'; font-size: 16px; line-height: 1; flex-shrink: 0; }
   #shopify-section-{{ section.id }} .lf__state[open] summary::after { content: '\2212'; }
   #shopify-section-{{ section.id }} .lf__count { font-weight: 500; font-size: 11px; color: #55728F; margin-left: 6px; }
   #shopify-section-{{ section.id }} .lf__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 10px; }
-  #shopify-section-{{ section.id }} .lf__card { display: block; text-decoration: none; color: #201747; border: 1.5px solid #e5e8f2; border-radius: 10px; padding: 10px 12px; background: #fff; transition: border-color .15s ease, transform .15s ease; }
+  #shopify-section-{{ section.id }} .lf__card { position: relative; display: flex; flex-direction: column; text-decoration: none; color: #201747; border: 1.5px solid #e5e8f2; border-radius: 10px; padding: 10px 12px; background: #fff; transition: border-color .15s ease, transform .15s ease; }
   #shopify-section-{{ section.id }} .lf__card:hover { border-color: #201747; transform: translateY(-2px); }
   #shopify-section-{{ section.id }} .lf__city { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #00664F; }
-  #shopify-section-{{ section.id }} .lf__name { font-size: 15px; font-weight: 700; margin: 3px 0 4px; line-height: 1.25; }
+  #shopify-section-{{ section.id }} .lf__name { font-size: 15px; font-weight: 700; margin: 3px 0 4px; line-height: 1.25; min-height: 2.5em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  #shopify-section-{{ section.id }} .lf__tags { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; min-height: 22px; }
   #shopify-section-{{ section.id }} .lf__meta { font-size: 13px; color: #55728F; line-height: 1.45; }
-  #shopify-section-{{ section.id }} .lf__tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: #FFE4E5; color: #B3261E; }
+  #shopify-section-{{ section.id }} .lf__tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: #FFE4E5; color: #B3261E; }
   #shopify-section-{{ section.id }} .lf__tag--out { background: #eee; color: #666; }
-  #shopify-section-{{ section.id }} .lf__tag--soon { background: #DFF3EC; color: #00664F; margin-right: 4px; }
-  #shopify-section-{{ section.id }} .lf__dist { float: right; font-size: 12px; font-weight: 700; color: #00664F; }
+  #shopify-section-{{ section.id }} .lf__tag--soon { background: #DFF3EC; color: #00664F; }
+  #shopify-section-{{ section.id }} .lf__dist { position: absolute; top: 10px; right: 12px; font-size: 12px; font-weight: 700; color: #00664F; }
   #shopify-section-{{ section.id }} .lf__geo-row { text-align: center; margin: -6px 0 10px; }
   #shopify-section-{{ section.id }} .lf__geo { background: none; border: 0; cursor: pointer; font-size: 14px; font-weight: 600; color: #00664F; text-decoration: underline; text-underline-offset: 3px; }
   #shopify-section-{{ section.id }} .lf__towns { display: block; font-weight: 500; font-size: 11px; color: #55728F; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -142,6 +145,7 @@
               {%- if start != blank -%}Starts {{ start | date: '%a %b %-d' }}{%- endif -%}
             </div>
             {%- assign start_month = start | date: '%Y-%m' -%}
+            <div class="lf__tags">
             {%- if section.settings.soon_month != blank and start_month == section.settings.soon_month and product.available -%}
               <span class="lf__tag lf__tag--soon">{{ section.settings.soon_label | escape }}</span>
             {%- endif -%}
@@ -150,14 +154,15 @@
             {%- elsif left <= section.settings.low_stock and left > 0 -%}
               <span class="lf__tag">Only {{ left }} spots left</span>
             {%- endif -%}
+            </div>
           </a>
         {%- endif -%}
       {%- endfor -%}
     {%- endcapture -%}
     <details class="lf__state" id="lf-{{ st | handleize }}" data-lf-state="{{ st | handleize }}">
       <summary>
-        <span>{{ st }}<span class="lf__count">{{ n }} {% if n == 1 %}league{% else %}leagues{% endif %}</span>
-          <span class="lf__towns">{{ towns | remove_first: '|' | remove_last: '|' | split: '||' | join: ', ' }}</span></span>
+        <span><span class="lf__st">{{ st }}</span>
+          <span class="lf__towns">{{ n }} {% if n == 1 %}league{% else %}leagues{% endif %} · {{ towns | remove_first: '|' | remove_last: '|' | split: '||' | join: ', ' }}</span></span>
       </summary>
       <div class="lf__grid">{{ cards }}</div>
     </details>
