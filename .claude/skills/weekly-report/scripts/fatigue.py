@@ -174,10 +174,44 @@ def backtest(H, end):
     }
 
 
+def action(v, c, avg0, avg1):
+    """Suggested next step for one creative. Returns (kind, text).
+    kind: pause, pause_p1, keep, scale, restart, review, new, off. Uses the report card's phase split
+    and running flag, so a worn-out ad that still beats its phase average is kept."""
+    p0, p1 = c['p0'], c['p1']
+    running = c.get('dates', {}).get('running', True)
+    beats = lambda seg, avg: seg['spend'] > 0 and (seg['roas'] or 0) >= avg
+    main, avg, ph = (p0, avg0, 'Phase 0') if p0['spend'] >= p1['spend'] else (p1, avg1, 'Phase 1')
+    if v == 'Fatigued':
+        if p0['spend'] >= 500 and beats(p0, avg0) and p1['spend'] >= 500 and not beats(p1, avg1):
+            k, t = 'pause_p1', f'Keep in Phase 0 ({p0["roas"]:.2f}x vs {avg0:.2f}x average); pause it in the Phase 1 ad sets ({p1["roas"]:.2f}x).'
+        elif beats(main, avg):
+            k, t = 'keep', f'Still beats the {ph} average ({main["roas"]:.2f}x vs {avg:.2f}x). Keep for now and line up a replacement.'
+        else:
+            k, t = 'pause', f'Pause: {main["roas"]:.2f}x vs the {ph} average of {avg:.2f}x. Check its ad sets keep 2+ live ads.'
+        if not running and k != 'keep':
+            k, t = 'off', 'Already off (no spend in the last 3 days). Leave it off.'
+        return k, t
+    if not running:
+        if v == 'Fresh' and main['spend'] > 0 and (main['roas'] or 0) >= avg:
+            return 'restart', f'Turned off, but it was beating the {ph} average ({main["roas"]:.2f}x vs {avg:.2f}x). Consider turning it back on.'
+        return 'off', 'Not running.'
+    if v == 'Watch':
+        return 'review', 'Review its ad sets this week; no pause yet (Watch is an early flag).'
+    if v == 'Fresh':
+        if main['spend'] > 0 and (main['roas'] or 0) >= 1.15 * avg:
+            return 'scale', f'Keep, and give it more budget ({main["roas"]:.2f}x vs {avg:.2f}x {ph} average).'
+        return 'keep', 'Keep.'
+    if v == 'New':
+        return 'new', 'Too new to judge (under 3 live weeks).'
+    return 'off', 'Not running.'
+
+
 def score(hist_path, report, end, out):
     H = json.load(open(hist_path))
     D = json.load(open(report))
     rows = []
+    avg0, avg1 = D['portfolio']['p0']['roas'], D['portfolio']['p1']['roas']
     for c in D['creatives']:
         k = norm(c['name'])
         S = series(H, k, end)
@@ -190,6 +224,11 @@ def score(hist_path, report, end, out):
         rows.append({'name': c['name'], 'verdict': v, 'signals': warnings(p) if p else [], 'p': p,
                      'spend': c['total']['spend'], 'roas': c['total']['roas'], 'history_weeks': len(S),
                      'launch': S[0][0] if S else None})
+        rows[-1]['action_kind'], rows[-1]['action'] = action(v, c, avg0, avg1)
+        # how this creative's window spend splits by action, for the "where the money goes" line
+        kd, sp = rows[-1]['action_kind'], c['total']['spend']
+        rows[-1]['split'] = ({'keep': c['p0']['spend'], 'pause': c['p1']['spend']} if kd == 'pause_p1' else
+                             {'pause': sp} if kd == 'pause' else {'off': sp} if kd == 'off' else {'keep': sp})
     res = {'end_week': end, 'rows': rows, 'evidence': backtest(H, end),
            'rules': {'active': ACTIVE, 'fatigued': FATIGUED, 'age': AGE_WEEKS, 'ctr': CTR_DROP,
                      'roas': ROAS_DROP, 'conv': CONV_DROP}}

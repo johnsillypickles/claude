@@ -174,8 +174,18 @@ Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue
 - `score` re-runs this back-test on the full history every week. The report's evidence box shows the fresh numbers, so they update as history grows.
 - **Caveat to state when it applies:** a creative moved into weaker ad sets (e.g. Problem Children) can look fatigued because of where it ran, not because people are tired of it. Say so in the takeaway when most of its spend moved phases.
 
+**Wording (John, 10/19/26):** the report shows the Fatigued verdict as **"Fatiguing"** (the script and data keep the key `Fatigued`). Never lead with "X% of spend went to fatigued ads": Tommy reads that as waste. Fatiguing means an ad is well below its own best weeks, not that it is losing money. Always pair the share with where the money goes next (already off / pause now / keep because it still beats its phase average).
+
+**Action column:** `score` adds `action_kind`, `action` and `split` per row via `action()`; the template shows Action next to the verdict, plus a "where the money goes" box above the table. Rules:
+- Fatiguing, beats the Phase 0 average in Phase 0 but not the Phase 1 average in Phase 1 (both $500+): keep in Phase 0, pause in the Phase 1 ad sets.
+- Fatiguing, still beats the average of the phase where most of its spend is: keep for now, line up a replacement.
+- Fatiguing otherwise: pause, and check its ad sets keep 2+ live ads.
+- Not running (no spend in the last 3 days of the window): "already off"; a Fresh ad that was beating its phase average gets "consider turning it back on".
+- Watch: review, no pause yet. Fresh at 15%+ above its phase average: keep and give more budget. New: too new to judge.
+- Status changes John reports after the window (e.g. "I paused X") override the action text for that row; say who paused it and when. Check live status before telling John an ad is running: Lebesgue's `status` field can lag, so confirm with Windsor daily spend (`date, ad_name, spend` for the last few days; the ESSENTIAL plan has no same-day hourly data).
+
 **In the report:**
-- One takeaway bullet on fatigue (spend share and ROAS of Fatigued vs Fresh, and the biggest cases).
+- One takeaway bullet on fatigue in the "where the money goes" form: total on fatiguing ads, then already off / pause now / keep, naming the biggest cases.
 - Feed the results into the weekly doc's improvement-ideas section: which ads to retire or refresh, and which themes to brief Moodyboy on.
 - If Meta's own metrics later show up in Ads Manager or Windsor fields, add them as context columns.
 
