@@ -19,7 +19,7 @@ This is the playbook John and Claude worked out in October 2026. Follow it so ev
 - **Page:** `396692693535838`. **Pixel:** `1765459687532632`.
 - **League details:** Shopify (source of truth once the product is ACTIVE). Product metafields, namespace `custom`: `start_date`, `league_day_of_week`, `timing`, `facility_address`, `facility_name`, `facility_coordinates`, `season`, `end_date`, `league_skipped_weeks`, `league_duration`, `sport`, `metro_area`.
 - **Creative files:** Google Drive (search by file name).
-- **Sheets:** Meta campaign map `1iWLu6pn-GZFbVj1S_lAWSZ6JMgNHYQwp37H1VMzgAeg` (tabs: Ad Sets, Leagues, Fall26 Ad Sets, Fall26 League Status, Meta Actual, Kam import, Runbook). Winter 2027 Email Ops `1r21nUPNW2OkNfF0Oi7lRAlX7K8XKvkTLCnZGTGsHqKM` (tab Leagues). Kameron's tracker (tab `Kam Static Ad Tracker`): its ID is in the IMPORTRANGE formula in cell A1 of the map's `Kam import` tab.
+- **Sheets:** Meta campaign map `1iWLu6pn-GZFbVj1S_lAWSZ6JMgNHYQwp37H1VMzgAeg` (tabs: Ad Sets, Leagues, Fall26 Ad Sets, Fall26 Ads, Fall26 League Status, Meta Actual, Kam import, Runbook). Winter 2027 Email Ops `1r21nUPNW2OkNfF0Oi7lRAlX7K8XKvkTLCnZGTGsHqKM` (tab Leagues). Kameron's tracker (tab `Kam Static Ad Tracker`): its ID is in the IMPORTRANGE formula in cell A1 of the map's `Kam import` tab.
 
 ## Campaigns
 
@@ -105,6 +105,8 @@ Paused on John's call: `fall_in_love_stick_static` (do not add to new ad sets). 
 - Rename: `update_ad` with `name`.
 - Copy or link change on one ad: `update_ad_creative` (creates a new creative; only edits the single message/headline, so for multi-option copy create a new ad and pause the old one).
 - Archived ads (deleted in Ads Manager) cannot be edited or paused; that error is harmless.
+- **Log every pause or turn-on in the `Fall26 Ads` tab** (one row per ad, matched on column H, Meta ad ID), in the same session as the change. Set E (Want) and F (Actual) to Paused or Active, J to `YYYY-MM-DD, paused by Claude (<who approved>)` (or `turned on by`), and K to the reason. Do not touch G (Mismatch). If someone else made the change, log it as `paused by <name> (Claude confirmed)`. If an ad has no row, add one with A to O filled from Windsor.
+- Write `Fall26 Ads` updates one row (or one contiguous run of rows) per call, then re-read the rows by ad ID to confirm the right ones changed. A single large write with blank filler rows can land a row off.
 
 ## Windsor quirks
 
@@ -119,6 +121,7 @@ The `Fall26 League Status` tab compares Kameron's tracker (via `Kam import`) to 
 ## Sheets housekeeping after a build
 
 - `Fall26 Ad Sets`: add the row (see step 7).
+- `Fall26 Ads`: add a row per new ad (ad set, ad name, creative, rotation slot, Want, Actual, ad ID, date uploaded, `YYYY-MM-DD, built by Claude`, campaign, ad set ID).
 - New league that is not in the `Leagues` tabs yet: add it to the Meta map Leagues tab and the Email Ops Leagues tab with the Shopify details, or tell John so the Slack watch picks it up.
 - Never type over formula columns. Meta map `Leagues`: J and M to P (phase, campaign, ad set, live at launch) and V (ad copy line) are array formulas; to change phase use K (Phase override) and L (reason), to change the ad set change E/F/G. Meta map `Ad Sets`: F to J and Q are formulas (F pulls pin addresses from the Leagues tab, H counts leagues whose home is that ad set, so H and the number of addresses in F can differ). Email Ops `Leagues`: R and U to Y are formulas. Check with a grid read (`userEnteredValue.formulaValue`) before writing a column you have not written before.
 - Known exception: `Ad Sets` F4 (Houston P0) is typed text on John's call so it keeps the Bumpy Pickle pin.
