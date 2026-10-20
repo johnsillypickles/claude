@@ -64,6 +64,14 @@ Every ad gets several options so Meta can rotate them: **5 primary texts, 4 head
 - `call_to_action` SIGN_UP, linking to the landing page.
 - `degrees_of_freedom_spec.creative_features_spec`: OPT_IN `inline_comment`, `enhance_cta`, `image_brightness_and_contrast`; OPT_OUT `image_touchups`, `image_templates`, `image_uncrop`, `image_animation`, `add_text_overlay`, `text_optimizations`, `description_automation`, `site_extensions`, `product_extensions`, `show_summary`, `reveal_details_over_time`, `ads_with_benefits`, and for videos also `video_auto_crop`.
 
+### First values must match (or the ad set can't be duplicated)
+
+Meta accepts an ad whose `asset_feed_spec` and `object_story_spec` disagree, but then rejects every duplicate of its ad set ("For a Degrees of freedom enabled ad, the first value of Asset Feed Spec field should match the corresponding field in Object Story Spec", #100.2446211). The Oct 2026 W27 and LF26 builds hit this. For every ad with `asset_feed_spec`:
+
+- The first entry of `bodies`, `titles`, `descriptions` and `link_urls` equals `message`, `name`/`title`, `description`/`link_description` and `link` in `object_story_spec`. All three text fields must be present in `object_story_spec`.
+- The first entry of `images` (or `videos`) is the image (or video) in `object_story_spec`. With several sizes, put the default size (usually `img_1x1`/`vid_1x1`, the one with the empty `customization_spec`) first in the list; list order is separate from rule `priority`.
+- A broken ad can't be fixed in place. Build a corrected copy, then a person deletes the old one in Ads Manager (paused ads still block duplication).
+
 ### Static (single image)
 
 `object_story_spec.link_data` with `link`, `image_hash`, first body/title/description, CTA. `asset_feed_spec` with `images`, `bodies`, `titles`, `descriptions`, `link_urls`, `call_to_action_types: ["SIGN_UP"]`, `ad_formats: ["SINGLE_IMAGE"]`, `optimization_type: "DEGREES_OF_FREEDOM"`. When there are several sizes of one design, label them (`img_9x16`, `img_4x5`, `img_191x1`, `img_1x1`) and add `asset_customization_rules`: 9x16 for stories/reels/status, 4x5 for feed, 1.91 for right column, 1x1 as the default (empty `customization_spec`, last priority).
