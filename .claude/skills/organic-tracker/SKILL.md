@@ -16,17 +16,20 @@ Only data goes in. Every metric on Summary and the marketer tabs is a formula; n
 | Tab | Holds | Written by |
 |---|---|---|
 | Summary | Stale-data banner (A3), team totals (last week, prior week, change, QTD, MTD, downlines), By marketer table (row 19 header, rows 20-29 marketers, 30 NOT ASSIGNED YET, 31 Total: signups and clicks this week / last week / MTD / since Sept 1, total and new downlines, upcoming leagues, avg fill, # Critical/Push), 12-week team trend, monthly signups by marketer | Formulas. B8 = "UpPromote data through", a date-time (set each refresh) |
-| John Summary | Copy of the original Summary layout (affiliates, last week, QTD, MTD by marketer) that the weekly-report skill reads. B8 = Summary!B8 | Formulas. Never write to it |
+| John Summary | Copy of the original Summary layout (affiliates, last week, QTD, MTD by marketer) that the weekly-report skill reads. B8 = Summary!B8. Counts by Activity H / Affiliates L ("John Summary Marketer"), so it also includes Megan's downlines: row 30 "Megan (downlines)", 31 NOT ASSIGNED YET, 32 Total; monthly table rows 51 to 63 (Megan row 62, Total 63). Main Summary does not include Megan's downlines | Formulas. Never write to it |
 | Leagues | One row per league. A (Organic Lead), F, I, J, O are formulas filled to row 600; P (Flag), Q (Need / Day) and R (Global Lead, from Assignments column G) are array formulas in row 1 | Refresh writes B:E, G:H, K:L, N. M = Lead Override (people) |
 | Assignments | One row per facility: Facility ID (Internal League Tracker ID), facility, city, state, region, sub region, global lead, Organic Lead, previous lead, Status (Confirmed / Suggested), notes | Megan / John. Refresh only appends new facilities as Suggested |
+| Megan | Megan's downlines: affiliates whose UpPromote upline (Affiliates K) is meganadara@gmail.com or megan@sillypickles.com | Formulas |
+| Unassigned | Affiliates with no Marketer, most signups first, with UpPromote upline, so Megan can assign them | Formulas |
 | Jessica ... Ella | One per marketer; name in B1 drives every formula. Leagues where the person is the Organic Lead or the Global Lead, most urgent flag first | Formulas |
 | Team | Marketer names and tabs (A:D); team members' own UpPromote accounts in I:J (excluded from downline counts; add a row for any new member); flag thresholds in G2:G7 (goal 30, Critical 0.75/day or 14 days and 5 short, Push 0.5/day, Watch 0.25/day, same as Nate's) | Megan / John |
-| Affiliates | Every UpPromote affiliate (facility program excluded). C = Marketer (people). G:H and J (own account flag) formulas | Refresh upserts A, B, D, E, F, I |
+| Affiliates | Every UpPromote affiliate (facility program excluded). C = Marketer (people). G:H, J (own account flag), K (UpPromote upline, from Uplines) and L (John Summary Marketer: C, else "Megan (downlines)" when K is Megan) are formulas | Refresh upserts A, B, D, E, F, I |
+| Uplines (hidden) | Affiliate Email, UpPromote Upline Email, for affiliates that have an upline | Refresh replaces rows 2 onward |
 | Adjustments | Manual +/- signups by date and marketer, with reason | Megan / John |
 | History (May to Sep) | Final monthly signups by marketer from Nate's scoreboard (BixGrow + UpPromote). Frozen | Nobody |
 | Facilities | Facility ID, name, city, state from Internal League Tracker `2. Active Facility Info` | Refresh |
 | Weekly Data | Period Start, Period End, Affiliate Email, Clicks, Signups; F = Marketer formula | Refresh replaces rows 2 onward |
-| Activity | Formula stacking Weekly Data and Adjustments. All metrics read this | Formula |
+| Activity | Formula stacking Weekly Data and Adjustments (A:G). H = John Summary Marketer (F, else Affiliates L). All metrics read this | Formula |
 | Data Sources | One row per pull | Refresh appends |
 
 Summary, Affiliates, Adjustments, Assignments, Leagues, Facilities, Weekly Data, Activity and History are protected (John and Megan only). The connector runs as John, so writes work.
@@ -45,6 +48,7 @@ It writes `affiliates.json` (`[name, email, program, joined, status, upline_emai
 
 - **Weekly Data:** clear `'Weekly Data'!A2:E` and write all of `weekly.json` (it re-pulls from 8/3, so late denials are reflected). Leave column F alone.
 - **Affiliates:** read A:I. For each pulled affiliate, match on email (column B). Existing row: update D (program), E (joined), F (status) and leave C and I alone. New row: append with C = the Marketer of the row whose email equals `upline_email`, if that row has one (Ella Lee's downlines have upline ella@sillypickles.com or ellalee888@gmail.com), else blank; I = "Marketer set from UpPromote upline" when set. Rows not in UpPromote stay (BixGrow-era accounts).
+- **Uplines:** clear `Uplines!A2:B` and write `[email, upline_email]` for every pulled affiliate with a non-blank `upline_email`, emails lowercased. Affiliates K, the Megan tab and the Unassigned tab read it.
 - Set Summary B8 to the pull time in Central time as a plain date-time, for example `2026-10-13 07:05` (no apostrophe, no words). The A3 stale banner does date math on it; text breaks the banner. Only set B8 after Weekly Data was written successfully.
 
 If `UPPROMOTE_MCP_KEY` is not set but the UpPromote connector tools (`list_affiliates`, `list_referrals`, `get_top_affiliates`) are available, make the same calls through the connector and build the same two lists with the same rules: dates as `YYYY-MM-DDTHH:MM:SSZ` for Central-time day boundaries, `per_page` 100 with `has_more` paging, `exclude_network_sales: true` on `get_top_affiliates`. If neither works, skip this step, leave B8 alone, still do Leagues, and send the Slack alert in step 3.
@@ -67,6 +71,6 @@ If `UPPROMOTE_MCP_KEY` is not set but the UpPromote connector tools (`list_affil
 ## 3. Finish
 
 - Append a Data Sources row per pull (run time in CT, row counts, filters).
-- Read back Summary A1:N61 and 'John Summary' A1:N31 and one marketer tab; check for `#VALUE!`, `#REF!`, `#N/A`, that A1 still reads "Organic Marketing Summary", that A3 (stale banner) is blank, and that row 19 is the "Marketer" header (row 16 is "Total Downlines (as of period end)", F = Month to date; By marketer total is row 31). If Summary looks rearranged, stop writing to it and alert.
+- Read back Summary A1:N61 and 'John Summary' A1:N63 and one marketer tab; check for `#VALUE!`, `#REF!`, `#N/A`, that A1 still reads "Organic Marketing Summary", that A3 (stale banner) is blank, and that row 19 is the "Marketer" header (row 16 is "Total Downlines (as of period end)", F = Month to date; By marketer total is row 31). If Summary looks rearranged, stop writing to it and alert.
 - **Slack alert:** if the UpPromote pull failed, Shopify failed, A3 is not blank, or the Summary check failed, post in the private channel `#organic-tracker-alerts` (`C0C8HMX8V3M`, John and Megan) a message starting "Organic tracker refresh problem:" with what failed and the error text (never include keys). Post nothing when everything worked.
 - Reply with: leagues added (and any with a Suggested lead), announced but not live, new affiliates with no marketer, and team signups last week vs prior week.
