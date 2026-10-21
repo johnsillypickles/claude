@@ -50,7 +50,8 @@ Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and ca
 
 ### Naming
 
-- The ad name is the Drive file name (without extension), exactly the same in every ad set, no season prefix. The creative report matches on it.
+- The ad name is the Drive file name (without extension), exactly the same in every ad set. The creative report matches on it. Don't add a season prefix yourself, but keep one that is already in the file name: season-specific creatives (for example `W27_ALL_Moodyboy-TradingCards_Static_v1`) keep their `W27_` so John can tell which season they belong to.
+- Campaign and ad set names stay evergreen (no season words). Seasonal creatives run only in their season and get swapped out after it; seasonless creatives can keep running.
 - Location-specific creatives (for example the Houston volleyball set) end in `_localized`.
 - The creative name (inside `creative.name`) can carry a tag, for example `fall_leagues_live_stick_static_LF26NAurora_v1`.
 
