@@ -43,8 +43,13 @@ Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and ca
    - `targeting`: send the full object (it replaces, not merges). Keep everything from the template and change only `geo_locations.custom_locations` to one pin: `address_string`, `latitude`, `longitude` from `facility_coordinates`, `radius: 15`, `distance_unit: "mile"`, `country` (`US` or `CA`). Keep `excluded_custom_audiences`: `120243290793190019`, `120252875760880019`, `120253656154900019`.
 4. **Landing page:** the league's product page. Two leagues at one facility: the facility collection page.
 5. **Create the ads** (see below). Default set: 2 statics, 2 videos, 1 carousel.
-6. **Turn on** with `enable_adset` if asked to launch.
-7. **Log it** in the `Fall26 Ad Sets` tab: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
+6. **Check the targeting before turning on.** Read the ad set back with `get_data` (`adset_targeting`, `include_objects_without_insights`) and confirm, for every ad set you build, edit or enable:
+   - `geo_locations` has only `custom_locations` (plus `location_types`). Any `countries`, `regions`, `cities` or `zips` is wrong: stop and fix it. A P1 with no pins targets a whole country (Darling Harbour spent $585 in the US this way, Oct 2026).
+   - Every pin is `radius: 15`, `distance_unit: "mile"`, unless John has named an exception.
+   - For P1, each league in the name has a pin centered within 3 mi of its Shopify `facility_coordinates` (this checks the pin's location, not its radius), and the pin `country` matches the facility's country.
+   Run the same check across all delivering ad sets whenever you touch Meta targeting, not just the one you changed.
+7. **Turn on** with `enable_adset` if asked to launch.
+8. **Log it** in the `Fall26 Ad Sets` tab: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
 
 ## Ads
 
