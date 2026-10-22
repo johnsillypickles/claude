@@ -49,7 +49,7 @@ Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and ca
    - For P1, each league in the name has a pin centered within 3 mi of its Shopify `facility_coordinates` (this checks the pin's location, not its radius), and the pin `country` matches the facility's country.
    Run the same check across all delivering ad sets whenever you touch Meta targeting, not just the one you changed.
 7. **Turn on** with `enable_adset` if asked to launch.
-8. **Log it** in the tab for the ad set's season: Fall and Late Fall go in `Fall26 Ad Sets`; Early Winter and Winter go in `Ad Sets` (fill A to P, S, V; Q is a per-row formula, copy it down; never type in T or U). For `Fall26 Ad Sets`: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
+8. **Log it** in the tab for the ad set's season: Fall and Late Fall go in `Fall26 Ad Sets`; Early Winter goes in `EarlyWinter27 Ad Sets` (column G is a per-row Mismatch formula, copy it down); the `Ad Sets` tab is the Winter 2027 build plan, so log Winter ad sets there by filling O (ad set ID) and P (actual status) on the planned row. For `Fall26 Ad Sets`: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
 
 ## Ads
 
