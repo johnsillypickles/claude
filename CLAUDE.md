@@ -7,6 +7,14 @@ Used by John (marketing lead) and Kameron (paid ads) at Silly Pickles, which run
 - `meta-league-ads`: build, launch and edit Meta league ad sets (Phase 1 builds, creative swaps, copy, logging). Read it before any Meta change.
 - `weekly-report`: the weekly marketing update and creative report.
 
+## Agents in this repo
+
+Each agent is a file in `.claude/agents/`. Ask for one by name ("run league-sync") or @-mention it. The scheduled routines can call them too.
+
+- `league-sync`: Shopify, Slack and sheet reconcile for leagues (Meta map + Email Ops), unlist sweep, Phase 1 $1k flags, email plan check. DMs John.
+- `klaviyo-sync`: Klaviyo campaigns into the Email Ops plan, plus today's and overdue sends. DMs John.
+- `tracker-watch`: stale-data check on the Organic Marketing Tracker. Posts in #organic-tracker-alerts only when stale.
+
 ## House rules
 
 - Shopify is the source of truth for league details (dates, days, times, addresses) once a product is ACTIVE.
