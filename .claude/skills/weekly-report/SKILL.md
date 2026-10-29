@@ -28,7 +28,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
-| Organic marketing (activity) | Organic Marketing Tracker (JC), `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, Summary tab, first table ("Team totals"). Replaced Nate's scoreboard on 10/12/26; never use the scoreboard | If it can't be read, carry forward and mark `[Carried from last week, update]` |
+| Organic marketing (activity) | Organic Marketing Tracker (JC), `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, John Summary tab (the original Summary layout, kept for this report), first table ("Team totals"). The Summary tab is now Megan's by-marketer view. Replaced Nate's scoreboard on 10/12/26; never use the scoreboard | If it can't be read, carry forward and mark `[Carried from last week, update]` |
 | Organic marketing (revenue) | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See "Organic Marketing (UpPromote)" below |
 | Facility | Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) plus Gmail threads John is copied on | See "Facility Marketing" below |
 
