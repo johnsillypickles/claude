@@ -14,6 +14,7 @@ Each agent is a file in `.claude/agents/`. Ask for one by name ("run league-sync
 - `league-sync`: Shopify, Slack and sheet reconcile for leagues (Meta map + Email Ops), unlist sweep, Phase 1 $1k flags, email plan check. DMs John.
 - `klaviyo-sync`: Klaviyo campaigns into the Email Ops plan, plus today's and overdue sends. DMs John.
 - `tracker-watch`: stale-data check on the Organic Marketing Tracker. Posts in #organic-tracker-alerts only when stale.
+- `stop-rule-watch`: daily Meta stop-rule flags (Phase 1 ad sets over $1,500 lifetime under 1.00x ROAS). DMs John every day until he acts or says stop.
 
 ## House rules
 
