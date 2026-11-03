@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Windsor_ai__get_connectors",
+      "mcp__Windsor_ai__get_data",
+      "mcp__Windsor_ai__get_fields",
+      "mcp__Windsor_ai__get_options",
+      "mcp__Windsor_ai__list_actions",
+      "mcp__Windsor_ai__execute_action",
+      "mcp__Windsor_ai__upload_files",
+      "mcp__Google_Sheets__get_spreadsheet",
+      "mcp__Google_Sheets__get_values",
+      "mcp__Google_Sheets__update_values",
+      "mcp__Google_Sheets__append_values",
+      "mcp__Google_Sheets__batch_clear_values",
+      "mcp__Google_Sheets__update_formulas",
+      "mcp__Google_Drive__search_files",
+      "mcp__Google_Drive__get_file_metadata",
+      "mcp__Google_Drive__download_file_content",
+      "mcp__Google_Drive__read_file_content",
+      "mcp__Google_Docs__read_doc",
+      "mcp__Shopify__graphql_query",
+      "mcp__Shopify__graphql_schema",
+      "mcp__Shopify__run-analytics-query",
+      "mcp__Shopify__search_products",
+      "mcp__Shopify__get-product",
+      "mcp__Slack__slack_read_channel",
+      "mcp__Slack__slack_read_thread",
+      "mcp__Slack__slack_search_public_and_private",
+      "mcp__Slack__slack_search_channels"
+    ]
+  }
+}

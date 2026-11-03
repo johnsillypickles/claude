@@ -25,6 +25,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | Blended store metrics | Lebesgue `get_per_period_metrics`, shop `1307999470`, `period_type=week_monday` | `reporting_net_sales` = Net revenue, `total_revenue` = Shop revenue (gross), `total_orders` = Signups |
 | Paid by channel | Same call: `fb_*`, `ga_*`, `tt_*`, `total_adv_spend` | Platform-reported purchases and revenue |
 | Meta phases | Lebesgue `get_advertising_data_table`, source `facebook`, account `1346441932978787`, level `campaign` | Phase 0 = national/regional, Phase 1 = problem children, from campaign names. Also pull Le Pixel ROAS |
+| Meta lead forms | Windsor `get_data`, connector `facebook`, fields `campaign, adset_name, date, spend, clicks, actions_lead`, filter campaign contains "LeadForm" | Lebesgue shows lead-form campaigns with 0 purchases. Report leads and cost per lead (spend / leads) per market, keep them out of ROAS, and say Meta's lead count is the source (`actions_leadgen_grouped` reads 0 for these) |
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
@@ -60,6 +61,8 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 7. **Email (Klaviyo)**
 8. **Organic Marketing (UpPromote)**: see below. One section; affiliates, UpPromote and organic marketing are the same program.
 9. **Facility Marketing**
+
+**Keep sections 7 to 9 short (John, 11/2/26).** Email: one 4-row table (attributed revenue, campaigns sent / credited, flows credited, open rates campaigns / flows; week, prior week, QTD) and 2 bullets. Organic: one 4-row table (UpPromote orders, net revenue, share of store net revenue, team signups; week, prior week, QTD), the monthly team cost table (C below) and 3 bullets. Facility: one coverage sentence, an at-risk table (plus at most one "Watch" row) and 3 bullets. Put the long detail (per-campaign lists, flags, restatements, activity logs, tracker fixes) in your reply to John, not the doc, unless he asks for it.
 Last. **Ideas and experiments to improve** (Tommy, 10/14/26): a ranked table of what would bring ad spend down as a share of revenue: # / Idea / Why (evidence with numbers) / Effort / Owner / Priority or status. Carry the list forward week to week and update each item's status and result. Always consider: league selection and fill priority (Mar's Monday field), longer lead times with pre-registration lead forms (Fort Wayne and Little Rock: $27 and $32 per signup), creative (fewer, stronger concepts; see the creative report), waitlist / Notify-me email capture, Google search expansion, referrals (a refer-a-friend offer for current players already exists and is promoted by email only, not in paid ads, so frame ideas as growing or measuring it, not starting one), localized ads, new channels. Rank by expected savings vs effort, and mark untested ideas as our assumption.
 
 ## Organic Marketing (UpPromote)
@@ -89,11 +92,12 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 | AOV (paid orders) | | | | |
 | Share of blended net revenue | | | pts | |
 
-**C. Cost, ROAS and CAC (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Organic ROAS = organic net revenue / cost; organic CAC = cost / tracker signups. John keeps the monthly cost data (starting September 2026) somewhere private, not on a tab the organic team can see, because hours could be back-calculated from it. [Location pending: ask John for the sheet link if it isn't recorded here.] Report team-level ROAS and CAC only, never per marketer. The weekly update doesn't go to the organic team, so team-level figures are fine there. Use his figures as given; if the month isn't there yet, show `[pending: John adding <month> cost data]`. Never estimate hours, rates or commissions.
+**C. Cost and return by person (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Hours come from the Contractor Payment Request Form (Responses) sheet `13fEzAVGnWs8_mR0rXLlry1AU27DbMj3LU7VkdN2oocs`, tab "Form Responses 1": Category "Organic Marketing (ID: MAR-OM-09)", columns A (approved), C/D (name), G (rate), H (hours), M (total requested), P (time frame), S (comments). The sheet holds phone, Zelle and email data: read only those columns and never copy personal details into reports or the repo. Use the latest complete month (pay periods ending in that month; flag unapproved rows as pending). Commissions and revenue come from UpPromote referrals for the month (exclude denied; "Network referrals" rows are upline commissions: cost to the upline, not revenue), mapped to marketers with the tracker Affiliates tab, with Megan's downlines under Megan Mehl. Leave Megan Mehl out as a person (John, 11/3/26): no row for her hours, commissions or downlines. Her team bonus ($10 per signup the team gets) is a team cost: show it as one row, "Megan Mehl: team bonus ($10 x <team signups>)", using her billed bonus row from the payment sheet when it exists, else rate x team signups marked "not yet billed". One row per person plus a team total and a separate "Not on the team (hosts and unassigned)" row. Signups per person = the tracker's "Monthly signups by marketer" table on the Summary tab (it already includes each marketer's affiliates and the Adjustments tab); use UpPromote only for people the tracker has no row for (e.g. Megan). Columns: hours, rate, hourly pay, commissions, total cost, signups, revenue, revenue minus cost, revenue / cost (x). John asked for per-person figures on 11/2/26: show them in the weekly update (it doesn't go to the organic team), never in anything the organic team sees. State that revenue is ticket sales before league costs, and flag pending commissions and manual commission batches. Never estimate hours, rates or commissions.
 
 **Always flag:**
 
 - Tracker signups (spots, minus denied, plus adjustments) vs Shopify tagged orders (orders) will differ. Say which number each line uses.
+- If tracker signups are well below Shopify tagged orders, do not blame sync lag. The Summary team totals only count affiliates with a Marketer (Weekly Data column F). Sum `Weekly Data` signups for the week with and without a Marketer, and confirm the total against UpPromote `list_referrals` for the week (drop `Network referrals` rows, they are upline credits; add spots for orders with quantity 2+). Report the unassigned spots and the top unassigned affiliates by name, and ask John about any unassigned affiliate with a big week. Some unassigned affiliates are correct by design: league hosts who signed up outside the organic team or before it existed are not tied to any marketer (e.g. Jill Loiars `jill.sillypickles@gmail.com` and Kate Ollila `kate.ollila10@gmail.com`). Hosts the team recruited should have one. Megan's downlines (affiliates whose UpPromote upline is Megan, filed under "Megan (downlines)") count toward the team (John, 11/2/26). Until the tracker's team table includes them, add their spots and clicks to the team figures in the bullets and show the math (e.g. 17 + 3 = 20). Being a host, or having a `*.sillypickles` email, does not tell you which, so ask John rather than guess. (10/18/26 week: 33 spots in UpPromote and Weekly Data, 13 on Summary, 20 from unassigned affiliates.)
 - The number of $0 orders and any orders tagged for both UpPromote and BixGrow.
 - Commission rule changes and outages. Search Slack for "UpPromote" in the report week (e.g. 10/8/26: commission changed from per order to per league item; 9/22 to 9/25/26: promo codes deleted, attribution broke).
 - Refund restatements of prior weeks' revenue.
@@ -102,7 +106,7 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 
 - No em dashes or en dashes. Use "to" for ranges ("9/21 to 9/27").
 - Money is whole dollars in summary tables and 2 decimals for CAC in the weekly table. ROAS is 2 decimals with an "x".
-- **Plain English (John, 10/14/26).** Write bullets for someone who doesn't read dashboards. Short sentences. In bullets, say ROAS as money ("$1.87 of revenue per $1 of ads"), keep the "x" format in tables only, and the intro paragraph defines ROAS once ("ROAS means revenue per $1 of ad spend: 2.00x means $2 back for every $1"). Explain jargon the first time it appears in a section: Problem Children / Phase 1 = ads for struggling leagues; Phase 0 = national ads; Le Pixel = our own tracking; retargeting = ads to people who already visited the site; flows = automated emails; restatement = platforms adding late sales to past weeks. Name campaigns by what they do, not their Meta names. Skip formulas in bullets unless the number would otherwise be unclear. Say "our read" or "our assumption" instead of "(inference)".
+- **Plain English (John, 10/14/26).** Write bullets for someone who doesn't read dashboards. Short sentences. Write ROAS in the "x" format everywhere, bullets included ("Meta had 3.10x ROAS", "Le Pixel 2.16x"); never "$3.10 per $1" or "returned $3.10 for every $1" (John, 10/26/26, repeated from 10/19). This also applies to the creative report takeaways and card recommendations. The intro paragraph defines ROAS once ("ROAS means revenue per $1 of ad spend: 2.00x means $2 back for every $1"). Explain jargon the first time it appears in a section: Problem Children / Phase 1 = ads for struggling leagues; Phase 0 = national ads; Le Pixel = our own tracking; retargeting = ads to people who already visited the site; flows = automated emails; restatement = platforms adding late sales to past weeks. Name campaigns by what they do, not their Meta names. Skip formulas in bullets unless the number would otherwise be unclear. Say "our read" or "our assumption" instead of "(inference)".
 - Bullets lead with the number and the reason. Mark inferences as such.
 - Put missing data in brackets, like `[pending]`. Never estimate it.
 - **Edits after the doc exists go in the same doc.** John's Google Docs connector is connected (10/14/26). Make any later change (John's feedback, corrections, restated numbers) with Google Docs `update_doc` on the existing doc so the link stays the same; never recreate the doc to apply an edit. Read the doc's `revisionId` with `read_doc` first and send it as `writeControl.requiredRevisionId`. Follow the google-workspace skill's `references/docs.md`. If the Docs tools aren't loaded in a session, ask John to turn the connector on rather than making a new doc.
@@ -111,7 +115,7 @@ Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter sta
 
 ## Creative report (HTML attachment)
 
-Template: `assets/creative_report_template.html` (a cleaned copy of John's `template.html` from Drive). Fill `__DATA__` with JSON, `__GEN__` with the generated date and `__TAKE__` with 4 to 6 `<li>` takeaways. Optional data keys: `sources` (header source line), `tiktok.source` and `tiktok.note` (shown when `tiktok.creatives` is empty).
+Template: `assets/creative_report_template.html` (a cleaned copy of John's `template.html` from Drive). Fill `__DATA__` with JSON, `__GEN__` with the generated date and `__TAKE__` with 4 to 6 `<li>` takeaways. Optional data keys: `sources` (header source line), `tiktok.source` and `tiktok.note` (shown when `tiktok.creatives` is empty), and `fatigue` (the fatigue check section, see "Creative fatigue check").
 
 **Window:** last 14 days ending on the report Sunday.
 
@@ -140,6 +144,54 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
   - **Same creative, other platform or cut:** when one file is unavailable, reuse the thumbnail of the identical creative (e.g. the Meta and TikTok copies of a video, a TikTok `_static` version of a Meta static, or a `-shortened` cut). Download TikTok `video_thumbnail_url`s for every TikTok video in the same session even when Meta also has the ad.
   4. No spend threshold: low-spend and test ads get thumbnails too. Use Drive when a small file exists. Otherwise use the Meta preview, which is often quicker for test ads.
 - Render it in Chromium before sending and check there are no script errors. Python Playwright isn't preinstalled: `pip install playwright`, then `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')` (never `playwright install`). Collect `pageerror` and console errors, force `loading='eager'` on images, then count `img` elements where `naturalWidth` is 0 and list the `.ph` placeholders with their card names. The `.ph` list must be empty, and the count of `#testsec img.tthumb` must equal the count of `#testsec tr.adrow`.
+
+## Creative fatigue check (section of the creative report)
+
+Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue`, rendered after the Meta cards), not a separate page. Meta's own fatigue, similarity and theme metrics aren't in John's Ads Manager, Windsor or Lebesgue (checked 10/16/26), so we use our own rules, back-tested on our Meta history.
+
+**History store.** Weekly Meta ad-level results live in the private Google Sheet "Meta weekly ad history (fatigue check)" (ID `19pC7Bwvgsi7yO6R-spa8dKSR6pH90o6IZByErdaA_pg`, tab `Untitled`; Jan 6, 2025 to Oct 11, 2026 loaded and verified 10/16/26). Never commit it: this repo is public. Columns: `week` (Monday), `key` (normalized ad name, see `norm()` in the script), spend, impressions, clicks, purchases, purchases_conversion_value, add_to_cart. One `__account__` row per week holds the whole Meta account; other rows are creative-weeks with $250+ spend (only those count as "live" weeks). Ad names are normalized so " - Copy" duplicates, `AllGeos_Pickleball_` prefixes and format suffixes (`_Static`, `_Video`, `_1080x1920`, ...) roll up to one creative across ad sets and relaunches.
+
+**Each week** (script: `scripts/fatigue.py`):
+1. Read the Sheet with `get_values` (range `Untitled!A:H`; the result is usually saved to a file) and run `fatigue.py from-sheet <values file> history.json`.
+2. Pull the report week from Lebesgue: `get_advertising_data_table`, source `facebook`, account `1346441932978787`, level `ad`, Monday to Sunday, `period_type=all`. If it's over the 50k-token limit, split it into Mon-Wed and Thu-Sun (then single days). Pulls must not cross a Monday. If last week is missing from the Sheet too, pull it as well.
+3. `fatigue.py add history.json <pull files>`: it refuses a day that's already in the history.
+4. `fatigue.py to-rows history.json new_rows.json --weeks <new Mondays>`, then append those rows to the Sheet with `append_values`.
+5. `fatigue.py score history.json --report data.json --end <Monday of the report's last week> --out fatigue.json`, then add context fields and set `D.fatigue`:
+   - per row, `freq` (views per person over the 14 days: sum of impressions / sum of reach, from Windsor `facebook` ad level) and `quality` (spend-weighted Meta quality rank). Both are context only: there's no history to test them.
+   - `themes` (theme, ads, spend, roas, pixel_roas, fatigued count) and `groups` (near-duplicate group, ads, spend, roas, note). Tag themes and near-duplicates by concept, e.g. nostalgia/gameplay, beginner reassurance, phrase statics, social proof, urgency, identity humor, founder video, localized announcement, volleyball, how it works; groups like the Boo cuts or Localized v1 to v3.
+
+**Rules** (from the Jan 2025 to Oct 2026 study, 58 creatives with 6+ live weeks and $3k+ spend):
+- **Season-adjusted ROAS index** = the creative's ROAS divided by the whole Meta account's ROAS in the same weeks, pooled over 2 live weeks.
+- **Fatigued:** the last 2 live weeks' index is at or below 60% of the creative's best 2-week index.
+- **Watch:** 2 or more of:
+  - 8+ live weeks
+  - click rate down 15%+ vs its first 2 live weeks
+  - index down 25%+ vs its best 2 weeks
+  - purchases per click down 40%+ vs its first 2 live weeks
+- **Fresh:** neither. **New:** under 3 live weeks. **Not live:** no $250+ week in the last 2 weeks.
+- What the study found:
+  - 36 of 58 creatives wore out, around live week 8 or 9 (median; range 3 to 31).
+  - After wearing out they kept running: $342k at 1.73x vs 2.08x for the account in the same weeks.
+  - The Watch rule caught 56% of wear-outs a week early and 34% two weeks early, but also flags 18% of healthy weeks. So Watch means "check it", not "pause it".
+  - Rising cost per 1,000 views was NOT a warning sign (it rose more often in healthy weeks). Neither was lifetime spend or lifetime views, so don't use them.
+  - Our old guesses (CPM up 20%, 3+ views per person, bottom-10% quality) are retired as scored signals.
+- `score` re-runs this back-test on the full history every week. The report's evidence box shows the fresh numbers, so they update as history grows.
+- **Caveat to state when it applies:** a creative moved into weaker ad sets (e.g. Problem Children) can look fatigued because of where it ran, not because people are tired of it. Say so in the takeaway when most of its spend moved phases.
+
+**Wording (John, 10/19/26):** the report shows the Fatigued verdict as **"Fatiguing"** (the script and data keep the key `Fatigued`). Never lead with "X% of spend went to fatigued ads": Tommy reads that as waste. Fatiguing means an ad is well below its own best weeks, not that it is losing money. Always pair the share with where the money goes next (already off / pause now / keep because it still beats its phase average).
+
+**Action column:** `score` adds `action_kind`, `action` and `split` per row via `action()`; the template shows Action next to the verdict, plus a "where the money goes" box above the table. Rules:
+- Fatiguing, beats the Phase 0 average in Phase 0 but not the Phase 1 average in Phase 1 (both $500+): keep in Phase 0, pause in the Phase 1 ad sets.
+- Fatiguing, still beats the average of the phase where most of its spend is: keep for now, line up a replacement.
+- Fatiguing otherwise: pause, and check its ad sets keep 2+ live ads.
+- Not running (no spend in the last 3 days of the window): "already off"; a Fresh ad that was beating its phase average gets "consider turning it back on".
+- Watch: review, no pause yet. Fresh at 15%+ above its phase average: keep and give more budget. New: too new to judge.
+- Status changes John reports after the window (e.g. "I paused X") override the action text for that row; say who paused it and when. Check live status before telling John an ad is running: Lebesgue's `status` field can lag, so confirm with Windsor daily spend (`date, ad_name, spend` for the last few days; the ESSENTIAL plan has no same-day hourly data).
+
+**In the report:**
+- One takeaway bullet on fatigue in the "where the money goes" form: total on fatiguing ads, then already off / pause now / keep, naming the biggest cases.
+- Feed the results into the weekly doc's improvement-ideas section: which ads to retire or refresh, and which themes to brief Moodyboy on.
+- If Meta's own metrics later show up in Ads Manager or Windsor fields, add them as context columns.
 
 ## Facility Marketing
 
