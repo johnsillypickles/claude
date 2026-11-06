@@ -54,7 +54,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 The doc is about 2 pages. Every section is a few bullets or one small table. Long detail (per-campaign lists, restatements, flags, per-person splits, tracker fixes, activity logs) goes in your reply to John, not the doc.
 
 **1. Executive summary**
-- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, MER (blended ROAS = net revenue / total ad spend), Spend-to-revenue, Signups, Blended CAC. Columns: Last week, Prior week, QTD, Q4 goal (the full-quarter goal). Bullets: what the rest of the quarter needs per day (see Targets), MER so far vs goal, the week vs prior week with the 1 to 2 biggest reasons.
+- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, Ad spend as % of revenue (Tommy, 11/6/26; the Q4 goal is 30%), MER (blended ROAS = net revenue / total ad spend), Signups, Blended CAC. Also say the QTD % in the summary text. Columns: Last week, Prior week, QTD, Q4 goal (the full-quarter goal). Bullets: what the rest of the quarter needs per day (see Targets), MER so far vs goal, the week vs prior week with the 1 to 2 biggest reasons.
 - **b. What's working in ads (2 to 4 bullets).** Thematic, not ad by ad: which concepts win (for example founder video, localized announcements, beginner reassurance, nostalgia), which are fatiguing, and what we're briefing next. Draw from the creative report's themes and fatigue check. Name at most 2 ads per bullet, by what they show. For localized announcements, always say whether they beat generic ads in the same leagues (use the localized vs generic test numbers), not just where they ran.
 - **c. What we're testing.** One short block per live test: what we changed, when, the result so far with numbers vs a control, and the call (keep, kill, keep testing). Carry the list week to week and drop tests once called. Always cover:
   - Email A/B tests (see "Tests: email A/B").
@@ -71,9 +71,9 @@ The doc is about 2 pages. Every section is a few bullets or one small table. Lon
 Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
 
 **Look and voice (John, 11/6/26: "make it look less like AI").** Write it the way John would: first person plural ("we spent", "I don't think the exclusion hurt us"), full sentences, short paragraphs. Reference: sample v3 in the reports folder.
-- Plain Google Doc: Arial, dark green headings, light gray table headers, thin gray borders. No title banner, colored status pills, tinted callout boxes, KPI tiles, or emoji.
+- Plain Google Doc: Arial, black headings (no custom colors), light gray table headers, thin gray borders. No title banner, colored status pills, tinted callout boxes, KPI tiles, or emoji.
 - Don't open every bullet with a bold label and a colon, and don't use labels like "TL;DR", "Call:", "Hypothesis:", "Confidence:" or "Our read:". Flag a guess in plain words ("I think", "probably", "I wouldn't credit it for all of it").
-- Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
+- Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Email, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
 - Definitions go in one small gray line under the table they explain, not in an intro.
 - Say "signups" throughout (not orders or purchases). Don't say "behind pace". Blended CAC includes returning players: say so in the note.
 
