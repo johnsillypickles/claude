@@ -28,7 +28,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | Meta lead forms | Windsor `get_data`, connector `facebook`, fields `campaign, adset_name, date, spend, clicks, actions_lead`, filter campaign contains "LeadForm" | Lebesgue shows lead-form campaigns with 0 purchases. Report leads and cost per lead (spend / leads) per market, keep them out of ROAS, and say Meta's lead count is the source (`actions_leadgen_grouped` reads 0 for these) |
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
-| Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
+| Email | Klaviyo campaign and flow reports | See "Email section" below |
 | Organic marketing | Organic Marketing Tracker, UpPromote, contractor sheet | See "Organic marketing" below |
 | Facility marketing | Shopify sessions and discount codes, UpPromote facility programs, contractor sheet | See "Facility marketing" below |
 | Tests | Klaviyo, Meta (Lebesgue, Windsor), Slack | See "Tests" below |
@@ -54,7 +54,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 The doc is about 2 pages. Every section is a few bullets or one small table. Long detail (per-campaign lists, restatements, flags, per-person splits, tracker fixes, activity logs) goes in your reply to John, not the doc.
 
 **1. Executive summary**
-- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, MER (blended ROAS = net revenue / total ad spend), Spend-to-revenue, Signups, Blended CAC. Columns: Last week, Prior week, QTD, Q4 goal (the full-quarter goal). Bullets: what the rest of the quarter needs per day (see Targets), MER so far vs goal, the week vs prior week with the 1 to 2 biggest reasons.
+- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, Ad spend as % of revenue (Tommy, 11/6/26; the Q4 goal is 30%), MER (blended ROAS = net revenue / total ad spend), Signups, Blended CAC. Also say the QTD % in the summary text. Columns: Last week, Prior week, QTD, Q4 goal (the full-quarter goal). Bullets: what the rest of the quarter needs per day (see Targets), MER so far vs goal, the week vs prior week with the 1 to 2 biggest reasons.
 - **b. What's working in ads (2 to 4 bullets).** Thematic, not ad by ad: which concepts win (for example founder video, localized announcements, beginner reassurance, nostalgia), which are fatiguing, and what we're briefing next. Draw from the creative report's themes and fatigue check. Name at most 2 ads per bullet, by what they show. For localized announcements, always say whether they beat generic ads in the same leagues (use the localized vs generic test numbers), not just where they ran.
 - **c. What we're testing.** One short block per live test: what we changed, when, the result so far with numbers vs a control, and the call (keep, kill, keep testing). Carry the list week to week and drop tests once called. Always cover:
   - Email A/B tests (see "Tests: email A/B").
@@ -71,13 +71,23 @@ The doc is about 2 pages. Every section is a few bullets or one small table. Lon
 Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
 
 **Look and voice (John, 11/6/26: "make it look less like AI").** Write it the way John would: first person plural ("we spent", "I don't think the exclusion hurt us"), full sentences, short paragraphs. Reference: sample v3 in the reports folder.
-- Plain Google Doc: Arial, dark green headings, light gray table headers, thin gray borders. No title banner, colored status pills, tinted callout boxes, KPI tiles, or emoji.
+- Plain Google Doc: Arial, black headings (no custom colors), light gray table headers, thin gray borders. No title banner, tinted callout boxes, KPI tiles, or emoji.
+- Color only in two places (John, 11/6/26): the Ads section is a 2-column table with a colored tag cell (WINNING green #D6EFCF / #1E5C1E, STEADY blue #D9E8F7 / #174A7A, ABOUT EVEN gray #E6E8E3 / #3E453E, WEARING OUT red #F9D3CF / #8A1F14) and one line of text; and the "Where it stands" cell of the tests table is shaded (green working, yellow too early or unclear, blue running, gray paused). Everything else stays plain.
 - Don't open every bullet with a bold label and a colon, and don't use labels like "TL;DR", "Call:", "Hypothesis:", "Confidence:" or "Our read:". Flag a guess in plain words ("I think", "probably", "I wouldn't credit it for all of it").
-- Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
+- Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Email, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
 - Definitions go in one small gray line under the table they explain, not in an intro.
 - Say "signups" throughout (not orders or purchases). Don't say "behind pace". Blended CAC includes returning players: say so in the note.
 
 **First report of each month** (the week that contains the 1st, or the first one built after it): add last month's numbers to organic and facility, including costs from the time sheets.
+
+## Email section (John, 11/6/26)
+
+One sentence or two on what drove the week, then one table (Last week, Prior week, Change, QTD): Campaigns sent, Recipients, Clicks, Purchases, Campaign revenue, Automated email (flow) revenue, Total email revenue.
+- Campaigns: Klaviyo `get_campaign_report`, `conversion_metric_id` `VAQscR` (Placed Order), statistics `recipients, delivered, clicks_unique, click_rate, conversions, conversion_uniques`, value_statistics `conversion_value`, group_by `campaign_id, send_channel`, filter `equals(send_channel,"email")`, timeframe = Central midnight to midnight with ISO offsets (-05:00 in CDT, -06:00 after the first Sunday of November). It filters by send date and returns each campaign's attributed conversions to date. Campaigns sent = row count. A full-quarter call times out: sum weekly or half-month chunks.
+- Flows: `get_flow_report`, same metric and stats, group_by `flow_id`, same filter; read `flow_aggregation`.
+- Total email revenue = campaigns + flows. Don't mix with Klaviyo's "attributed revenue by order date" (the old email line); it differs by a few thousand a week.
+- Cross-check with Lebesgue `get_klaviyo_performance` (entity campaign, then flow): revenue and recipients match exactly.
+- Late conversions keep landing for about 5 days after a send, so build the report Thursday or later, or say last week's email numbers may still rise.
 
 ## Tests (section 1c)
 
