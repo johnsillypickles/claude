@@ -71,7 +71,8 @@ The doc is about 2 pages. Every section is a few bullets or one small table. Lon
 Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
 
 **Look and voice (John, 11/6/26: "make it look less like AI").** Write it the way John would: first person plural ("we spent", "I don't think the exclusion hurt us"), full sentences, short paragraphs. Reference: sample v3 in the reports folder.
-- Plain Google Doc: Arial, black headings (no custom colors), light gray table headers, thin gray borders. No title banner, colored status pills, tinted callout boxes, KPI tiles, or emoji.
+- Plain Google Doc: Arial, black headings (no custom colors), light gray table headers, thin gray borders. No title banner, tinted callout boxes, KPI tiles, or emoji.
+- Color only in two places (John, 11/6/26): the Ads section is a 2-column table with a colored tag cell (WINNING green #D6EFCF / #1E5C1E, STEADY blue #D9E8F7 / #174A7A, ABOUT EVEN gray #E6E8E3 / #3E453E, WEARING OUT red #F9D3CF / #8A1F14) and one line of text; and the "Where it stands" cell of the tests table is shaded (green working, yellow too early or unclear, blue running, gray paused). Everything else stays plain.
 - Don't open every bullet with a bold label and a colon, and don't use labels like "TL;DR", "Call:", "Hypothesis:", "Confidence:" or "Our read:". Flag a guess in plain words ("I think", "probably", "I wouldn't credit it for all of it").
 - Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Email, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
 - Definitions go in one small gray line under the table they explain, not in an intro.
