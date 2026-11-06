@@ -28,7 +28,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | Meta lead forms | Windsor `get_data`, connector `facebook`, fields `campaign, adset_name, date, spend, clicks, actions_lead`, filter campaign contains "LeadForm" | Lebesgue shows lead-form campaigns with 0 purchases. Report leads and cost per lead (spend / leads) per market, keep them out of ROAS, and say Meta's lead count is the source (`actions_leadgen_grouped` reads 0 for these) |
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
-| Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
+| Email | Klaviyo campaign and flow reports | See "Email section" below |
 | Organic marketing | Organic Marketing Tracker, UpPromote, contractor sheet | See "Organic marketing" below |
 | Facility marketing | Shopify sessions and discount codes, UpPromote facility programs, contractor sheet | See "Facility marketing" below |
 | Tests | Klaviyo, Meta (Lebesgue, Windsor), Slack | See "Tests" below |
@@ -79,6 +79,15 @@ Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel,
 - Say "signups" throughout (not orders or purchases). Don't say "behind pace". Blended CAC includes returning players: say so in the note.
 
 **First report of each month** (the week that contains the 1st, or the first one built after it): add last month's numbers to organic and facility, including costs from the time sheets.
+
+## Email section (John, 11/6/26)
+
+One sentence or two on what drove the week, then one table (Last week, Prior week, Change, QTD): Campaigns sent, Recipients, Clicks, Purchases, Campaign revenue, Automated email (flow) revenue, Total email revenue.
+- Campaigns: Klaviyo `get_campaign_report`, `conversion_metric_id` `VAQscR` (Placed Order), statistics `recipients, delivered, clicks_unique, click_rate, conversions, conversion_uniques`, value_statistics `conversion_value`, group_by `campaign_id, send_channel`, filter `equals(send_channel,"email")`, timeframe = Central midnight to midnight with ISO offsets (-05:00 in CDT, -06:00 after the first Sunday of November). It filters by send date and returns each campaign's attributed conversions to date. Campaigns sent = row count. A full-quarter call times out: sum weekly or half-month chunks.
+- Flows: `get_flow_report`, same metric and stats, group_by `flow_id`, same filter; read `flow_aggregation`.
+- Total email revenue = campaigns + flows. Don't mix with Klaviyo's "attributed revenue by order date" (the old email line); it differs by a few thousand a week.
+- Cross-check with Lebesgue `get_klaviyo_performance` (entity campaign, then flow): revenue and recipients match exactly.
+- Late conversions keep landing for about 5 days after a send, so build the report Thursday or later, or say last week's email numbers may still rise.
 
 ## Tests (section 1c)
 
