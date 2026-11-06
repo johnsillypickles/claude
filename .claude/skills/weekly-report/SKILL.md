@@ -35,7 +35,7 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 
 ## Formulas
 
-- Blended ROAS = Net revenue / Total ad spend
+- Blended ROAS = MER = Net revenue / Total ad spend (call it "MER (blended ROAS)" in the doc; some people compute MER on gross revenue, ours is net)
 - Spend-to-revenue = Total ad spend / Net revenue
 - Blended CAC = Total ad spend / Signups (all orders)
 - Paid ROAS and CAC use platform-reported purchases and revenue
@@ -49,21 +49,28 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 - Early in a quarter, spend-to-revenue runs high because spend leads revenue. Next to the QTD figure, give context with real numbers, not softer wording: the same days of the prior quarter and where that quarter finished (Q3 2026: 42.7% after 7/1 to 7/11, finished 32.3%), and spend-to-revenue excluding Phase 1 (Meta + TikTok Problem Children spend and its platform-attributed revenue). Always report the headline number unchanged.
 - For any other quarter, ask John for targets. Never invent them.
 
-## Section order
+## Section order (Tommy, 11/6/26: "too long, make it digestible")
 
-0. **Executive summary** (starts with the week ending 10/18/26; first thing in the doc, before any table): 3 to 5 plain-English bullets for Tommy: how it's going vs pace and targets, the 1 to 3 biggest reasons, what's working, and next steps with owners. No tables, no jargon, every bullet has a number.
-1. **Quarter-to-Date**: Metric / Value / Target (net revenue, ad spend, blended ROAS, spend-to-revenue, signups, blended CAC, shop revenue gross), plus 2 pacing bullets.
-2. **Quarter-to-Date By Channel**: Meta, Google, TikTok, Total paid: Spend, Share of Spend, Purchases, Revenue, ROAS (Platform), CAC.
-3. **Weekly: Blended and Paid (last 10 weeks)**: Week Ending, Total Ad Spend, Signups, Net Revenue, Blended CAC, Blended ROAS, then paid Spend, Purchases, Revenue, CAC, ROAS (platform). Bullets on the week and on restatements.
-4. **Last Week By Channel**: spend, revenue and ROAS for the week and QTD.
-5. **By Campaign Type: Meta (last week)**: Phase 0 and Phase 1: Spend, Purchases, Revenue, ROAS (Meta), ROAS (Le Pixel), CAC.
-6. **By Campaign Type: TikTok (last week)**
-7. **Email (Klaviyo)**
-8. **Organic Marketing (UpPromote)**: see below. One section; affiliates, UpPromote and organic marketing are the same program.
-9. **Facility Marketing**
+The doc is about 2 pages. Every section is a few bullets or one small table. Long detail (per-campaign lists, restatements, flags, per-person splits, tracker fixes, activity logs) goes in your reply to John, not the doc.
 
-**Keep sections 7 to 9 short (John, 11/2/26).** Email: one 4-row table (attributed revenue, campaigns sent / credited, flows credited, open rates campaigns / flows; week, prior week, QTD) and 2 bullets. Organic: one 4-row table (UpPromote orders, net revenue, share of store net revenue, team signups; week, prior week, QTD), the monthly team cost table (C below) and 3 bullets. Facility: one coverage sentence, an at-risk table (plus at most one "Watch" row) and 3 bullets. Put the long detail (per-campaign lists, flags, restatements, activity logs, tracker fixes) in your reply to John, not the doc, unless he asks for it.
-Last. **Ideas and experiments to improve** (Tommy, 10/14/26): a ranked table of what would bring ad spend down as a share of revenue: # / Idea / Why (evidence with numbers) / Effort / Owner / Priority or status. Carry the list forward week to week and update each item's status and result. Always consider: league selection and fill priority (Mar's Monday field), longer lead times with pre-registration lead forms (Fort Wayne and Little Rock: $27 and $32 per signup), creative (fewer, stronger concepts; see the creative report), waitlist / Notify-me email capture, Google search expansion, referrals (a refer-a-friend offer for current players already exists and is promoted by email only, not in paid ads, so frame ideas as growing or measuring it, not starting one), localized ads, new channels. Rank by expected savings vs effort, and mark untested ideas as our assumption.
+**1. Executive summary**
+- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, MER (blended ROAS = net revenue / total ad spend), Spend-to-revenue, Signups, Blended CAC. Columns: Last week, Prior week, QTD, Q4 target prorated to date. Bullets: how we're pacing vs target, the 1 to 2 biggest reasons, and the week vs prior week. Use the spend-to-revenue early-quarter context rule from Targets only if spend-to-revenue is over target.
+- **b. What's working in ads (2 to 4 bullets).** Thematic, not ad by ad: which concepts win (for example founder video, localized announcements, beginner reassurance, nostalgia), which are fatiguing, and what we're briefing next. Draw from the creative report's themes and fatigue check. Name at most 2 ads per bullet, by what they show.
+- **c. What we're testing.** One short block per live test: what we changed, when, the result so far with numbers vs a control, and the call (keep, kill, keep testing). Carry the list week to week and drop tests once called. Always cover:
+  - Email A/B tests (see "Tests: email A/B").
+  - Ad fatigue: purchaser exclusions (see "Tests: purchaser exclusions").
+  - Localized vs generic creative, head to head within each market (see "Tests: localized vs generic"). One small table, markets as rows.
+  - Any other running experiment (lead forms, tROAS / creative test campaigns, new channels, organic bonus test). The old "Ideas and experiments" table (Tommy, 10/14/26) folds in here: a running idea is a test; untested ideas go in one closing line, "Next to try:", top 3, marked as our assumption.
+
+**2. Channels (one table).** Meta, Google, TikTok, Email (Klaviyo attributed, shown separately, not added to the paid total), Total paid: spend, revenue, ROAS for last week and QTD. One bullet only if something moved a lot.
+
+**3. Organic marketing.** See "Organic marketing" below. One weekly table, plus the monthly table in the first report of each month, plus 2 lines on the bonus.
+
+**4. Facility marketing.** See "Facility marketing" below. Same shape as organic.
+
+Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
+
+**First report of each month** (the week that contains the 1st, or the first one built after it): add last month's numbers to organic and facility, including costs from the time sheets.
 
 ## Organic Marketing (UpPromote)
 
