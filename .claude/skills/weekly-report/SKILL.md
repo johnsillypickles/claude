@@ -29,13 +29,13 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 | TikTok phases | Same tool, source `tiktok`, account `7665825541274255361` | |
 | Google | Same tool, source `google`, account `3026057182` | Google restates heavily. Flag it |
 | Email | Lebesgue `get_klaviyo_performance` (campaign and flow) plus `kl_purchases_conversion_value` | Open and unsub rates, campaign counts by type |
-| Organic marketing (activity) | Organic Marketing Tracker (JC), `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, Summary tab, first table ("Team totals"). Replaced Nate's scoreboard on 10/12/26; never use the scoreboard | If it can't be read, carry forward and mark `[Carried from last week, update]` |
-| Organic marketing (revenue) | Shopify Admin GraphQL, orders tagged `UpPromote_order` | See "Organic Marketing (UpPromote)" below |
-| Facility | Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) plus Gmail threads John is copied on | See "Facility Marketing" below |
+| Organic marketing | Organic Marketing Tracker, UpPromote, contractor sheet | See "Organic marketing" below |
+| Facility marketing | Shopify sessions and discount codes, UpPromote facility programs, contractor sheet | See "Facility marketing" below |
+| Tests | Klaviyo, Meta (Lebesgue, Windsor), Slack | See "Tests" below |
 
 ## Formulas
 
-- Blended ROAS = Net revenue / Total ad spend
+- Blended ROAS = MER = Net revenue / Total ad spend (call it "MER (blended ROAS)" in the doc; some people compute MER on gross revenue, ours is net)
 - Spend-to-revenue = Total ad spend / Net revenue
 - Blended CAC = Total ad spend / Signups (all orders)
 - Paid ROAS and CAC use platform-reported purchases and revenue
@@ -49,58 +49,74 @@ The report is a Google Doc named `Weekly Update M.D.YY` (the date is the Sunday 
 - Early in a quarter, spend-to-revenue runs high because spend leads revenue. Next to the QTD figure, give context with real numbers, not softer wording: the same days of the prior quarter and where that quarter finished (Q3 2026: 42.7% after 7/1 to 7/11, finished 32.3%), and spend-to-revenue excluding Phase 1 (Meta + TikTok Problem Children spend and its platform-attributed revenue). Always report the headline number unchanged.
 - For any other quarter, ask John for targets. Never invent them.
 
-## Section order
+## Section order (Tommy, 11/6/26: "too long, make it digestible")
 
-0. **Executive summary** (starts with the week ending 10/18/26; first thing in the doc, before any table): 3 to 5 plain-English bullets for Tommy: how it's going vs pace and targets, the 1 to 3 biggest reasons, what's working, and next steps with owners. No tables, no jargon, every bullet has a number.
-1. **Quarter-to-Date**: Metric / Value / Target (net revenue, ad spend, blended ROAS, spend-to-revenue, signups, blended CAC, shop revenue gross), plus 2 pacing bullets.
-2. **Quarter-to-Date By Channel**: Meta, Google, TikTok, Total paid: Spend, Share of Spend, Purchases, Revenue, ROAS (Platform), CAC.
-3. **Weekly: Blended and Paid (last 10 weeks)**: Week Ending, Total Ad Spend, Signups, Net Revenue, Blended CAC, Blended ROAS, then paid Spend, Purchases, Revenue, CAC, ROAS (platform). Bullets on the week and on restatements.
-4. **Last Week By Channel**: spend, revenue and ROAS for the week and QTD.
-5. **By Campaign Type: Meta (last week)**: Phase 0 and Phase 1: Spend, Purchases, Revenue, ROAS (Meta), ROAS (Le Pixel), CAC.
-6. **By Campaign Type: TikTok (last week)**
-7. **Email (Klaviyo)**
-8. **Organic Marketing (UpPromote)**: see below. One section; affiliates, UpPromote and organic marketing are the same program.
-9. **Facility Marketing**
+The doc is about 2 pages. Every section is a few bullets or one small table. Long detail (per-campaign lists, restatements, flags, per-person splits, tracker fixes, activity logs) goes in your reply to John, not the doc.
 
-**Keep sections 7 to 9 short (John, 11/2/26).** Email: one 4-row table (attributed revenue, campaigns sent / credited, flows credited, open rates campaigns / flows; week, prior week, QTD) and 2 bullets. Organic: one 4-row table (UpPromote orders, net revenue, share of store net revenue, team signups; week, prior week, QTD), the monthly team cost table (C below) and 3 bullets. Facility: one coverage sentence, an at-risk table (plus at most one "Watch" row) and 3 bullets. Put the long detail (per-campaign lists, flags, restatements, activity logs, tracker fixes) in your reply to John, not the doc, unless he asks for it.
-Last. **Ideas and experiments to improve** (Tommy, 10/14/26): a ranked table of what would bring ad spend down as a share of revenue: # / Idea / Why (evidence with numbers) / Effort / Owner / Priority or status. Carry the list forward week to week and update each item's status and result. Always consider: league selection and fill priority (Mar's Monday field), longer lead times with pre-registration lead forms (Fort Wayne and Little Rock: $27 and $32 per signup), creative (fewer, stronger concepts; see the creative report), waitlist / Notify-me email capture, Google search expansion, referrals (a refer-a-friend offer for current players already exists and is promoted by email only, not in paid ads, so frame ideas as growing or measuring it, not starting one), localized ads, new channels. Rank by expected savings vs effort, and mark untested ideas as our assumption.
+**1. Executive summary**
+- **a. Performance (3 bullets + one table).** Table rows: Net revenue, Ad spend, MER (blended ROAS = net revenue / total ad spend), Spend-to-revenue, Signups, Blended CAC. Columns: Last week, Prior week, QTD, Q4 target prorated to date. Bullets: how we're pacing vs target, the 1 to 2 biggest reasons, and the week vs prior week. Use the spend-to-revenue early-quarter context rule from Targets only if spend-to-revenue is over target.
+- **b. What's working in ads (2 to 4 bullets).** Thematic, not ad by ad: which concepts win (for example founder video, localized announcements, beginner reassurance, nostalgia), which are fatiguing, and what we're briefing next. Draw from the creative report's themes and fatigue check. Name at most 2 ads per bullet, by what they show.
+- **c. What we're testing.** One short block per live test: what we changed, when, the result so far with numbers vs a control, and the call (keep, kill, keep testing). Carry the list week to week and drop tests once called. Always cover:
+  - Email A/B tests (see "Tests: email A/B").
+  - Ad fatigue: purchaser exclusions (see "Tests: purchaser exclusions").
+  - Localized vs generic creative, head to head within each market (see "Tests: localized vs generic"). One small table, markets as rows.
+  - Any other running experiment (lead forms, tROAS / creative test campaigns, new channels, organic bonus test). The old "Ideas and experiments" table (Tommy, 10/14/26) folds in here: a running idea is a test; untested ideas go in one closing line, "Next to try:", top 3, marked as our assumption.
 
-## Organic Marketing (UpPromote)
+**2. Channels (one table).** Meta, Google, TikTok, Email (Klaviyo attributed, shown separately, not added to the paid total), Total paid: spend, revenue, ROAS for last week and QTD. One bullet only if something moved a lot.
 
-Affiliates, UpPromote and organic marketing are one program, reported in one section. The organic team are internal part-time marketers. Each is paid an hourly rate plus a bonus for signups from the affiliates they recruit, and also posts their own UpPromote link for a bonus. UpPromote replaced BixGrow (first tagged order 2026-08-14; tracking took hold the week of 8/24).
+**3. Organic marketing.** See "Organic marketing" below. One weekly table, plus the monthly table in the first report of each month, plus 2 lines on the bonus.
 
-**A. Activity: tracker table (primary).** Copy the first table on the Summary tab of the Organic Marketing Tracker (JC) as-is: rows "Affiliates onboarded", "Clicks", "Signups", "Conversion rate (signups / clicks)", "Affiliates (total, as of period end)" with columns Last week, Prior week, WoW Change, Quarter to date, Month to date. Read `Summary!A1:F16`; check that the "Last week starts" cell matches the report week before copying, and note the "UpPromote data through" timestamp. Tracker signups are league spots from UpPromote referrals minus denied referrals (a 2-spot order counts 2), plus manual adjustments. Bullets can draw on the "By marketer" table on the same tab (top marketers by signups, clicks without signups).
+**4. Facility marketing.** See "Facility marketing" below. Same shape as organic.
 
-**B. Revenue: Shopify tagged orders.** Pull orders tagged `UpPromote_order`, 50 per page, paginated on `endCursor` until `hasNextPage` is false:
+Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
 
-```graphql
-query($q:String!,$after:String){ orders(first:50, after:$after, query:$q, sortKey:CREATED_AT){
-  pageInfo{hasNextPage endCursor}
-  nodes{ name createdAt cancelledAt tags currentSubtotalPriceSet{shopMoney{amount}} } } }
-```
+**First report of each month** (the week that contains the 1st, or the first one built after it): add last month's numbers to organic and facility, including costs from the time sheets.
 
-Use `q = "tag:UpPromote_order AND created_at:>=<prior week Monday or quarter start, whichever is earlier>"`. Write each order as one line, `name createdAt amount flag`, with flag `BIX` if tags include `Referral-Bixgrow`, else `-`. Then run `scripts/uppromote_weekly.py <file> <week_end YYYY-MM-DD> <qtd_start YYYY-MM-DD>`, which buckets by Central-time Mon to Sun week.
+## Tests (section 1c)
 
-- Orders = tagged orders, excluding cancelled. Paid orders = subtotal above $0 (test and free codes such as `johntest100` and `SOCIALHOST-FREELEAGUE` are $0).
-- Net revenue = sum of `currentSubtotalPriceSet` (after discounts and refunds, before tax and shipping). AOV = Net revenue / Paid orders.
-- Share of blended net revenue = organic net / `reporting_net_sales`; share of signups = tagged orders / `total_orders`.
+Find tests each week in Slack (search "test", "A/B", "experiment", "pilot" in #core-four, #new-email, #organicmktg, the paid ads group DMs and #lebesgue-silly-pickles), Meta campaign names ("Test", "CreativeTest", "NewCustomer", "LeadForm") and Kameron's task lists. John asked Kameron on 10/23 to keep a test log; use it once it exists. For every test give: what changed, start date, result vs a control with numbers, sample size, and the call. Mark our reads as such.
 
-| Metric | Week Ending [date] | Prior Week | WoW | Quarter to Date |
-|---|---|---|---|---|
-| Tagged orders | | | | |
-| Net revenue | | | | |
-| AOV (paid orders) | | | | |
-| Share of blended net revenue | | | pts | |
+**Email A/B.** Klaviyo `get_campaigns` (filter `greater-or-equal(created_at,<quarter start>)`, include campaign-messages); keep messages with more than one variation. `get_campaign_message` (include campaign-variations) for subject and template. `get_campaign_report` with `conversion_metric_id` `VAQscR` (Placed Order), group_by `[campaign_id, campaign_message_id, send_channel, variation, variation_name]`; pull unfiltered (a campaign_id filter returns empty). Per variant: recipients, open rate, click rate, orders, revenue, revenue per recipient. Pool by wave (same design vs same design). Run a two-proportion z-test on clicks and orders; under |z| 1.96 = "no winner yet". As of 11/6/26 these are design tests (same subject): wave 1 "A/B" 10/21 to 10/27 (Payton's seasonal designs vs vanilla; which letter is the new design is not documented, ask John), wave 2 "Control/Test" from 10/29 (Test = John's new templates). The split has no winner send, so say a winner was never applied.
 
-**C. Cost and return by person (monthly).** Cost = organic marketers' hourly pay + signup bonuses + affiliate commissions. Hours come from the Contractor Payment Request Form (Responses) sheet `13fEzAVGnWs8_mR0rXLlry1AU27DbMj3LU7VkdN2oocs`, tab "Form Responses 1": Category "Organic Marketing (ID: MAR-OM-09)", columns A (approved), C/D (name), G (rate), H (hours), M (total requested), P (time frame), S (comments). The sheet holds phone, Zelle and email data: read only those columns and never copy personal details into reports or the repo. Use the latest complete month (pay periods ending in that month; flag unapproved rows as pending). Commissions and revenue come from UpPromote referrals for the month (exclude denied; "Network referrals" rows are upline commissions: cost to the upline, not revenue), mapped to marketers with the tracker Affiliates tab, with Megan's downlines under Megan Mehl. Leave Megan Mehl out as a person (John, 11/3/26): no row for her hours, commissions or downlines. Her team bonus ($10 per signup the team gets) is a team cost: show it as one row, "Megan Mehl: team bonus ($10 x <team signups>)", using her billed bonus row from the payment sheet when it exists, else rate x team signups marked "not yet billed". One row per person plus a team total and a separate "Not on the team (hosts and unassigned)" row. Signups per person = the tracker's "Monthly signups by marketer" table on the Summary tab (it already includes each marketer's affiliates and the Adjustments tab); use UpPromote only for people the tracker has no row for (e.g. Megan). Columns: hours, rate, hourly pay, commissions, total cost, signups, revenue, revenue minus cost, revenue / cost (x). John asked for per-person figures on 11/2/26: show them in the weekly update (it doesn't go to the organic team), never in anything the organic team sees. State that revenue is ticket sales before league costs, and flag pending commissions and manual commission batches. Never estimate hours, rates or commissions.
+**Purchaser exclusions (ad fatigue).** Timeline: 10/5 last-30-day purchasers excluded; by 10/8 to 10/12 all past customers (Shopify list plus a Meta purchasers audience); Tommy said on 10/15 he doesn't want ALL customers excluded. Check current scope each week with Windsor `facebook` fields `campaign, adset_name, adset_targeting, spend` for the report week (it shows current targeting only, no history). Compare equal windows before (9/21 to 10/4) and after (from 10/12), skipping 10/5 to 10/11: spend, Meta ROAS, CPP, frequency (Windsor), CTR, CPM, Le Pixel first-time share (Lebesgue `pixel_customer_type` first). There is no clean control (all Meta and TikTok got it); Google is the closest, with caveats. Show Retargeting separately (it is most exposed to a shrinking warm pool).
 
-**Always flag:**
+**Localized vs generic creative, within each market.** `scripts/locgen.py`: Lebesgue ad level in 7-day chunks (check the chunks add up to the campaign total), plus adset and campaign level for names. `python3 -I scripts/locgen.py adset.json 14d=<last 14 days files> 4wk=<last 4 weeks files> --out locgen_table.json`. Localized = ad name contains `_Localized_` or ends `_localized`; update `classify()` when new naming appears. Only markets (ad sets) where both types spent; flag under $300 or under 5 purchases a side. Show the 4-week table and the 14-day count, plus the pooled totals and "localized won N of M markets". The comparison is against the market's whole generic set, not a matched twin. As of 11/6/26 only 3 markets qualify, so say the sample is thin.
 
-- Tracker signups (spots, minus denied, plus adjustments) vs Shopify tagged orders (orders) will differ. Say which number each line uses.
-- If tracker signups are well below Shopify tagged orders, do not blame sync lag. The Summary team totals only count affiliates with a Marketer (Weekly Data column F). Sum `Weekly Data` signups for the week with and without a Marketer, and confirm the total against UpPromote `list_referrals` for the week (drop `Network referrals` rows, they are upline credits; add spots for orders with quantity 2+). Report the unassigned spots and the top unassigned affiliates by name, and ask John about any unassigned affiliate with a big week. Some unassigned affiliates are correct by design: league hosts who signed up outside the organic team or before it existed are not tied to any marketer (e.g. Jill Loiars `jill.sillypickles@gmail.com` and Kate Ollila `kate.ollila10@gmail.com`). Hosts the team recruited should have one. Megan's downlines (affiliates whose UpPromote upline is Megan, filed under "Megan (downlines)") count toward the team (John, 11/2/26). Until the tracker's team table includes them, add their spots and clicks to the team figures in the bullets and show the math (e.g. 17 + 3 = 20). Being a host, or having a `*.sillypickles` email, does not tell you which, so ask John rather than guess. (10/18/26 week: 33 spots in UpPromote and Weekly Data, 13 on Summary, 20 from unassigned affiliates.)
-- The number of $0 orders and any orders tagged for both UpPromote and BixGrow.
-- Commission rule changes and outages. Search Slack for "UpPromote" in the report week (e.g. 10/8/26: commission changed from per order to per league item; 9/22 to 9/25/26: promo codes deleted, attribution broke).
-- Refund restatements of prior weeks' revenue.
+**Other running tests (as of 11/6/26):** Meta tROAS vs tCPA (`Fall26_Phase0_CreativeTest-tROASfocus` vs `Fall26_Phase0_NewCustomer(only)`, from 10/9; Meta starved the tCPA arm, so it isn't a fair split); Winter27 lead forms (from 10/27; leads and cost per lead from Windsor `actions_lead`, signups from lead lists when available); TikTok incrementality phase 2 with Lebesgue (test vs control leagues, from about 11/5); Google PMAX tROAS vs tCPA split (launched 11/2, paused by 11/5); Meta refer-a-friend remarketing (proposed 11/2). Drop each once it's called.
+
+## Organic marketing (section 3)
+
+Affiliates, UpPromote and organic marketing are one program. The organic team are internal part-time marketers paid hourly plus bonuses, who recruit UpPromote affiliates and post their own links. Tommy, 11/6/26: scrap the long section; show one table.
+
+**Weekly table** (columns: Last week, Prior week, WoW, QTD):
+
+| Metric | Source |
+|---|---|
+| Clicks | Organic Marketing Tracker `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, `Summary!A1:F16`, row "Clicks" (B last week, C prior, D WoW, E QTD). Check the "Last week starts" cell matches the report week and note "UpPromote data through" |
+| Purchases (signups) | Same table, row "Signups" (league spots from team referrals, minus denied, plus adjustments; a 2-spot order counts 2) |
+| Hours | Contractor sheet (below), Category "Organic Marketing (ID: MAR-OM-09)" |
+
+- The tracker is the source because its team list spans programs (e.g. a member's link in the League Host program). Cross-check only: UpPromote `get_performance_data`, program_id `336611` (Organic Team Affiliate Program). Never use the whole UpPromote channel (includes hosts and outside referrers) or the Shopify `UpPromote_order` tag (it tags far more orders than commissioned referrals: 75 tagged vs 5 referrals the week of 10/26).
+- Megan's downlines count toward the team (John, 11/2/26). If the tracker's team table doesn't include them yet, add them and show the math.
+
+**Hours (organic and facility).** Contractor Payment Request Form (Responses) `13fEzAVGnWs8_mR0rXLlry1AU27DbMj3LU7VkdN2oocs`, tab "Form Responses 1". PRIVACY: the sheet holds phone, Zelle and email data. Read only columns A (approved), B (timestamp), C/D (name), E (category), G (rate), H (hours), M (total requested), P (time frame), S (comments). Request M and P as separate ranges: a range like M:P also returns N and O, which hold contact data. Never copy personal details into the report or the repo. Assign rows to periods by P (time frame), not the timestamp. People submit by half month (1st to 14th or 15th, then to month end), so hours exist by half month, not by week. In the weekly table show hours for the latest complete half-month pay period and QTD, labeled with the period (e.g. "10/15 to 10/31: 162.5 h"). Never prorate hours into weeks. Flag unapproved rows as pending and late submissions as `[not yet submitted]`.
+
+**First report of each month: last month's table** (team totals; per-person rows go in the reply to John, never in anything the organic team sees):
+
+| Metric | How |
+|---|---|
+| Hours | Sum of H for the month's pay periods |
+| Hourly pay | Sum of M for those rows (excluding bonus rows) |
+| Commissions | UpPromote `get_performance_data`, program_id `336611`, `total_commission` for the month |
+| Bonuses | Bonus rows on the contractor sheet (e.g. Megan's monthly affiliate bonus, $10 per team signup; contest bonuses). If not filed yet, rate x count marked "not yet billed" |
+| Total cost | Hourly pay + commissions + bonuses. Discounts given to buyers are not a cost (John, 11/3/26) |
+| Signups | Tracker "Monthly signups by marketer" team total |
+| Revenue | UpPromote referral revenue for the team for the month (exclude denied; "Network referrals" rows are upline commissions, not revenue). Ticket sales before league costs |
+| Revenue / cost | x format |
+
+**Bonus (2 lines, every week):** "Testing this month: <bonus, rules, who's eligible>" and "Last month: <who earned which bonus, amount>". Sources: Slack (search "bonus" in organic channels and DMs with Megan), the tracker's tabs, and bonus rows on the contractor sheet. If not found, write `[ask Megan]`; never guess.
+
+**Reply to John (not the doc):** tracker vs UpPromote mismatches, unassigned affiliates with a big week (hosts onboarded outside the team, e.g. Jill Loiars and Kate Ollila, stay unassigned by design; ask John about the rest), commission rule changes or outages (search Slack "UpPromote"), $0 test orders.
 
 ## Style
 
@@ -193,17 +209,20 @@ Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue
 - Feed the results into the weekly doc's improvement-ideas section: which ads to retire or refresh, and which themes to brief Moodyboy on.
 - If Meta's own metrics later show up in Ads Manager or Windsor fields, add them as context columns.
 
-## Facility Marketing
+## Facility marketing (section 4)
 
-Sources:
-- **Tracker** (Facility Marketing Tracker v4): `Dashboard` tab for coverage, pipeline by status and owner workload; `Leagues` tab for each league's owner, start date, fill %, outreach status and last contact.
-- **Gmail**: John is copied on facility outreach. Search the report week, e.g. `after:<Mon> before:<next Mon> league (from:aly@sillypickles.com OR from:katie@sillypickles.com OR from:grace@sillypickles.com OR from:tommy@sillypickles.com OR to:aly@sillypickles.com OR to:katie@sillypickles.com)`, and read the threads with facility domains (subjects like "Marketing Kickoff!" or "Silly Pickles League at <facility>"). Skip pure ops/booking threads (court booking, invoices, agreements).
+Facility marketing = staff (Grace, Aly; Katie in some months) getting facilities to promote leagues to their members, usually with a facility discount code (e.g. 50% off for the first 15 from the facility's list) or a link. Tommy, 11/6/26: no per-league updates; one table.
 
-**The tracker lags the inbox.** Treat email as the source of truth for what happened, and list every league where the tracker status disagrees with the emails (e.g. Pictona was "Not Started" while Tommy had already asked the facility for a list of fun/social players). Tommy and Nate also do facility outreach that never gets logged.
+**Weekly table** (columns: Last week, Prior week, WoW, QTD):
 
-Section layout:
-1. Coverage line from the Dashboard (leagues starting in 30 days, how many have outreach started, coverage %, follow-ups due, unassigned).
-2. **Activity this week** (from email): facility, who reached out, what was asked or sent, the facility's response, and the league's current fill %.
-3. **At-risk leagues**: start within 14 days and under 30 players signed up (John's rule from 10/14/26), with outreach status (flag any with no outreach).
-4. **Tracker updates needed**: leagues where email activity isn't reflected in the tracker.
-- Don't present "avg fill, contacted vs not contacted" from the Dashboard as an effect of outreach: the team targets struggling leagues, so contacted leagues are lower-fill by selection.
+| Metric | Source |
+|---|---|
+| Clicks (sessions, proxy) | Shopify `run-analytics-query`: `FROM sessions SHOW sessions, sessions_that_completed_checkout WHERE referrer_name IN (<facility referrers>) OR utm_source IN ('facility', 'facility_signups', 'facility_flyers') SINCE <Mon> UNTIL <Sun> WITH TOTALS` (shop timezone is Central). Facility referrers as of 11/6/26: 'thepeoplescourts', 'bumpypickle', 'podplay', 'courtreserve', '3rdshotpickleball', 'wearerecs', 'chickennpickle', 'thedinkpickleball', 'pickleandchill', 'playerscourtyard', 'indianapolispickleballclub'. Add a facility's domain when it starts sending traffic (check `GROUP BY referrer_source, referrer_name` monthly) |
+| Purchases (facility code orders) | `FROM sales SHOW orders, gross_sales, discounts, total_sales WHERE discount_code IN (<facility codes>) GROUP BY discount_code, week SINCE <qtd start> UNTIL <Sun> WITH TOTALS`. Facility codes come from the Facility Marketing Tracker v4 (`16Bkghe54LCnpfkCSbzY7FTSyHmsrdH6ZpxpGYiedw40`) Facilities tab column I and the Code Usage tab; re-read them each week |
+| Hours | Contractor sheet (see Organic), Category "Facility Marketing (ID: MAR-FM-03)". Exclude "Facility Partnerships (ID: OPS-FP-02)", an ops category. Same half-month rule: never prorate into weeks |
+| Money spent | Monthly: contractor pay (M) + UpPromote facility programs `339185` (Facility Referral) and `350752` (Special Facility, $80 per signup) `total_commission`. Show code discounts as a separate line, not as cost |
+
+- Say what the proxies miss: facility emails opened in Gmail land as "email/gmail" or direct, and buyers who heard from a facility but paid full price or used a generic code aren't counted. Facility referrer sessions also include facilities' own website listings.
+- First report of each month: add last month's hours, pay, commissions, total cost, code orders and net revenue, and revenue / cost.
+- Flag any code you can't tie to a facility from the tracker or Slack, and ask John (e.g. RT12PICKLE, 11/6/26).
+- Reply to John (not the doc): leagues starting within 14 days under 30 players with no outreach, and tracker statuses that disagree with email (the tracker lags the inbox; search Gmail as before: `after:<Mon> before:<next Mon> league (from:aly@sillypickles.com OR from:katie@sillypickles.com OR from:grace@sillypickles.com OR from:tommy@sillypickles.com OR to:aly@sillypickles.com OR to:katie@sillypickles.com)`).
