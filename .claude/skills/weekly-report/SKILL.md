@@ -70,17 +70,12 @@ The doc is about 2 pages. Every section is a few bullets or one small table. Lon
 
 Dropped from the doc on 11/6/26: the 10-week weekly table, last week by channel, Meta and TikTok by campaign type, the email section and the long organic and facility sections. Pull the data anyway when a bullet needs it.
 
-**Layout (designer + strategist review, 11/6/26; sample v2 doc `1hmfHkyzwv3DwXW_exKrthESaCZ66JhE87RCqja0VQaI`).** Google Doc built from HTML (Docs, not Slides: it pastes into email, reflows on phones, and one upload builds each week). One new Doc per week. Inline styles only (tables, `bgcolor` plus background-color on td, font color and size, borders survive; classes, flex, grid, rounded corners and SVG don't). Arial. Order and pieces:
-- Dark green title banner (#1E4A1E, lime #9BCB3C top border), then one italic line defining ROAS and MER, and that MER counts all revenue (renewals and email) while paid ROAS counts only ad-credited revenue.
-- **TL;DR box** (pale yellow #FFF8DC, lime left border): 3 lines, each starting with a bold takeaway and a number. This box plus the KPI strip is what John pastes into the email.
-- **KPI strip:** one row of 4 tiles (Net revenue, Ad spend, MER, Signups): big number, prior week, a colored change tag with the % (show the math in your reply).
-- Performance table (no spend-to-revenue row: it's 1 / MER), then 3 bullets.
-- What's working: a 2-column table, colored tag cell (Winning green, Steady blue, About even gray, Wearing out red) plus bold title and one line.
-- Tests: a summary table (test, status tag), then one short block per test with its tag in the heading; "Other experiments" as tagged rows (Too early, Promising, Running, Paused).
-- **Decisions and asks box** (same style as TL;DR): numbered, each with an owner; untested ideas and "our suggestion" items are marked.
-- Then Channels, Organic, Facility. Tables: dark green header row, white text, zebra rows, bold first column and total row.
-- Tag colors: green #D6EFCF / #1E5C1E, yellow #FFF0B8 / #6B5200, red #F9D3CF / #8A1F14, blue #D9E8F7 / #174A7A, gray #E6E8E3 / #3E453E.
-- Avoid: "behind pace" framing, mixing "signups", "orders" and "purchases" for the same thing in one table, and blended CAC presented as new-player cost (it includes renewals).
+**Look and voice (John, 11/6/26: "make it look less like AI").** Write it the way John would: first person plural ("we spent", "I don't think the exclusion hurt us"), full sentences, short paragraphs. Reference: sample v3 in the reports folder.
+- Plain Google Doc: Arial, dark green headings, light gray table headers, thin gray borders. No title banner, colored status pills, tinted callout boxes, KPI tiles, or emoji.
+- Don't open every bullet with a bold label and a colon, and don't use labels like "TL;DR", "Call:", "Hypothesis:", "Confidence:" or "Our read:". Flag a guess in plain words ("I think", "probably", "I wouldn't credit it for all of it").
+- Order: Summary (3 short paragraphs and the numbers table; this is what John pastes into the email), Ads, Tests (one summary table: test, started, where it stands; then a short paragraph per test), Decisions needed (numbered, owner in brackets), Channels, Organic marketing, Facility marketing.
+- Definitions go in one small gray line under the table they explain, not in an intro.
+- Say "signups" throughout (not orders or purchases). Don't say "behind pace". Blended CAC includes returning players: say so in the note.
 
 **First report of each month** (the week that contains the 1st, or the first one built after it): add last month's numbers to organic and facility, including costs from the time sheets.
 
