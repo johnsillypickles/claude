@@ -147,13 +147,17 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
 
 ## Creative fatigue check (section of the creative report)
 
-Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue`, rendered after the Meta cards), not a separate page. Meta's own fatigue, similarity and theme metrics aren't in John's Ads Manager, Windsor or Lebesgue (checked 10/16/26), so we use our own rules, back-tested on our Meta history.
+Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue`, rendered after the Meta cards), not a separate page.
 
-**History store.** Weekly Meta ad-level results live in the private Google Sheet "Meta weekly ad history (fatigue check)" (ID `19pC7Bwvgsi7yO6R-spa8dKSR6pH90o6IZByErdaA_pg`, tab `Untitled`; Jan 6, 2025 to Oct 11, 2026 loaded and verified 10/16/26). Never commit it: this repo is public. Columns: `week` (Monday), `key` (normalized ad name, see `norm()` in the script), spend, impressions, clicks, purchases, purchases_conversion_value, add_to_cart. One `__account__` row per week holds the whole Meta account; other rows are creative-weeks with $250+ spend (only those count as "live" weeks). Ad names are normalized so " - Copy" duplicates, `AllGeos_Pickleball_` prefixes and format suffixes (`_Static`, `_Video`, `_1080x1920`, ...) roll up to one creative across ad sets and relaunches.
+**Always score fatigue per ad set, never per creative overall (John, 11/6/26).** An ad can wear out in one location and still be fresh in another, and in a brand new market every ad starts fresh (0 fatigued). So every verdict, action and pause is for one creative in one ad set: "pause BiggestMistake in Regional National", never "pause BiggestMistake". A creative that is Fatiguing in one ad set can be added to or kept in a new market's ad set. Meta's own fatigue, similarity and theme metrics aren't in John's Ads Manager, Windsor or Lebesgue (checked 10/16/26), so we use our own rules, back-tested on our Meta history.
+
+**History store.** Weekly Meta ad-level results live in the private Google Sheet "Meta weekly ad history (fatigue check)" (ID `19pC7Bwvgsi7yO6R-spa8dKSR6pH90o6IZByErdaA_pg`). Never commit it: this repo is public. Columns: `week` (Monday), `key`, spend, impressions, clicks, purchases, purchases_conversion_value, add_to_cart. One `__account__` row per week holds the whole Meta account.
+- **Per-ad-set history (from 11/6/26):** `key` is `<ad set name>||<normalized ad name>` (see `key()` and `norm()` in the script). Rows are creative x ad set weeks with $100+ spend there (only those count as "live" weeks). Ad names are normalized so " - Copy" duplicates, `AllGeos_Pickleball_` prefixes and format suffixes (`_Static`, `_Video`, `_1080x1920`, ...) roll up to one creative within an ad set.
+- **Old rows:** tab `Untitled` (Jan 6, 2025 to Oct 11, 2026) is keyed by creative alone, across all ad sets. `from-sheet` skips those rows. They need a one-time backfill into per-ad-set rows (Windsor `facebook` daily ad-level with `adset_name`, a month per pull) before the back-test is meaningful again; until then the evidence box covers only the backfilled weeks. Say so in the report if the backfill isn't done.
 
 **Each week** (script: `scripts/fatigue.py`):
 1. Read the Sheet with `get_values` (range `Untitled!A:H`; the result is usually saved to a file) and run `fatigue.py from-sheet <values file> history.json`.
-2. Pull the report week from Lebesgue: `get_advertising_data_table`, source `facebook`, account `1346441932978787`, level `ad`, Monday to Sunday, `period_type=all`. If it's over the 50k-token limit, split it into Mon-Wed and Thu-Sun (then single days). Pulls must not cross a Monday. If last week is missing from the Sheet too, pull it as well.
+2. Pull the report week from Windsor `facebook` (account `1346441932978787`), daily, whole account, no filters: `date, adset_name, ad_name, spend, impressions, clicks, actions_purchase, action_values_purchase, actions_add_to_cart`. The ad set name is required: the script refuses a pull without it. If the result is saved to a file, pass that file. Pulls must not cross a Monday. If last week is missing from the Sheet too, pull it as well. (A Lebesgue ad-level pull works only if its rows carry the ad set name.)
 3. `fatigue.py add history.json <pull files>`: it refuses a day that's already in the history.
 4. `fatigue.py to-rows history.json new_rows.json --weeks <new Mondays>`, then append those rows to the Sheet with `append_values`.
 5. `fatigue.py score history.json --report data.json --end <Monday of the report's last week> --out fatigue.json`, then add context fields and set `D.fatigue`:
@@ -162,7 +166,8 @@ Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue
 
 **Rules** (from the Jan 2025 to Oct 2026 study, 58 creatives with 6+ live weeks and $3k+ spend):
 - **Season-adjusted ROAS index** = the creative's ROAS divided by the whole Meta account's ROAS in the same weeks, pooled over 2 live weeks.
-- **Fatigued:** the last 2 live weeks' index is at or below 60% of the creative's best 2-week index.
+- All rules below run on one creative's history inside one ad set. A creative with under 3 live weeks in an ad set is New there, however old it is elsewhere.
+- **Fatigued:** the last 2 live weeks' index is at or below 60% of the creative's best 2-week index in that ad set.
 - **Watch:** 2 or more of:
   - 8+ live weeks
   - click rate down 15%+ vs its first 2 live weeks
@@ -176,15 +181,14 @@ Since 10/16/26 the fatigue check is a section of the creative report (`D.fatigue
   - Rising cost per 1,000 views was NOT a warning sign (it rose more often in healthy weeks). Neither was lifetime spend or lifetime views, so don't use them.
   - Our old guesses (CPM up 20%, 3+ views per person, bottom-10% quality) are retired as scored signals.
 - `score` re-runs this back-test on the full history every week. The report's evidence box shows the fresh numbers, so they update as history grows.
-- **Caveat to state when it applies:** a creative moved into weaker ad sets (e.g. Problem Children) can look fatigued because of where it ran, not because people are tired of it. Say so in the takeaway when most of its spend moved phases.
+- The study was run on creative-level history; the thresholds are reused per ad set until the per-ad-set back-test (re-run by `score` each week) says otherwise. Per ad set, the back-test counts pairs with 6+ live weeks and $1,500+ spend.
 
 **Wording (John, 10/19/26):** the report shows the Fatigued verdict as **"Fatiguing"** (the script and data keep the key `Fatigued`). Never lead with "X% of spend went to fatigued ads": Tommy reads that as waste. Fatiguing means an ad is well below its own best weeks, not that it is losing money. Always pair the share with where the money goes next (already off / pause now / keep because it still beats its phase average).
 
-**Action column:** `score` adds `action_kind`, `action` and `split` per row via `action()`; the template shows Action next to the verdict, plus a "where the money goes" box above the table. Rules:
-- Fatiguing, beats the Phase 0 average in Phase 0 but not the Phase 1 average in Phase 1 (both $500+): keep in Phase 0, pause in the Phase 1 ad sets.
-- Fatiguing, still beats the average of the phase where most of its spend is: keep for now, line up a replacement.
-- Fatiguing otherwise: pause, and check its ad sets keep 2+ live ads.
-- Not running (no spend in the last 3 days of the window): "already off"; a Fresh ad that was beating its phase average gets "consider turning it back on".
+**Action column:** `score` writes one row per creative x ad set live in the last 2 weeks, with `adset`, `phase` (from the ad set name), `action_kind`, `action` and `split` via `action()`; the template shows the ad set under the creative name, Action next to the verdict, plus a "where the money goes" box above the table. Rules, each for that one ad set:
+- Fatiguing, still beats its ad set's phase average (last 2 weeks there): keep for now, line up a replacement in that ad set.
+- Fatiguing otherwise: pause in that ad set only, and check the ad set keeps 2+ live ads. It keeps running wherever it isn't Fatiguing.
+- Not running in that ad set in the report's last week: "already off"; a Fresh ad that was beating its phase average gets "consider turning it back on".
 - Watch: review, no pause yet. Fresh at 15%+ above its phase average: keep and give more budget. New: too new to judge.
 - Status changes John reports after the window (e.g. "I paused X") override the action text for that row; say who paused it and when. Check live status before telling John an ad is running: Lebesgue's `status` field can lag, so confirm with Windsor daily spend (`date, ad_name, spend` for the last few days; the ESSENTIAL plan has no same-day hourly data).
 
