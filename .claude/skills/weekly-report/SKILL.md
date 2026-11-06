@@ -94,7 +94,7 @@ Affiliates, UpPromote and organic marketing are one program. The organic team ar
 |---|---|
 | Clicks | Organic Marketing Tracker `1i3tYrN8Toy7ATXrer1qmDDSB7zwJIiGy6xaypt4CS60`, `Summary!A1:F16`, row "Clicks" (B last week, C prior, D WoW, E QTD). Check the "Last week starts" cell matches the report week and note "UpPromote data through" |
 | Purchases (signups) | Same table, row "Signups" (league spots from team referrals, minus denied, plus adjustments; a 2-spot order counts 2) |
-| Hours | Contractor sheet (below), Category "Organic Marketing (ID: MAR-OM-09)" |
+| Hours | Contractor sheet (below), Category "Organic Marketing (ID: MAR-OM-09)", including Megan Mehl's hours (John, 11/6/26) |
 
 - The tracker is the source because its team list spans programs (e.g. a member's link in the League Host program). Cross-check only: UpPromote `get_performance_data`, program_id `336611` (Organic Team Affiliate Program). Never use the whole UpPromote channel (includes hosts and outside referrers) or the Shopify `UpPromote_order` tag (it tags far more orders than commissioned referrals: 75 tagged vs 5 referrals the week of 10/26).
 - Megan's downlines count toward the team (John, 11/2/26). If the tracker's team table doesn't include them yet, add them and show the math.
@@ -105,7 +105,7 @@ Affiliates, UpPromote and organic marketing are one program. The organic team ar
 
 | Metric | How |
 |---|---|
-| Hours | Sum of H for the month's pay periods |
+| Hours | Sum of H for the month's pay periods, including Megan Mehl (team lead; John, 11/6/26) |
 | Hourly pay | Sum of M for those rows (excluding bonus rows) |
 | Commissions | UpPromote `get_performance_data`, program_id `336611`, `total_commission` for the month |
 | Bonuses | Bonus rows on the contractor sheet (e.g. Megan's monthly affiliate bonus, $10 per team signup; contest bonuses). If not filed yet, rate x count marked "not yet billed" |
