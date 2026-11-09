@@ -7,12 +7,12 @@ adset_names={r['adset_id']:r['name'] for r in json.load(open(args[0]))['rows']}
 CAMP={"120252229329790019":"Fall26_Phase1_ProblemChildren","120253767214500019":"EarlyWinter27_Phase1",
       "120252634833170019":"Fall26_Phase0_Regional","120253767213590019":"EarlyWinter27_Phase0"}
 # market campaigns: any name containing Phase1, plus Phase 0 Regional (per region/metro) and EarlyWinter27_Phase0
-def is_market(cname): return 'Phase1' in cname or 'Regional' in cname or cname=='EarlyWinter27_Phase0'
+def is_market(cname): return 'Phase1' in cname or 'Regional' in cname or cname=='EarlyWinter27_Phase0' or (cname.startswith('Winter27_') and 'LeadForm' not in cname)
 def classify(name):
     n=name.lower()
     if '_localized_' in n: return 'localized','rule1: _Localized_ template'
     if re.search(r'[_ -]localized$',n): return 'localized','rule2: _localized suffix (per-location version of a generic twin)'
-    if re.search(r'\b(houston|dallas|tualatin|chicago|seattle)\b',n): return 'localized','rule3: city in name'
+    if re.search(r'(?<![a-z])(houston|dallas|tualatin|chicago|seattle)(?![a-z])',n): return 'localized','rule3: city in name'
     return 'generic',''
 M=['spend','purchases','purchases_conversion_value','pixel_conversion_value','pixel_purchases','clicks','impressions']
 def metrics(a):
