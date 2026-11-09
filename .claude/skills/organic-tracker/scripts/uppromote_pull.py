@@ -24,6 +24,8 @@ Usage: uppromote_pull.py --start 2026-08-03 --out <dir>
 import argparse
 import json
 import os
+import time as clock
+import urllib.error
 import urllib.request
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta
@@ -31,6 +33,9 @@ from zoneinfo import ZoneInfo
 
 URL = "https://mcp.uppromote.com/mcp"
 CT = ZoneInfo("America/Chicago")
+# UpPromote allows 100 requests per minute per store. Space calls out and wait out a 429.
+MIN_GAP = 0.75
+RETRY_WAITS = [30, 60, 90, 120]
 # Facility marketing programs and test accounts; never credited to organic marketers.
 EXCLUDED_PROGRAMS = {"Facility Referral Program (External)", "Facility Referral Program",
                      "Facility Affiliate Program", "Non-Affiliate Facilities",
@@ -43,6 +48,7 @@ class Client:
         self.h = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream",
                   "Authorization": os.environ["UPPROMOTE_MCP_KEY"]}
         self.sid = None
+        self.last = 0.0
         self._post({"jsonrpc": "2.0", "id": 1, "method": "initialize",
                     "params": {"protocolVersion": "2025-03-26", "capabilities": {},
                                "clientInfo": {"name": "organic-tracker", "version": "1"}}})
@@ -53,9 +59,19 @@ class Client:
         if self.sid:
             h["Mcp-Session-Id"] = self.sid
         req = urllib.request.Request(URL, data=json.dumps(body).encode(), headers=h, method="POST")
-        with urllib.request.urlopen(req, timeout=120) as r:
-            self.sid = r.headers.get("Mcp-Session-Id") or self.sid
-            txt = r.read().decode()
+        for wait in RETRY_WAITS + [None]:
+            clock.sleep(max(0.0, self.last + MIN_GAP - clock.monotonic()))
+            self.last = clock.monotonic()
+            try:
+                with urllib.request.urlopen(req, timeout=120) as r:
+                    self.sid = r.headers.get("Mcp-Session-Id") or self.sid
+                    txt = r.read().decode()
+                break
+            except urllib.error.HTTPError as e:
+                if e.code != 429 or wait is None:
+                    raise
+                print(f"rate limited, waiting {wait}s", flush=True)
+                clock.sleep(wait)
         for line in txt.splitlines():
             if line.startswith("data: "):
                 return json.loads(line[6:])
@@ -64,13 +80,16 @@ class Client:
     def call(self, name, args):
         if name == "review_affiliate":
             raise SystemExit("review_affiliate writes to UpPromote and is never called")
-        r = self._post({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
-                        "params": {"name": name, "arguments": args}})
-        text = r["result"]["content"][0]["text"]
-        data = json.loads(text) if text.lstrip().startswith("{") else None
-        if data is None:
-            raise SystemExit(f"{name} failed: {text[:300]}")
-        return data
+        for wait in RETRY_WAITS + [None]:
+            r = self._post({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                            "params": {"name": name, "arguments": args}})
+            text = r["result"]["content"][0]["text"]
+            if text.lstrip().startswith("{"):
+                return json.loads(text)
+            if wait is None or not ("429" in text or "rate limit" in text.lower() or "per minute" in text.lower()):
+                raise SystemExit(f"{name} failed: {text[:300]}")
+            print(f"{name} rate limited, waiting {wait}s", flush=True)
+            clock.sleep(wait)
 
     def all_pages(self, name, args):
         page, rows = 1, []
