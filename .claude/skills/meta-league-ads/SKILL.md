@@ -71,7 +71,13 @@ Every ad gets several options so Meta can rotate them: **5 primary texts, 4 head
 - `url_tags`: `utm_source=facebook&utm_medium=paid&utm_campaign={{campaign.name}}&utm_id={{campaign.id}}&utm_term={{adset.id}}&utm_content={{ad.id}}&lebesgue_source=meta&lebesgue_adid={{ad.id}}`
 - `call_to_action` SIGN_UP, linking to the landing page.
 - **Placement sizes (required, John and Tommy, 2026-11-10).** Every placement must show a clean, centered asset with no text or faces cut off.
-  - 9:16 designed for the safe zone is our standard and is fine on its own: text, captions and faces sit in the center so a 1:1 crop keeps them (Meta shows 9:16 as 4:5 in feed). Keep text out of the top ~14% and bottom ~35% for reels UI (check Meta's current safe-zone guide). When building or rebuilding, also add our own 4:5 center crop of the same file, so Meta's crop never decides.
+  - **Our creative spec is a single 9:16 file (1080x1920) built for the safe zone** (Silly Pickles Winter 2027 Ad Creative Specs, John, 2026-10-09; Drive folder `19OTV_tJKtITq_zbA5a0EK25HkBMQYxJK`: spec PDF `1ThnKJooRc1MiOvabxdXu4d4nNiZwcniY`, overlay SVG `1rPdKvPnhg6EPbMESRB0UoQmEjlqj0c5L` / PNG `11OrioUCgjrtrhN_HT2TH2l6Xdk3XgZB_`). Such a file is fine on its own and is not a sizing problem. The zones, in pixels on the 1080x1920 frame:
+    - Reels UI covers the top 270px, the bottom 670px (y 1250 to 1920: captions, CTA, like/comment/share) and 65px on each side.
+    - 4:5 crop (1080x1350, centered) = y 285 to 1635. 1:1 crop (1080x1080, centered) = y 420 to 1500.
+    - **Text, logo and caption safe zone: x 65 to 1015, y 420 to 1250 (950x830).** Faces stay inside the center 1080x1080 square (y 420 to 1500).
+    - Videos: native 9:16, burned-in captions in the same safe zone, 15 to 30 s preferred, 60 s max. Carousels: 1080x1080 cards (3 to 10).
+  - Before using a 9:16 asset, check one frame (statics: the image; videos: a few frames incl. caption frames) against those boxes. If text or faces fall outside, use the designer's separate 4x5 (1080x1350) and 1x1 (1080x1080) files; the spec says they send those when a design can't survive the crop. If they don't exist, ask the creator before launch.
+  - When building or rebuilding, add our own 4:5 crop of the 9:16 file (y 285 to 1635, full width) and a 1:1 crop (y 420 to 1500) as labeled sizes, so Meta's crop never decides.
   - Never run a 1:1-only or 4:5-only asset in stories/reels/status: use the 9x16 from Drive (FrozenManMeme, SocialLifeOnIce, Jackpot and the SP_Sept2026 designs all have one). If a design has no 9x16, ask the creator before launch.
   - Use a 1.91x1 asset for right column/search when one exists; otherwise serve the original uncropped, never a Meta-made crop.
   - Wire sizes with `asset_customization_rules`. The 11/10 audit found 81 ads 1:1-only in stories and 22 ads serving Meta-generated "untitled" crops that cut faces.
