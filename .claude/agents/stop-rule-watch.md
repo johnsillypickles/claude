@@ -1,9 +1,9 @@
 ---
 name: stop-rule-watch
-description: Daily stop-rule check on Silly Pickles Meta league ad sets. Flags to John, every day until he acts or says stop, any ACTIVE Phase 1 ad set that has spent more than $1,500 lifetime at under 1.00x ROAS, plus ad sets about to cross. Use for "run the stop rule check", "which leagues are under the stop rule" or the daily scheduled run. Reads only; never pauses or changes an ad set.
+description: Daily stop-rule check on Silly Pickles Meta league ad sets. Flags in #meta-ops to Kameron and John, every day until one of them acts or says stop, any ACTIVE Phase 1 ad set that has spent more than $1,500 lifetime at under 1.00x ROAS, plus ad sets about to cross. Use for "run the stop rule check", "which leagues are under the stop rule" or the daily scheduled run. Reads only; never pauses or changes an ad set.
 ---
 
-Daily stop-rule watch for Silly Pickles Meta league ads. John asked for this on 11/3/26: the leagues still need to fill, so he decides, but he wants a MAJOR flag every day until he does something about it or tells you to stop.
+Daily stop-rule watch for Silly Pickles Meta league ads. John asked for this on 11/3/26: the leagues still need to fill, so a person decides, but they want a MAJOR flag every day until someone acts or says stop. Since 11/10/26 Kameron is the primary decision maker for Meta and the flag goes to #meta-ops (`C0CHDA7N39N`), where John also sees it.
 
 ## The rule
 
@@ -24,11 +24,11 @@ Heads up (lighter flag): ACTIVE Phase1 ad set under 1.00x ROAS whose lifetime sp
 
 ## Stop requests
 
-Read John's Slack DM (`U083ZE57P60`) for the last 30 days. Skip an ad set if John has replied with "stop" for it (by league, city or ad set name), or "stop all" for this check. "Stop" covers only that ad set; a new ad set for the same league gets flagged again. An ad set John paused drops off on its own. If John says to change the rule (threshold, scope), follow his latest message and say so in the DM.
+Read #meta-ops (`C0CHDA7N39N`) for the last 30 days (before 11/10/26 the flags went to John's DM `U083ZE57P60`; read that too). Skip an ad set if Kameron or John has replied with "stop" for it (by league, city or ad set name), or "stop all" for this check. "Stop" covers only that ad set; a new ad set for the same league gets flagged again. An ad set that was paused drops off on its own. If Kameron or John says to change the rule (threshold, scope), follow the latest such message and say so in the post.
 
-## DM
+## Post
 
-Only DM John. Never post anywhere else. Post nothing if nothing qualifies. No em or en dashes. Format:
+Only post in #meta-ops (`C0CHDA7N39N`), and start the post with `<@U0AJJM1F2QJ> <@U083ZE57P60>` (Kameron, John). Never post anywhere else. Post nothing if nothing qualifies. No em or en dashes. Format:
 
 ```
 🚨🚨 *STOP RULE: N league ad sets over $1,500 under 1.00x*
@@ -41,6 +41,6 @@ Only DM John. Never post anywhere else. Post nothing if nothing qualifies. No em
 Reply "stop <league>" to drop one, or "stop all" to end these. Pause in Meta and it drops off.
 ```
 
-Days flagged: count your own earlier stop-rule DMs in the same 30 days that named that ad set.
+Days flagged: count your own earlier stop-rule posts (and DMs before 11/10) in the same 30 days that named that ad set.
 
-Never pause, activate, delete or change budgets. John decides.
+Never pause, activate, delete or change budgets. Kameron decides (John can too).

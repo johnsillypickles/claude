@@ -10,7 +10,8 @@ This is the playbook John and Claude worked out in October 2026. Follow it so ev
 ## Who can do what
 
 - John and Kameron can both build ads, and can turn ads and ad sets on (live) when asked.
-- **Flag to John first, before doing it:** any ad set budget above **$500/day**, any change to a bid strategy or cost cap on an ad set that is already live, and anything that touches the Phase 0 regional ad sets (pins/addresses).
+- **Decision rights (John, 2026-11-10):** Kameron is the primary decision maker for Meta, including budgets and cost caps. John can also decide. An explicit OK from either one approves a specific change; log who approved it in Ad Sets column K.
+- **Flag to Kameron first, before doing it (John can see and weigh in):** any ad set budget above **$500/day**, anything that touches the Phase 0 regional ad sets (pins/addresses), new campaigns, and releasing the December winter reserve.
 - Never delete. The Windsor API can only pause; deletion is done by a person in Ads Manager.
 
 ## Tools and accounts
@@ -38,19 +39,26 @@ Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and ca
 
 1. **Get the league from Shopify.** Search products by title; use the ACTIVE product. Pull the metafields above plus `legacyResourceId` (the product ID) and `onlineStoreUrl`.
 2. **Duplicate the template ad set.** `duplicate_adset` with `adset_id` `120253711911230019` (Tualatin), `deep_copy: false`, `status_option: "paused"`. This copies the approved settings: $500/day, COST_CAP $50, Purchase on the pixel, ages 25-45, past-customer exclusions, placements.
+   - **Lifetime budget wanted:** a duplicate keeps the template's daily budget and Meta won't switch it to lifetime (error 1885257). Use `create_adset` instead, in the same campaign: `optimization_goal: "OFFSITE_CONVERSIONS"`, `billing_event: "IMPRESSIONS"`, `promoted_object` pixel + `PURCHASE`, `bid_strategy: "COST_CAP"` with `bid_amount` (cents), `lifetime_budget` (cents) with `end_time`, and the template's full targeting object (copy from a live P1, change only the pin). Westerville Late Fall (Oct 28) was built this way.
 3. **Rename and retarget** with `update_adset`:
    - `name`: Shopify product title + `_` + product ID. Two leagues in one ad set: join IDs with `_` (for example `..._10338358657282_10338362360066`).
    - `targeting`: send the full object (it replaces, not merges). Keep everything from the template and change only `geo_locations.custom_locations` to one pin: `address_string`, `latitude`, `longitude` from `facility_coordinates`, `radius: 15`, `distance_unit: "mile"`, `country` (`US` or `CA`). Keep `excluded_custom_audiences`: `120243290793190019`, `120252875760880019`, `120253656154900019`.
 4. **Landing page:** the league's product page. Two leagues at one facility: the facility collection page.
 5. **Create the ads** (see below). Default set: 2 statics, 2 videos, 1 carousel.
-6. **Turn on** with `enable_adset` if asked to launch.
-7. **Log it** in the `Fall26 Ad Sets` tab: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
+6. **Check the targeting before turning on.** Read the ad set back with `get_data` (`adset_targeting`, `include_objects_without_insights`) and confirm, for every ad set you build, edit or enable:
+   - `geo_locations` has only `custom_locations` (plus `location_types`). Any `countries`, `regions`, `cities` or `zips` is wrong: stop and fix it. A P1 with no pins targets a whole country (Darling Harbour spent $585 in the US this way, Oct 2026).
+   - Every pin is `radius: 15`, `distance_unit: "mile"`, unless John has named an exception.
+   - For P1, each league in the name has a pin centered within 3 mi of its Shopify `facility_coordinates` (this checks the pin's location, not its radius), and the pin `country` matches the facility's country.
+   Run the same check across all delivering ad sets whenever you touch Meta targeting, not just the one you changed.
+7. **Turn on** with `enable_adset` if asked to launch.
+8. **Log it** in the tab for the ad set's season: Fall and Late Fall go in `Fall26 Ad Sets`; Early Winter goes in `EarlyWinter27 Ad Sets` (column G is a per-row Mismatch formula, copy it down); the `Ad Sets` tab is the Winter 2027 build plan, so log Winter ad sets there by filling O (ad set ID) and P (actual status) on the planned row. For `Fall26 Ad Sets`: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
 
 ## Ads
 
 ### Naming
 
-- The ad name is the Drive file name (without extension), exactly the same in every ad set, no season prefix. The creative report matches on it.
+- The ad name is the Drive file name (without extension), exactly the same in every ad set. The creative report matches on it. Don't add a season prefix yourself, but keep one that is already in the file name: season-specific creatives (for example `W27_ALL_Moodyboy-TradingCards_Static_v1`) keep their `W27_` so John can tell which season they belong to.
+- Campaign and ad set names stay evergreen (no season words). Seasonal creatives run only in their season and get swapped out after it; seasonless creatives can keep running.
 - Location-specific creatives (for example the Houston volleyball set) end in `_localized`.
 - The creative name (inside `creative.name`) can carry a tag, for example `fall_leagues_live_stick_static_LF26NAurora_v1`.
 
@@ -63,6 +71,14 @@ Every ad gets several options so Meta can rotate them: **5 primary texts, 4 head
 - `url_tags`: `utm_source=facebook&utm_medium=paid&utm_campaign={{campaign.name}}&utm_id={{campaign.id}}&utm_term={{adset.id}}&utm_content={{ad.id}}&lebesgue_source=meta&lebesgue_adid={{ad.id}}`
 - `call_to_action` SIGN_UP, linking to the landing page.
 - `degrees_of_freedom_spec.creative_features_spec`: OPT_IN `inline_comment`, `enhance_cta`, `image_brightness_and_contrast`; OPT_OUT `image_touchups`, `image_templates`, `image_uncrop`, `image_animation`, `add_text_overlay`, `text_optimizations`, `description_automation`, `site_extensions`, `product_extensions`, `show_summary`, `reveal_details_over_time`, `ads_with_benefits`, and for videos also `video_auto_crop`.
+
+### First values must match (or the ad set can't be duplicated)
+
+Meta accepts an ad whose `asset_feed_spec` and `object_story_spec` disagree, but then rejects every duplicate of its ad set ("For a Degrees of freedom enabled ad, the first value of Asset Feed Spec field should match the corresponding field in Object Story Spec", #100.2446211). The Oct 2026 W27 and LF26 builds hit this. For every ad with `asset_feed_spec`:
+
+- The first entry of `bodies`, `titles`, `descriptions` and `link_urls` equals `message`, `name`/`title`, `description`/`link_description` and `link` in `object_story_spec`. All three text fields must be present in `object_story_spec`.
+- The first entry of `images` (or `videos`) is the image (or video) in `object_story_spec`. With several sizes, put the default size (usually `img_1x1`/`vid_1x1`, the one with the empty `customization_spec`) first in the list; list order is separate from rule `priority`.
+- A broken ad can't be fixed in place. Build a corrected copy, then a person deletes the old one in Ads Manager (paused ads still block duplication).
 
 ### Static (single image)
 
@@ -124,4 +140,6 @@ The `Fall26 League Status` tab compares Kameron's tracker (via `Kam import`) to 
 - `Fall26 Ads`: add a row per new ad (ad set, ad name, creative, rotation slot, Want, Actual, ad ID, date uploaded, `YYYY-MM-DD, built by Claude`, campaign, ad set ID).
 - New league that is not in the `Leagues` tabs yet: add it to the Meta map Leagues tab and the Email Ops Leagues tab with the Shopify details, or tell John so the Slack watch picks it up.
 - Never type over formula columns. Meta map `Leagues`: J and M to P (phase, campaign, ad set, live at launch) and V (ad copy line) are array formulas; to change phase use K (Phase override) and L (reason), to change the ad set change E/F/G. Meta map `Ad Sets`: F to J and Q are formulas (F pulls pin addresses from the Leagues tab, H counts leagues whose home is that ad set, so H and the number of addresses in F can differ). Email Ops `Leagues`: R and U to Y are formulas. Check with a grid read (`userEnteredValue.formulaValue`) before writing a column you have not written before.
-- Known exception: `Ad Sets` F4 (Houston P0) is typed text on John's call so it keeps the Bumpy Pickle pin.
+- Known exception: `Ad Sets` F4 (Houston P0) is typed text on John's call so it keeps the Bumpy Pickle pin. F47 (Baltimore) and F50 (Atlanta) are also typed (synced to Meta 2026-11-08).
+- P0 pins and P1 overlap (John, 2026-11-08, "option A"): metro P0s keep the addresses of their P1 leagues pinned; there are no P0 geo exclusions in Meta. On `Ad Sets` P0 rows, F lists leagues routed to the P0 plus that sub-metro's P1 leagues, and G is "None". Do not add exclusions in Meta or the sheet unless John changes this.
+- `Ad Sets` F on formula P0 rows follows the Leagues tab, not Meta: while January pins are off (2026-11-04 to ~Dec 1) and for cancelled leagues, F still lists those addresses. Meta is the truth for live pins.

@@ -1,0 +1,240 @@
+{% comment %}
+  MM-collection-header — dynamic header for state/collection pages.
+
+  Auto-pulls:
+    - Image    → collection.image (fallback: solid brand band)
+                 Optional "Image override" setting replaces it on one template
+                 without changing the collection itself.
+    - Headline → "{prefix} {collection.title}"  e.g. PICKLEBALL LEAGUES IN COLORADO
+    - Cities   → collection.metafields.custom.city_collections (list of city
+                 collections). Shows just the city (state name stripped),
+                 joined as "Denver, Colorado Springs, Thornton and beyond."
+
+  Editable: tagline, CTA label, prefix, scrim, colors, heights.
+  CTA scrolls down to the product grid on the collection page.
+{% endcomment %}
+
+{%- liquid
+  assign coll = section.settings.collection | default: collection
+  assign img = coll.image
+  if section.settings.image_override != blank
+    assign img = section.settings.image_override
+  endif
+  assign city_list = coll.metafields.custom.city_collections.value
+
+  comment
+    Build the city names string. Each city collection's title/handle carries
+    the state (e.g. "denver-colorado"); strip the state slug and title-case,
+    handling multi-word cities.
+  endcomment
+  assign state_slug = coll.title | handle
+-%}
+
+{%- liquid
+  assign city_names = '' | split: ','
+  if city_list != blank
+    for city in city_list
+      assign city_slug = city.title | handle
+      assign strip = '-' | append: state_slug
+      assign city_slug = city_slug | remove_last: strip
+      assign words = city_slug | split: '-'
+      assign built = ''
+      for w in words
+        if forloop.first
+          assign built = w | capitalize
+        else
+          assign wc = w | capitalize
+          assign built = built | append: ' ' | append: wc
+        endif
+      endfor
+      assign one = built | split: '||'
+      assign city_names = city_names | concat: one
+    endfor
+  endif
+
+  comment
+    Join: "A, B & C". Commas between all but the last two, "&" before the last.
+    No stray space before commas; no "and beyond".
+  endcomment
+  assign cities_text = ''
+  assign total = city_names.size
+  for name in city_names
+    if forloop.first
+      assign cities_text = name
+    elsif forloop.last
+      assign cities_text = cities_text | append: ' & ' | append: name
+    else
+      assign cities_text = cities_text | append: ', ' | append: name
+    endif
+  endfor
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .mm-ch {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    --ch-overlay: {{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }};
+    position: relative; overflow: hidden;
+    height: {{ section.settings.height_mobile }}px;
+    border-radius: {{ section.settings.corner_radius }}px;
+    background: {{ section.settings.fallback_bg }};
+  }
+  #shopify-section-{{ section.id }} .mm-ch__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{ section.settings.focal_mobile }}; display: block; }
+  /* Left-to-right scrim so the copy stays legible over the photo. */
+  #shopify-section-{{ section.id }} .mm-ch::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg,
+      rgba(var(--ch-overlay), {{ section.settings.scrim_opacity | divided_by: 100.0 }}) 0%,
+      rgba(var(--ch-overlay), {{ section.settings.scrim_opacity | divided_by: 160.0 }}) 40%,
+      rgba(var(--ch-overlay), 0) 72%);
+  }
+  #shopify-section-{{ section.id }} .mm-ch__inner {
+    position: relative; z-index: 2; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    max-width: var(--page-width, 1200px); margin: 0 auto;
+    padding: 0 {{ section.settings.content_left }}px;
+  }
+  #shopify-section-{{ section.id }} .mm-ch__title {
+    font-family: {% if section.settings.use_display_font %}TanStCanard, {% endif %}var(--font-heading-family);
+    font-weight: 700; text-transform: uppercase;
+    font-size: {{ section.settings.title_size_mobile }}px; line-height: 1.02;
+    color: {{ section.settings.text_color }}; margin: 0;
+    text-shadow: 0 2px 18px rgba(0,0,0,.3);
+    max-width: {{ section.settings.copy_max_width }}px;
+  }
+  #shopify-section-{{ section.id }} .mm-ch__tagline {
+    font-family: var(--font-body-family);
+    font-size: {{ section.settings.tagline_size_mobile }}px; font-weight: 600;
+    color: {{ section.settings.tagline_color }}; margin: 10px 0 0;
+    text-shadow: 0 2px 14px rgba(0,0,0,.3);
+  }
+  #shopify-section-{{ section.id }} .mm-ch__cities {
+    font-family: var(--font-body-family);
+    font-size: {{ section.settings.cities_size_mobile }}px;
+    color: {{ section.settings.text_color }}; opacity: .95; margin: 8px 0 0;
+    max-width: {{ section.settings.copy_max_width }}px;
+    text-shadow: 0 2px 14px rgba(0,0,0,.3); line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .mm-ch__cta {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+    background: {{ section.settings.cta_bg }}; color: {{ section.settings.cta_text }};
+    font-family: var(--font-body-family); font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    font-size: {{ section.settings.cta_size }}px; padding: 11px 20px; border-radius: 100px;
+    border: none; cursor: pointer; text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .mm-ch__cta:hover { opacity: .92; }
+
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }} .mm-ch { height: {{ section.settings.height_desktop }}px; }
+    #shopify-section-{{ section.id }} .mm-ch__img { object-position: {{ section.settings.focal_desktop }}; }
+    #shopify-section-{{ section.id }} .mm-ch__title { font-size: {{ section.settings.title_size_desktop }}px; }
+    #shopify-section-{{ section.id }} .mm-ch__tagline { font-size: {{ section.settings.tagline_size_desktop }}px; }
+    #shopify-section-{{ section.id }} .mm-ch__cities { font-size: {{ section.settings.cities_size_desktop }}px; }
+  }
+{%- endstyle -%}
+
+<div class="mm-ch" data-collection-header>
+  {%- if img != blank -%}
+    <img class="mm-ch__img"
+      src="{{ img | image_url: width: 2000 }}"
+      srcset="{{ img | image_url: width: 1000 }} 1000w, {{ img | image_url: width: 1600 }} 1600w, {{ img | image_url: width: 2000 }} 2000w"
+      sizes="100vw"
+      alt="{{ coll.title | escape }}" loading="eager" fetchpriority="high"
+      width="{{ img.width }}" height="{{ img.height }}">
+  {%- endif -%}
+
+  <div class="mm-ch__inner">
+    <h1 class="mm-ch__title">
+      {{ section.settings.title_prefix }} {{ coll.title | escape }}
+    </h1>
+    {%- if section.settings.tagline != blank -%}
+      <p class="mm-ch__tagline">{{ section.settings.tagline | escape }}</p>
+    {%- endif -%}
+    {%- if cities_text != blank -%}
+      <p class="mm-ch__cities">{{ section.settings.cities_prefix }} {{ cities_text }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank -%}
+      <button type="button" class="mm-ch__cta" data-ch-scroll>
+        {{ section.settings.cta_label | escape }}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+      </button>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('shopify-section-{{ section.id }}');
+  if(!root) return;
+  var btn = root.querySelector('[data-ch-scroll]');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    // Scroll to the product grid on the collection page. Try common targets.
+    var target = document.querySelector('#ProductGridContainer, #product-grid, .collection, main [id*="product-grid"]');
+    if(target){ target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    else { window.scrollBy({ top: window.innerHeight * 0.9, behavior:'smooth' }); }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Collection header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "paragraph", "content": "Auto-pulls the collection image, title, and its city_collections list. Use on collection templates." },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Leave empty on a collection template to use the current collection." },
+    { "type": "header", "content": "Headline" },
+    { "type": "text", "id": "title_prefix", "label": "Title prefix", "default": "Pickleball Leagues in" },
+    { "type": "checkbox", "id": "use_display_font", "label": "Use display font (Tan St. Canard)", "default": false },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Come for the games. Stay for the people. 🍊" },
+    { "type": "text", "id": "cities_prefix", "label": "City list prefix", "default": "Beginner-friendly adult leagues in" },
+    { "type": "header", "content": "CTA" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Find your city" },
+    { "type": "color", "id": "cta_bg", "label": "Button background", "default": "#FFB81C" },
+    { "type": "color", "id": "cta_text", "label": "Button text", "default": "#201747" },
+    { "type": "range", "id": "cta_size", "label": "Button text size", "min": 11, "max": 20, "step": 1, "unit": "px", "default": 13 },
+    { "type": "header", "content": "Image & fallback" },
+    { "type": "image_picker", "id": "image_override", "label": "Image override", "info": "Leave empty to use the collection image." },
+    { "type": "color", "id": "fallback_bg", "label": "Fallback background (no image)", "default": "#201747" },
+    {
+      "type": "select", "id": "focal_desktop", "label": "Image position (desktop)", "default": "center center",
+      "options": [
+        { "value": "left top", "label": "Top left" }, { "value": "center top", "label": "Top center" }, { "value": "right top", "label": "Top right" },
+        { "value": "left center", "label": "Middle left" }, { "value": "center center", "label": "Middle center" }, { "value": "right center", "label": "Middle right" },
+        { "value": "left bottom", "label": "Bottom left" }, { "value": "center bottom", "label": "Bottom center" }, { "value": "right bottom", "label": "Bottom right" }
+      ]
+    },
+    {
+      "type": "select", "id": "focal_mobile", "label": "Image position (mobile)", "default": "center center",
+      "options": [
+        { "value": "left top", "label": "Top left" }, { "value": "center top", "label": "Top center" }, { "value": "right top", "label": "Top right" },
+        { "value": "left center", "label": "Middle left" }, { "value": "center center", "label": "Middle center" }, { "value": "right center", "label": "Middle right" },
+        { "value": "left bottom", "label": "Bottom left" }, { "value": "center bottom", "label": "Bottom center" }, { "value": "right bottom", "label": "Bottom right" }
+      ]
+    },
+    { "type": "range", "id": "height_desktop", "label": "Height (desktop)", "min": 240, "max": 640, "step": 10, "unit": "px", "default": 340 },
+    { "type": "range", "id": "height_mobile", "label": "Height (mobile)", "min": 180, "max": 480, "step": 10, "unit": "px", "default": 260 },
+    { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Scrim & colors" },
+    { "type": "color", "id": "overlay_color", "label": "Scrim color", "default": "#140f32" },
+    { "type": "range", "id": "scrim_opacity", "label": "Scrim strength", "min": 0, "max": 95, "step": 5, "unit": "%", "default": 65 },
+    { "type": "color", "id": "text_color", "label": "Headline & city text", "default": "#FFFFFF" },
+    { "type": "color", "id": "tagline_color", "label": "Tagline", "default": "#8FD6BD" },
+    { "type": "header", "content": "Layout & sizes" },
+    { "type": "range", "id": "content_left", "label": "Left spacing", "min": 16, "max": 200, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "copy_max_width", "label": "Text max width", "min": 300, "max": 800, "step": 20, "unit": "px", "default": 560 },
+    { "type": "range", "id": "title_size_desktop", "label": "Headline size (desktop)", "min": 28, "max": 72, "step": 2, "unit": "px", "default": 44 },
+    { "type": "range", "id": "title_size_mobile", "label": "Headline size (mobile)", "min": 20, "max": 48, "step": 2, "unit": "px", "default": 30 },
+    { "type": "range", "id": "tagline_size_desktop", "label": "Tagline size (desktop)", "min": 12, "max": 30, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "tagline_size_mobile", "label": "Tagline size (mobile)", "min": 11, "max": 24, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "cities_size_desktop", "label": "City list size (desktop)", "min": 11, "max": 22, "step": 1, "unit": "px", "default": 14 },
+    { "type": "range", "id": "cities_size_mobile", "label": "City list size (mobile)", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 13 },
+    { "type": "header", "content": "Section padding" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [ { "name": "Collection header" } ]
+}
+{% endschema %}
