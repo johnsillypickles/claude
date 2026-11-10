@@ -10,7 +10,8 @@ This is the playbook John and Claude worked out in October 2026. Follow it so ev
 ## Who can do what
 
 - John and Kameron can both build ads, and can turn ads and ad sets on (live) when asked.
-- **Flag to John first, before doing it:** any ad set budget above **$500/day**, any change to a bid strategy or cost cap on an ad set that is already live, and anything that touches the Phase 0 regional ad sets (pins/addresses).
+- **Decision rights (John, 2026-11-10):** Kameron is the primary decision maker for Meta, including budgets and cost caps. John can also decide. An explicit OK from either one approves a specific change; log who approved it in Ad Sets column K.
+- **Flag to Kameron first, before doing it (John can see and weigh in):** any ad set budget above **$500/day**, anything that touches the Phase 0 regional ad sets (pins/addresses), new campaigns, and releasing the December winter reserve.
 - Never delete. The Windsor API can only pause; deletion is done by a person in Ads Manager.
 
 ## Tools and accounts

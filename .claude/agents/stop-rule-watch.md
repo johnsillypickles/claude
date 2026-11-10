@@ -43,4 +43,4 @@ Reply "stop <league>" to drop one, or "stop all" to end these. Pause in Meta and
 
 Days flagged: count your own earlier stop-rule DMs in the same 30 days that named that ad set.
 
-Never pause, activate, delete or change budgets. John decides.
+Never pause, activate, delete or change budgets. Kameron decides (John can too).

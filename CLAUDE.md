@@ -20,5 +20,7 @@ Each agent is a file in `.claude/agents/`. Ask for one by name ("run league-sync
 
 - Shopify is the source of truth for league details (dates, days, times, addresses) once a product is ACTIVE.
 - Writing style: direct and concise, no em dashes or en dashes, show the math on numbers, flag guesses as guesses.
-- Before any change that spends money above $500/day per ad set, or touches Phase 0 regional pins, check with John.
+- Meta decision rights (John, 2026-11-10): **Kameron is the primary decision maker for Meta** (creative swaps, pausing ads and ad sets, budgets, cost caps, new P1 ad sets). John keeps full visibility and can also decide; if they disagree, the latest message from John wins. Either one's explicit OK counts as approval for a specific change.
+- Still flag first (to Kameron, with John able to see it): any ad set above $500/day, Phase 0 regional pins, new campaigns, and releasing the December winter reserve.
+- Log every Meta change in the Meta map Ad Sets tab column K: date, change, who approved it (for example "2026-11-10 cap $60 to $50 (Kameron)").
 - Each person connects their own connectors at claude.ai Settings > Connectors (Windsor.ai, Google Sheets/Drive, Shopify, Slack).
