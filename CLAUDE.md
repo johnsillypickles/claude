@@ -1,6 +1,6 @@
 # Silly Pickles marketing workspace
 
-Used by John (marketing lead) and Kameron (paid ads) at Silly Pickles, which runs adult pickleball and volleyball ladder leagues. Sessions here do marketing work through connectors, not code: Meta ads via Windsor.ai, Shopify, Google Sheets and Drive, Slack, Gmail, Klaviyo.
+Used by John (marketing lead) and Kameron (paid ads) at Silly Pickles, which runs adult pickleball and volleyball ladder leagues. Sessions here do marketing work through connectors, not code: Meta ads via the direct Graph API (`META_ACCESS_TOKEN` in the cloud environment; not Windsor), Shopify, Google Sheets and Drive, Slack, Gmail, Klaviyo.
 
 ## Skills in this repo
 
