@@ -64,7 +64,7 @@ Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and ca
 
 ### Copy
 
-Every ad gets several options so Meta can rotate them: **5 primary texts, 4 headlines, 2 descriptions**, put in `asset_feed_spec.bodies`, `titles`, `descriptions`, with the first of each also in `object_story_spec`. Write them from Shopify: day, time, start date, facility, skipped weeks. Brand voice: playful, "Athletic? Debatable. Fun? Guaranteed.", "Sign up solo or bring a friend", "matched at your level". Use the 🥒 emoji, never 🏓 (ping pong). Do not invent dates; if a request conflicts with Shopify, say so and use Shopify.
+Every ad gets several options so Meta can rotate them: **5 primary texts, 4 headlines, 2 descriptions**, put in `asset_feed_spec.bodies`, `titles`, `descriptions`, with the first of each also in `object_story_spec`. Write them from Shopify: day, time, start date, facility, skipped weeks. Brand voice: playful, "Athletic? Debatable. Fun? Guaranteed.", "Sign up solo or bring a friend", "matched at your level". Emojis (John, 2026-11-12): 🏓 is fine. Mix in fun, funny emojis beyond 🥒 (e.g. 🙈🙃🐣🥳🤠🤪🤓🫠😅🫪), but **John approves every emoji not already in approved copy before it goes live**, because some carry subtext with certain audiences: list any new ones when you show him the copy. No 🥒 in volleyball copy. Do not invent dates; if a request conflicts with Shopify, say so and use Shopify.
 
 ### Required on every creative
 
@@ -146,7 +146,9 @@ Meta's "Flexible" format (several images chosen under Media) cannot be set throu
 | DiffSkillLevels_Video | video | video `1536137918312288` (thumbnail: pull a fresh `thumbnail_url` from Windsor; fbcdn links expire) |
 | Nov25Testimonials Carousel_1_1_1 | carousel, 4 cards 1x1 | hashes `9a48f0ba6a0da546f21b4924dd9fe76e`, `6b2d3cdd6a4b7430853878643bf018d0`, `19d36aae965aae9a0d146db9d4d46178`, `94204a5cb95ca3e47c345d128a68b8d5` |
 
-Paused on John's call: `fall_in_love_stick_static` (do not add to new ad sets). Re-rank before a new season: Windsor `get_data` fields `ad_name, spend, actions_purchase` over `last_30d`, rank by purchases and cost per purchase, skip off-season themes (summer, Halloween).
+Paused on John's call: `fall_in_love_stick_static` (do not add to new ad sets).
+
+**Seasonal creatives (John, 2026-11-12):** fall-themed designs run only in fall / late fall (Fall26) campaigns, never in Winter or Early Winter campaigns: `SP_Fall2026_Jackpot_static` (fall only, explicitly), `SP_July2026_Loading`, `SP_Sept2026_FallBucketList`, `SP_Sept2026_LastCall_Pickleball`. Houston's "Last Call for Sand Volleyball" is OK for Houston volleyball (late fall). Evergreen (any season): CatMeme, StayForFriends, The76, Toggle, DigitalCamera, DiffSkillLevels (keep as is; no designer, no other sizes). Re-rank before a new season: Windsor `get_data` fields `ad_name, spend, actions_purchase` over `last_30d`, rank by purchases and cost per purchase, skip off-season themes (summer, Halloween).
 
 ## Getting creative assets into Meta
 
