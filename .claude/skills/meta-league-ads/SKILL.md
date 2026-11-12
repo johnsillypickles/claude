@@ -1,6 +1,6 @@
 ---
 name: meta-league-ads
-description: Build, launch, edit and log Silly Pickles Meta (Facebook/Instagram) league ad sets through the Windsor.ai connector. Use for any request to set up or launch a Phase 1 (P1) ad set for a league, add or swap creatives in an ad set, pause or turn on ads, duplicate a fall ad set for a new season, write league ad copy, or check fall pins and statuses against Kameron's tracker.
+description: Build, launch, edit and log Silly Pickles Meta (Facebook/Instagram) league ad sets through the direct Meta Graph API (META_ACCESS_TOKEN; not the Windsor connector). Use for any request to set up or launch a Phase 1 (P1) ad set for a league, add or swap creatives in an ad set, pause or turn on ads, duplicate a fall ad set for a new season, write league ad copy, or check fall pins and statuses against Kameron's tracker.
 ---
 
 # Silly Pickles: Meta league ads (Phase 1 builds and edits)
@@ -12,11 +12,12 @@ This is the playbook John and Claude worked out in October 2026. Follow it so ev
 - John and Kameron can both build ads, and can turn ads and ad sets on (live) when asked.
 - **Decision rights (John, 2026-11-10):** Kameron is the primary decision maker for Meta, including budgets and cost caps. John can also decide. An explicit OK from either one approves a specific change; log who approved it in Ad Sets column K.
 - **Flag to Kameron first, before doing it (John can see and weigh in):** any ad set budget above **$500/day**, anything that touches the Phase 0 regional ad sets (pins/addresses), new campaigns, and releasing the December winter reserve.
-- Never delete. The Windsor API can only pause; deletion is done by a person in Ads Manager.
+- Don't delete live or spending objects. Paused test ads can be deleted with `DELETE /{ad_id}` once John or Kameron OKs it (John, 2026-11-11); otherwise pause, and a person deletes in Ads Manager.
 
 ## Tools and accounts
 
-- **Meta writes and reads:** Windsor.ai MCP, connector `facebook`, account `1346441932978787`. Call `list_actions` once per session to load the schemas.
+- **Meta writes and reads: the direct Graph API, always (John, 2026-11-12).** `https://graph.facebook.com/v21.0` (videos: `https://graph-video.facebook.com/v21.0`) with `access_token=$META_ACCESS_TOKEN` (system user, app 577513808656072, which must stay in Live mode). Ad account `act_1346441932978787`. Start every session with read-only checks: `GET /me/permissions`, `GET /act_1346441932978787?fields=name,account_status`, `GET /396692693535838?fields=name`. Never paste or print the token.
+- **Do not use the Windsor.ai connector for Meta.** Windsor `create_ad` drops per-placement sizes, `update_ad_creative` wiped multi-text copy, and it can't read headlines 2+ or descriptions. If a Graph call fails, stop and report; don't fall back to Windsor for writes. (Windsor reporting reads for the weekly report are fine.)
 - **Page:** `396692693535838`. **Pixel:** `1765459687532632`.
 - **League details:** Shopify (source of truth once the product is ACTIVE). Product metafields, namespace `custom`: `start_date`, `league_day_of_week`, `timing`, `facility_address`, `facility_name`, `facility_coordinates`, `season`, `end_date`, `league_skipped_weeks`, `league_duration`, `sport`, `metro_area`.
 - **Creative files:** Google Drive (search by file name).
@@ -33,24 +34,25 @@ This is the playbook John and Claude worked out in October 2026. Follow it so ev
 | Fall26_Phase0_CreativeTest-tROASfocus | 120253673698350019 | |
 | Pre-Winter27_LeadForm | 120253325111400019 | |
 
-Winter 2027 (W27) campaigns are not built yet; John still owes bid/budget and campaign-name decisions. Do not create W27 campaigns without him.
+Winter 2027 campaigns exist per market (`Winter27_<Market>`, e.g. `Winter27_Carolinas`, `Winter27_Louisville`, `Winter27_RestOfUS`; list them with `GET /act_1346441932978787/campaigns?fields=name,effective_status`). A new Winter P1 goes in its market's existing `Winter27_` campaign (the Leagues tab, column N, names it). Do not create new campaigns without flagging Kameron and John first.
 
 ## Build a P1 ad set for one league
 
 1. **Get the league from Shopify.** Search products by title; use the ACTIVE product. Pull the metafields above plus `legacyResourceId` (the product ID) and `onlineStoreUrl`.
-2. **Duplicate the template ad set.** `duplicate_adset` with `adset_id` `120253711911230019` (Tualatin), `deep_copy: false`, `status_option: "paused"`. This copies the approved settings: $500/day, COST_CAP $50, Purchase on the pixel, ages 25-45, past-customer exclusions, placements.
-   - **Lifetime budget wanted:** a duplicate keeps the template's daily budget and Meta won't switch it to lifetime (error 1885257). Use `create_adset` instead, in the same campaign: `optimization_goal: "OFFSITE_CONVERSIONS"`, `billing_event: "IMPRESSIONS"`, `promoted_object` pixel + `PURCHASE`, `bid_strategy: "COST_CAP"` with `bid_amount` (cents), `lifetime_budget` (cents) with `end_time`, and the template's full targeting object (copy from a live P1, change only the pin). Westerville Late Fall (Oct 28) was built this way.
-3. **Rename and retarget** with `update_adset`:
+0. **Check for an existing ad set first.** Search the Leagues and Ad Sets tabs and Meta (`GET /act_1346441932978787/adsets?fields=name,effective_status,targeting{geo_locations}&filtering=[{"field":"name","operator":"CONTAIN","value":"<city>"}]`). If another P1 already pins the same facility, add the league to that ad set instead (Louisville had two P1s on one address until 2026-11-12).
+2. **Duplicate the template ad set.** `POST /120253711911230019/copies` (Tualatin template) with `deep_copy=false`, `status_option=PAUSED`, `campaign_id=<the market's Winter27 campaign ID>`. This copies the approved settings: $500/day, Purchase on the pixel, ages 25-45, past-customer exclusions, placements (FB/IG/WhatsApp incl. stories and reels). The template's cost cap is $35, so set `bid_amount` to `5000` ($50, cents) on the copy unless Kameron or John names another cap.
+   - **Lifetime budget wanted:** a copy keeps the template's daily budget and Meta won't switch it to lifetime (error 1885257). Use `POST /act_1346441932978787/adsets` instead, in the same campaign: `optimization_goal: "OFFSITE_CONVERSIONS"`, `billing_event: "IMPRESSIONS"`, `promoted_object` pixel + `PURCHASE`, `bid_strategy: "COST_CAP"` with `bid_amount` (cents), `lifetime_budget` (cents) with `end_time`, and the template's full targeting object (copy from a live P1, change only the pin). Westerville Late Fall (Oct 28) was built this way.
+3. **Rename and retarget** with `POST /{adset_id}` (`name`, `targeting` as JSON, `bid_amount`):
    - `name`: Shopify product title + `_` + product ID. Two leagues in one ad set: join IDs with `_` (for example `..._10338358657282_10338362360066`).
-   - `targeting`: send the full object (it replaces, not merges). Keep everything from the template and change only `geo_locations.custom_locations` to one pin: `address_string`, `latitude`, `longitude` from `facility_coordinates`, `radius: 15`, `distance_unit: "mile"`, `country` (`US` or `CA`). Keep `excluded_custom_audiences`: `120243290793190019`, `120252875760880019`, `120253656154900019`.
+   - `targeting`: send the full object (it replaces, not merges). Keep everything from the template and change only `geo_locations.custom_locations` to one pin: `address_string`, `latitude`, `longitude` from `facility_coordinates`, `radius: 15`, `distance_unit: "mile"`, `country` (`US` or `CA`). Keep `excluded_custom_audiences` (all four, as on every live P1, checked 2026-11-12): `120243290793190019` (Purchasers 30d), `120252634024910019` (Shopify all-customer list), `120252875760880019` (Purchasers 730d), `120253656154900019` (Shopify customer list Oct 8).
 4. **Landing page:** the league's product page. Two leagues at one facility: the facility collection page.
 5. **Create the ads** (see below). Default set: 2 statics, 2 videos, 1 carousel.
-6. **Check the targeting before turning on.** Read the ad set back with `get_data` (`adset_targeting`, `include_objects_without_insights`) and confirm, for every ad set you build, edit or enable:
+6. **Check the targeting before turning on.** Read the ad set back with `GET /{adset_id}?fields=name,status,daily_budget,bid_amount,targeting` and confirm, for every ad set you build, edit or enable:
    - `geo_locations` has only `custom_locations` (plus `location_types`). Any `countries`, `regions`, `cities` or `zips` is wrong: stop and fix it. A P1 with no pins targets a whole country (Darling Harbour spent $585 in the US this way, Oct 2026).
    - Every pin is `radius: 15`, `distance_unit: "mile"`, unless John has named an exception.
    - For P1, each league in the name has a pin centered within 3 mi of its Shopify `facility_coordinates` (this checks the pin's location, not its radius), and the pin `country` matches the facility's country.
    Run the same check across all delivering ad sets whenever you touch Meta targeting, not just the one you changed.
-7. **Turn on** with `enable_adset` if asked to launch.
+7. **Turn on** with `POST /{id}` `status=ACTIVE` (ad set and ads) only when Kameron or John says to launch, then read `effective_status` back.
 8. **Log it** in the tab for the ad set's season: Fall and Late Fall go in `Fall26 Ad Sets`; Early Winter goes in `EarlyWinter27 Ad Sets` (column G is a per-row Mismatch formula, copy it down); the `Ad Sets` tab is the Winter 2027 build plan, so log Winter ad sets there by filling O (ad set ID) and P (actual status) on the planned row. For `Fall26 Ad Sets`: campaign, ad set name, ad set ID, Want, Actual, OK, daily budget, cost cap, bid strategy, ads loaded, ads live, spend, `YYYY-MM-DD, built by Claude for <name>`, notes.
 
 ## Ads
@@ -84,7 +86,7 @@ Every ad gets several options so Meta can rotate them: **5 primary texts, 4 head
   - Use a 1.91x1 asset for right column/search when one exists; otherwise serve the original uncropped, never a Meta-made crop.
   - Wire sizes with `asset_customization_rules` (PLACEMENT recipe). The 11/10 audit found 81 ads 1:1-only in stories and 22 ads serving Meta-generated "untitled" crops that cut faces; all Moodyboy and phrase ads were rebuilt 11/11 (Ad Copy Log rows 30 to 106).
   - **Check every new ad's placements before turning it on.** Generate `GET /{ad_id}/previews?ad_format=` for `INSTAGRAM_STORY`, `INSTAGRAM_REELS`, `FACEBOOK_STORY_MOBILE`, `INSTAGRAM_STANDARD`, `MOBILE_FEED_STANDARD`, render the iframe (Playwright through the proxy) and confirm the served media is 9:16 in stories/reels and 4:5 in feeds. Shareable `fb.me` preview links don't open for John and default to the feed view; send the Ads Manager link plus a screenshot sheet instead.
-- **Save every ad's full copy at build time (John, 2026-11-10).** After each `create_ad`, append one row to the Meta map tab "Ad Copy Log": date, campaign, ad set, ad set ID, ad name, ad ID, bodies (joined by " || "), titles, descriptions, link, url_tags, CTA, session. Windsor can't read headlines 2+ or descriptions back, so this log is the only way to rebuild an ad with identical copy.
+- **Save every ad's full copy at build time (John, 2026-11-10).** After creating each ad, append one row to the Meta map tab "Ad Copy Log": date, campaign, ad set, ad set ID, ad name, ad ID, bodies (joined by " || "), titles, descriptions, link, url_tags, CTA, session. The Graph API can read the full copy back, but this log is the record of what we shipped and why.
 - **Never use Windsor `update_ad_creative` on ads with several primary texts or headlines (2026-11-10).** On 19 of 21 such ads it wiped the copy: primary text came back blank and headlines were replaced with the page default. They were live with blank copy for about 10 minutes before being pointed back to their original creatives with `update_ad`. It only worked on single-text ads. Any creative edit: read the copy back immediately, and roll back with `update_ad` {creative_id: <original>} if anything changed. Windsor also cannot read headline/description sets beyond the first, so rebuilds need an Ads Manager export of the copy.
 - **No Meta cropping or expansion.** Every creative also opts out of `cv_transformation`, `image_auto_crop`, `image_uncrop`, `video_auto_crop`, `video_uncrop`, `video_uncrop_9x16_to_9x18`, `image_background_gen`, `pac_recomposition`, `pac_genai_recomposition`, `adapt_to_placement` and `image_animation`, and never carries `standard_enhancements`. Before turning an ad on, read back the assets it serves: no "untitled" or "cropped_" assets, and each placement gets its matching size.
 - `degrees_of_freedom_spec.creative_features_spec`: OPT_IN `inline_comment`, `enhance_cta`, `image_brightness_and_contrast`; OPT_OUT `image_touchups`, `image_templates`, `image_uncrop`, `image_animation`, `add_text_overlay`, `text_optimizations`, `description_automation`, `site_extensions`, `product_extensions`, `show_summary`, `reveal_details_over_time`, `ads_with_benefits`, and for videos also `video_auto_crop`.
@@ -143,38 +145,42 @@ Meta's "Flexible" format (several images chosen under Media) cannot be set throu
 | fall_leagues_live_stick_static | static 9x16 | image hash `d1bcfdafa14196d5b6b35cb48bc81c52` |
 | phrase3-lowpressure-high5_static | static 9x16 | image hash `62be088b36f83800ca4e2d5c55ffe117` |
 | WiiSport_Video | video 9x16 | video `1259424719705193`, thumbnail hash `8f488fdb671ef939feddbb3bf77279d0` |
-| DiffSkillLevels_Video | video | video `1536137918312288` (thumbnail: pull a fresh `thumbnail_url` from Windsor; fbcdn links expire) |
+| DiffSkillLevels_Video | video | video `1536137918312288` (9:16 only, 576x1024; thumbnail: `GET /1536137918312288/thumbnails`, fbcdn links expire) |
 | Nov25Testimonials Carousel_1_1_1 | carousel, 4 cards 1x1 | hashes `9a48f0ba6a0da546f21b4924dd9fe76e`, `6b2d3cdd6a4b7430853878643bf018d0`, `19d36aae965aae9a0d146db9d4d46178`, `94204a5cb95ca3e47c345d128a68b8d5` |
 
 Paused on John's call: `fall_in_love_stick_static` (do not add to new ad sets).
 
-**Seasonal creatives (John, 2026-11-12):** fall-themed designs run only in fall / late fall (Fall26) campaigns, never in Winter or Early Winter campaigns: `SP_Fall2026_Jackpot_static` (fall only, explicitly), `SP_July2026_Loading`, `SP_Sept2026_FallBucketList`, `SP_Sept2026_LastCall_Pickleball`. Houston's "Last Call for Sand Volleyball" is OK for Houston volleyball (late fall). Evergreen (any season): CatMeme, StayForFriends, The76, Toggle, DigitalCamera, DiffSkillLevels (keep as is; no designer, no other sizes). Re-rank before a new season: Windsor `get_data` fields `ad_name, spend, actions_purchase` over `last_30d`, rank by purchases and cost per purchase, skip off-season themes (summer, Halloween).
+**Seasonal creatives (John, 2026-11-12):** fall-themed designs run only in fall / late fall (Fall26) campaigns, never in Winter or Early Winter campaigns: `SP_Fall2026_Jackpot_static` (fall only, explicitly), `SP_July2026_Loading`, `SP_Sept2026_FallBucketList`, `SP_Sept2026_LastCall_Pickleball`. Houston's "Last Call for Sand Volleyball" is OK for Houston volleyball (late fall). Evergreen (any season): CatMeme, StayForFriends, The76, Toggle, DigitalCamera, DiffSkillLevels (keep as is; no designer, no other sizes). Re-rank before a new season: `GET /act_1346441932978787/insights?level=ad&date_preset=last_30d&fields=ad_name,spend,actions`, sum by ad name, rank by purchases (`offsite_conversion.fb_pixel_purchase`) and cost per purchase, skip off-season themes (summer, Halloween).
 
 ## Getting creative assets into Meta
 
-- **Find an existing asset:** Windsor `get_data` with `ad_id` + `image_asset_hash` + `image_asset_url` (statics) or `video_asset_video_id` (videos), `date_preset: "last_90d"`, filtered by `ad_name` or `adset_id`. Image and video asset fields cannot be queried together, and asset fields cannot be combined with `title_asset_text`/`body_asset_text`. Single-image ads may return no asset rows; then use the Drive file.
-- **Upload images:** call Windsor `upload_files` (action `create_ad_image`), then POST the files with curl as repeated `file` form parts to the returned URL. It returns one hash per file. Meta dedupes, so re-uploading an existing image returns its existing hash.
-- **Upload videos:** `create_ad_video` with `video_url` `https://drive.usercontent.google.com/download?id=<FILE_ID>&export=download&confirm=t` (this form works for files over 100 MB). For a thumbnail, download the video, grab a frame with `ffmpeg -ss 2 -frames:v 1`, and upload it as an image.
+- **Find an existing asset or copy:** `GET /{ad_id}?fields=name,creative{id,object_story_spec,asset_feed_spec,url_tags,degrees_of_freedom_spec}` returns every body, headline, description, image hash and video ID. Image details: `GET /act_1346441932978787/adimages?hashes=[...]&fields=hash,name,original_width,original_height,url`. Video details: `GET /{video_id}?fields=title,format{width,height,filter},thumbnails{uri,is_preferred}`. Account video list: `GET /act_1346441932978787/advideos?fields=id,title,created_time`.
+- **Upload images:** download from Drive (`https://drive.usercontent.google.com/download?id=<FILE_ID>&export=download&confirm=t`), save with the real extension (`.jpg`/`.png`; an unknown extension returns no hash), then `curl -F "filename=@file.jpg" -F access_token=... https://graph.facebook.com/v21.0/act_1346441932978787/adimages`. Meta dedupes, so re-uploading returns the existing hash.
+- **Upload videos:** `POST https://graph-video.facebook.com/v21.0/act_1346441932978787/advideos` with `file_url=<the Drive download URL above>` and `name=<Drive file name>`; poll `GET /{video_id}?fields=status` until `video_status` is `ready`. Thumbnail: download the preferred one from `/{video_id}/thumbnails` and upload it as an image.
+- **Check real dimensions** with Pillow / `ffprobe`, not the file name: some "1440x1800" files are 1400x1800 (7:9) and "1440x2560" files 1400x2560. Trim to the exact ratio (crop plain background only) before uploading.
 - Check image sizes before labeling (Pillow), and look at the image: confirm the city (Houston vs Chicago) and that there are no stale dates or season words that clash with the league.
 
 ## Editing live ads
 
-- Pause or turn on: `pause_ad` / `enable_ad`, `pause_adset` / `enable_adset`.
-- Rename: `update_ad` with `name`.
-- Copy or link change on one ad: `update_ad_creative` (creates a new creative; only edits the single message/headline, so for multi-option copy create a new ad and pause the old one).
+- Pause or turn on: `POST /{ad_or_adset_id}` with `status=PAUSED` or `status=ACTIVE`, then read `status,effective_status` back.
+- Rename: `POST /{id}` with `name`.
+- Copy or link change: creatives can't be edited. Read the current creative, build a new one with the change (strip label `id`s and `standard_enhancements`), then `POST /{ad_id}` with `creative={"creative_id":"<new>"}`. Works on paused and live ads; a live ad keeps delivering through re-review. Read the copy back.
+- Creative swap: build the replacement paused, wait until its review clears, set it ACTIVE, confirm, then pause the original (never pause first).
 - Archived ads (deleted in Ads Manager) cannot be edited or paused; that error is harmless.
-- **Log every pause or turn-on in the `Fall26 Ads` tab** (one row per ad, matched on column H, Meta ad ID), in the same session as the change. Set E (Want) and F (Actual) to Paused or Active, J to `YYYY-MM-DD, paused by Claude (<who approved>)` (or `turned on by`), and K to the reason. Do not touch G (Mismatch). If someone else made the change, log it as `paused by <name> (Claude confirmed)`. If an ad has no row, add one with A to O filled from Windsor.
+- **Log every pause or turn-on in the `Fall26 Ads` tab** (one row per ad, matched on column H, Meta ad ID), in the same session as the change. Set E (Want) and F (Actual) to Paused or Active, J to `YYYY-MM-DD, paused by Claude (<who approved>)` (or `turned on by`), and K to the reason. Do not touch G (Mismatch). If someone else made the change, log it as `paused by <name> (Claude confirmed)`. If an ad has no row, add one with B to O filled from the Graph API (leave A, G and L blank: formulas).
 - Write `Fall26 Ads` updates one row (or one contiguous run of rows) per call, then re-read the rows by ad ID to confirm the right ones changed. A single large write with blank filler rows can land a row off.
 
-## Windsor quirks
+## Graph API notes
 
-- `get_data` sometimes times out at 60 s. Retry with fewer fields or a narrower `date_preset`.
-- Reads only return objects with spend in the date range; a new or paused ad set may not appear.
-- No hourly data on this plan, so `force_refresh` is rejected.
+- List endpoints page at `limit` (max ~50 with insights); follow `paging.next` until it's gone. The account has 6,500+ ads.
+- Code `2` "unexpected error, retry later" is transient: retry with backoff (5, 15, 30, 60 s).
+- Deleted ads read back as `status: DELETED`; archived objects can't be edited (harmless error).
+- Ad previews: `GET /{ad_id}/previews?ad_format=INSTAGRAM_STORY` (also `INSTAGRAM_REELS`, `FACEBOOK_STORY_MOBILE`, `INSTAGRAM_STANDARD`, `MOBILE_FEED_STANDARD`, `RIGHT_COLUMN_STANDARD`) returns an iframe URL; render it with Playwright (proxy in `HTTPS_PROXY`) to screenshot and check the served media size. A preview fetched seconds after a creative change can be stale; re-check before reporting a failure.
+- Windsor (reporting only): `get_data` can time out at 60 s and only returns objects with spend in range.
 
 ## Checking fall pins and statuses
 
-The `Fall26 League Status` tab compares Kameron's tracker (via `Kam import`) to Meta (via `Meta Actual`). To refresh `Meta Actual`, pull `adset_targeting` from Windsor for the Phase 0 regional ad sets and match pins to leagues by address (column D is a normalized address key, not a Meta field). Every check column should read OK.
+The `Fall26 League Status` tab compares Kameron's tracker (via `Kam import`) to Meta (via `Meta Actual`). To refresh `Meta Actual`, read `GET /{adset_id}?fields=targeting{geo_locations}` for the Phase 0 regional ad sets and match pins to leagues by address (column D is a normalized address key, not a Meta field). Every check column should read OK.
 
 ## Sheets housekeeping after a build
 
