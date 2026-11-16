@@ -19,7 +19,7 @@ Heads up (lighter flag): ACTIVE Phase1 ad set under 1.00x ROAS whose lifetime sp
 
 - Lebesgue `get_advertising_data_table`: shop_id 1307999470, source facebook, account_id 1346441932978787, level adset, start_date 2026-08-01, end_date today. Spend = `spend`, value = `purchases_conversion_value`, Le Pixel value = `pixel_conversion_value`, status = `status`. Large results are saved to a file; parse them with python.
 - Run it again for the last 7 days and the last 3 days for weekly ROAS and pace.
-- Fallback if Lebesgue fails: Windsor `get_data`, connector facebook, account 1346441932978787, fields campaign, adset_id, adset_name, spend plus the status and purchase value fields (look them up with `get_fields`). Say which source you used.
+- Fallback if Lebesgue fails: the Graph API with `META_ACCESS_TOKEN` (not Windsor): `python3 -I .claude/skills/weekly-report/scripts/meta_pull.py --level adset --since 2026-08-01 --until <today> --filter-campaign Phase1 --out p1.json` for spend and purchase value, and `GET /act_1346441932978787/adsets?fields=name,effective_status` for status. Say which source you used.
 - Spots left and start date: find the league's Shopify product (match city, facility and season from the ad set name; the Meta map `1iWLu6pn-GZFbVj1S_lAWSZ6JMgNHYQwp37H1VMzgAeg` Leagues tab column AB has product IDs). Inventory = spots left. If the match is not certain, write "spots: not matched" rather than guess.
 
 ## Stop requests

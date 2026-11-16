@@ -308,16 +308,10 @@ def from_sheet(values_path, hist_path):
         if r[0] == 'week':
             continue
         w, k = r[0], r[1]
-        if '||' in k:  # ad-set-level rows ("<ad set>||<creative>") are not creative-weeks; skip them
-            continue
         nums = [float(x or 0) for x in r[2:2 + len(F)]]
         W = H['weeks'].setdefault(w, {'acct': [0] * len(F), 'ads': {}, 'days': [
             str(dt.date.fromisoformat(w) + dt.timedelta(i)) for i in range(7)]})
         if k == '__account__':
-            if any(W['acct']):  # keep the first account row per week; warn on duplicates
-                if W['acct'] != nums:
-                    print('warning: duplicate __account__ row for', w, 'ignored', file=sys.stderr)
-                continue
             W['acct'] = nums
         elif SEP in k:
             W['ads'][k] = nums
