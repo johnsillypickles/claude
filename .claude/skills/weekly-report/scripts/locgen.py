@@ -7,6 +7,11 @@ adset_names={r['adset_id']:r['name'] for r in json.load(open(args[0]))['rows']}
 CAMP={"120252229329790019":"Fall26_Phase1_ProblemChildren","120253767214500019":"EarlyWinter27_Phase1",
       "120252634833170019":"Fall26_Phase0_Regional","120253767213590019":"EarlyWinter27_Phase0"}
 # market campaigns: any name containing Phase1, plus Phase 0 Regional (per region/metro) and EarlyWinter27_Phase0
+# campaign ids not listed above (e.g. Winter27_<region>) get their names from the pulls' rows when present
+for _spec in args[1:]:
+    for _f in _spec.split('=',1)[1].split(','):
+        for _r in json.load(open(_f))['rows']:
+            if _r.get('campaign_name'): CAMP.setdefault(_r['campaign_id'],_r['campaign_name'])
 def is_market(cname): return 'Phase1' in cname or 'Regional' in cname or cname=='EarlyWinter27_Phase0' or (cname.startswith('Winter27_') and 'LeadForm' not in cname)
 def classify(name):
     n=name.lower()
