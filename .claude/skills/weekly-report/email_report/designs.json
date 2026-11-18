@@ -1,0 +1,7 @@
+{"rules":[
+ {"match":"(13b)","arm":"test","design":"Test: John's new template (13b, dark movie poster)"},
+ {"match":"Metro All - Test","arm":"test","design":"Test: John's new template (13b, dark movie poster)"},
+ {"match":"Open Registration - Test","arm":"test","design":"Test: John's new template (13b, dark movie poster)"},
+ {"match":"Last Call - Test","arm":"test","design":"Test: John's new template (14a, navy and coral)"},
+ {"match":"- Control","arm":"control","design":"Control: usual look"}
+]}

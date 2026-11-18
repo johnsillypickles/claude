@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Email Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f4;--card:#fff;--ink:#1a2b1a;--muted:#6b7a6b;--line:#e4e9e4;--green:#2f9e44;--amber:#f08c00;--orange:#e8590c;--red:#e03131;--gray:#adb5ad;--brand:#3aa655;--brand-d:#237a3d;--test:#5b3cc4;--ctrl:#6b7a6b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.45}
+h1,h2,h3{font-family:'Poppins',sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 16px 80px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:3px solid var(--brand);padding-bottom:14px;margin-bottom:22px}
+header h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi h3{margin:0 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+.kpi .big{font-family:'Poppins';font-size:28px;font-weight:800;line-height:1.1}
+.kpi .sm{font-size:12px;color:var(--muted);margin-top:4px}
+h2.sec{font-size:16px;font-weight:800;margin:30px 0 12px}
+.take{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;padding:12px 18px}
+.take li{margin:6px 0}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+table.sum{border-collapse:collapse;width:100%;font-size:13px;min-width:1100px}
+table.sum th,table.sum td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.sum th{background:#eef2ee;font-weight:700;cursor:pointer;user-select:none;position:sticky;top:0}
+table.sum th.grp{text-align:center;background:#e3ebe3;border-left:2px solid var(--line);cursor:default}
+table.sum td.name,table.sum th.name{text-align:left;white-space:normal;min-width:220px;position:sticky;left:0;background:var(--card)}
+table.sum th.name{background:#eef2ee}
+table.sum td.l,table.sum th.l{text-align:left;white-space:normal}
+table.sum td.b0,table.sum th.b0{border-left:2px solid var(--line)}
+table.sum tr.tot td{font-weight:800;background:#eef6ee;border-top:2px solid var(--brand)}
+table.sum td.when{white-space:nowrap;text-align:left}
+table.sum td.cty{min-width:180px;max-width:260px;font-size:12px;color:var(--muted)}
+td.lp,th.lp{color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px;align-items:center}
+.filters button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--muted)}
+.filters button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(560px,1fr));gap:16px}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card .head{padding:12px 14px 8px;border-bottom:1px dashed var(--line)}
+.card .nm{font-family:'Poppins';font-weight:700;font-size:14px;word-break:break-word}
+.card .full{font-size:11px;color:var(--muted);word-break:break-word}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted);margin-top:6px}
+.meta b{color:var(--ink)}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 9px;border-radius:12px;background:#eef0ee;color:#4a5a4a;margin-right:4px}
+.pill.t{background:#ece7fb;color:var(--test)} .pill.c{background:#eef0ee;color:var(--ctrl)}
+.vars{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;padding:12px 14px}
+.var{border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.var.win{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+.shot{background:#eef0ee;display:flex;justify-content:center;align-items:flex-start;max-height:420px;overflow:hidden;border-bottom:1px solid var(--line)}
+.shot img{width:100%;max-width:300px;height:auto;display:block}
+.shot .ph{min-height:200px;color:#6b7a6b;font-size:12px;padding:20px;text-align:center;align-self:center}
+.var .vh{padding:8px 10px 2px;font-size:12px}
+table.m{border-collapse:collapse;width:100%;font-size:12px}
+table.m td{padding:3px 10px;border-bottom:1px solid var(--line);text-align:right}
+table.m td.k{text-align:left;color:var(--muted)}
+.cnote{font-size:12px;background:#f6f9f6;margin:0 14px 12px;border-radius:10px;padding:8px 10px}
+.cnote ul{margin:2px 0;padding-left:16px}
+.intro{color:var(--muted);font-size:12.5px;margin:0 0 12px;max-width:900px}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.6}
+.pos{color:var(--green)} .neg{color:var(--red)}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#e9ece9;margin-top:6px}
+.bar span{display:block;height:100%}
+@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+<header><div><h1 id="ttl">Weekly Email Report</h1><div class="sub" id="sub"></div></div>
+<div class="sub" style="text-align:right"><span id="src">Source: Klaviyo (read only)</span><br>Generated __GEN__</div></header>
+<div class="kpis" id="kpis"></div>
+<h2 class="sec">Key takeaways</h2><div class="take"><ul>__TAKE__</ul></div>
+<h2 class="sec">Campaign summary</h2>
+<p class="intro">One row per email campaign sent in the week (variations combined). Click a column header to sort. Rates use delivered emails as the base, like Klaviyo. Device shares only count opens and clicks where the device is known (see notes).</p>
+<div class="tablewrap"><table class="sum" id="sumtab"></table></div>
+<div id="testsec"></div>
+<h2 class="sec">Campaign detail</h2>
+<div class="filters" id="filters"></div>
+<div class="cards" id="cards"></div>
+<div class="foot" id="foot"></div>
+</div>
+<script>
+const D=__DATA__;
+const T=D.total;
+const fmtM=x=>x==null?'n/a':'$'+Math.round(x).toLocaleString();
+const fmtM2=x=>x==null?'n/a':'$'+x.toFixed(2);
+const fmtP=(x,d=1)=>x==null?'n/a':(x*100).toFixed(d)+'%';
+const fmtN=x=>x==null?'n/a':Math.round(x).toLocaleString();
+const fmtZ=x=>x==null?'n/a':(x>=0?'+':'')+x.toFixed(2);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ws=new Date(D.week_start+'T00:00');const we=new Date(ws);we.setDate(ws.getDate()+6);
+const md=d=>(d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(2);
+if(D.title)document.getElementById('ttl').textContent=D.title;
+if(D.sources)document.getElementById('src').textContent='Source: '+D.sources;
+document.getElementById('sub').textContent=`Week of ${md(ws)} to ${md(we)} (sends Monday to Sunday, ${D.tz||'CT'}) · ${T.campaigns} campaigns · ${T.variations} email versions · ${T.split_campaigns} A/B splits`;
+const k=(h,big,sm)=>`<div class="kpi"><h3>${h}</h3><div class="big">${big}</div><div class="sm">${sm||''}</div></div>`;
+document.getElementById('kpis').innerHTML=[
+ k('Sends',fmtN(T.campaigns),`${T.variations} versions (${T.split_campaigns} campaigns split Test vs Control)`),
+ k('Recipients',fmtN(T.recipients),`${fmtN(T.delivered)} delivered`),
+ k('Open rate',fmtP(T.open_rate),`${fmtN(T.opens)} unique opens (inflated by Apple Mail privacy)`),
+ k('Click rate',fmtP(T.click_rate,2),`${fmtN(T.clicks)} unique clicks`),
+ k('Conversions',fmtN(T.orders),`Placed Order · ${fmtP(T.order_rate,2)} of delivered`),
+ k('Revenue',fmtM(T.revenue),`avg order ${fmtM(T.aov)}`),
+ k('Revenue per recipient',fmtM2(T.rpr),`revenue / delivered`),
+ k('Mobile share',fmtP(T.device.click_mobile,0)+' <small style="font-size:13px;color:var(--muted)">of clicks</small>',`web/desktop ${fmtP(T.device.click_web,0)} of ${fmtN(T.device.click_known)} clicks with a known device · opens: ${fmtP(T.device.open_mobile,0)} mobile, but only ${fmtP(T.device.open_known_share,0)} of opens show a device`)
+].join('');
+// summary table
+const C=[...D.campaigns];let sk='sort',sd=1;
+const val=(c,key)=>{switch(key){case 'name':return c.short.toLowerCase();case 'sort':return c.send?c.send.sort:1e9;case 'cities':return c.cities.toLowerCase();
+ case 'cm':return c.device_pct?c.device_pct.click_mobile??-1:-1;case 'cw':return c.device_pct?c.device_pct.click_web??-1:-1;
+ case 'om':return c.device_pct?c.device_pct.open_mobile??-1:-1;case 'ow':return c.device_pct?c.device_pct.open_web??-1:-1;
+ default:return c.total[key]??-1}};
+const cols=[['recipients','Recipients',fmtN],['open_rate','Open rate',x=>fmtP(x)],['click_rate','Click rate',x=>fmtP(x,2)],['orders','Conv.',fmtN],['revenue','Revenue',fmtM],['rpr','Rev / recip.',fmtM2],['unsubs','Unsubs',fmtN]];
+function renderTable(){
+ C.sort((a,b)=>{const x=val(a,sk),y=val(b,sk);return (x<y?-1:x>y?1:0)*sd;});
+ let h=`<thead><tr><th class="name" data-k="name">Campaign ▲▼</th><th data-k="sort" class="l">Sent (${D.tz||'CT'})</th><th data-k="cities" class="l">Cities</th>`;
+ cols.forEach(c=>h+=`<th data-k="${c[0]}">${c[1]}</th>`);
+ h+=`<th class="b0" data-k="om">Opens mobile</th><th data-k="ow">Opens web</th><th class="b0" data-k="cm">Clicks mobile</th><th data-k="cw">Clicks web</th></tr></thead><tbody>`;
+ C.forEach(c=>{const s=c.send,dp=c.device_pct||{};h+=`<tr><td class="name">${esc(c.short)}<br><small style="color:var(--muted)">${esc(c.type)}${c.variations.length>1?' · A/B':''}</small></td><td class="when">${s?esc(s.day+' '+s.date)+'<br>'+esc(s.time):'n/a'}</td><td class="l cty">${esc(c.cities)}</td>`+cols.map(x=>`<td>${x[2](c.total[x[0]])}</td>`).join('')+`<td class="b0 lp">${fmtP(dp.open_mobile,0)}</td><td class="lp">${fmtP(dp.open_web,0)}</td><td class="b0">${fmtP(dp.click_mobile,0)}</td><td>${fmtP(dp.click_web,0)}</td></tr>`});
+ const d=T.device;
+ h+=`<tr class="tot"><td class="name">Total (${T.campaigns})</td><td></td><td></td>`+cols.map(x=>`<td>${x[2](T[x[0]])}</td>`).join('')+`<td class="b0">${fmtP(d.open_mobile,0)}</td><td>${fmtP(d.open_web,0)}</td><td class="b0">${fmtP(d.click_mobile,0)}</td><td>${fmtP(d.click_web,0)}</td></tr></tbody>`;
+ const t=document.getElementById('sumtab');t.innerHTML=h;
+ t.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const kk=th.dataset.k;if(sk===kk)sd*=-1;else{sk=kk;sd=(kk==='name'||kk==='sort'||kk==='cities')?1:-1;}renderTable();});
+}
+renderTable();
+// pooled design test
+if(D.tests&&D.tests.length){
+ let h=`<h2 class="sec">Design test: Test vs Control (pooled)</h2><p class="intro">Every split campaign sent each version to about half the audience with the same subject line, so the gap is the design. Pooled across the sends listed. Two-proportion z-test on delivered emails; we call a winner only at |z| of 1.96 or more (about 95% confidence) <b>and</b> when the result still holds after dropping any one send.</p><div class="tablewrap"><table class="sum" style="min-width:980px"><thead><tr><th class="name">Comparison</th><th>Sends</th><th class="l">Version</th><th>Delivered</th><th>Open rate</th><th>Click rate</th><th>Order rate</th><th>Orders</th><th>Revenue</th><th>Rev / recip.</th><th>Unsubs</th></tr></thead><tbody>`;
+ D.tests.forEach(t=>{[['test','Test (new template)'],['control','Control (usual look)']].forEach(([a,l],i)=>{const r=t[a];h+=`<tr>${i==0?`<td class="name" rowspan="3"><b>${esc(t.label)}</b></td><td rowspan="3">${t.sends}</td>`:''}<td class="l"><span class="pill ${a==='test'?'t':'c'}">${l}</span></td><td>${fmtN(r.delivered)}</td><td>${fmtP(r.open_rate)}</td><td>${fmtP(r.click_rate,2)}</td><td>${fmtP(r.order_rate,2)}</td><td>${fmtN(r.orders)}</td><td>${fmtM(r.revenue)}</td><td>${fmtM2(r.rpr)}</td><td>${fmtN(r.unsubs)}</td></tr>`});
+  const l=t.loo||{};h+=`<tr><td class="l" colspan="9" style="white-space:normal;font-size:12px"><b>Clicks:</b> z ${fmtZ(t.z_clicks)} (drop-one range ${l.clicks?fmtZ(l.clicks.min)+' to '+fmtZ(l.clicks.max):'n/a'}) · ${esc(t.verdict_clicks)}<br><b>Orders:</b> z ${fmtZ(t.z_orders)} (drop-one range ${l.orders?fmtZ(l.orders.min)+' to '+fmtZ(l.orders.max):'n/a'}) · ${esc(t.verdict_orders)}<br><span style="color:var(--muted)">Opens z ${fmtZ(t.z_opens)} (opens are unreliable, see notes). Revenue per recipient: Test ${fmtM2(t.test.rpr)} vs Control ${fmtM2(t.control.rpr)}${t.rpr_lift!=null?' ('+(t.rpr_lift>=0?'+':'')+Math.round(t.rpr_lift*100)+'%)':''}; revenue is not tested (a few big orders swing it).</span></td></tr>`});
+ document.getElementById('testsec').innerHTML=h+'</tbody></table></div>';}
+// cards
+const types=[...new Set(D.campaigns.map(c=>c.type))];
+let filt='all',csort='sort';
+document.getElementById('filters').innerHTML=[['all','All']].concat(types.map(t=>[t,t])).map(f=>`<button data-f="${esc(f[0])}"${f[0]==='all'?' class="on"':''}>${esc(f[1])}</button>`).join('')+`<span class="sub" style="margin-left:auto">Order: <select id="csort"><option value="sort">send time</option><option value="rpr">revenue per recipient</option><option value="revenue">revenue</option><option value="recipients">recipients</option></select></span>`;
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filt=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));renderCards();});
+document.getElementById('csort').onchange=e=>{csort=e.target.value;renderCards();};
+const mrows=[['recipients','Recipients',fmtN],['open_rate','Open rate',x=>fmtP(x)],['click_rate','Click rate',x=>fmtP(x,2)],['orders','Conversions',fmtN],['revenue','Revenue',fmtM],['rpr','Rev / recipient',fmtM2],['unsubs','Unsubscribes',fmtN]];
+function vcard(v,win){const arm=v.arm==='test'?'t':v.arm==='control'?'c':'';
+ return `<div class="var${win?' win':''}"><div class="shot">${v.img?`<img loading="lazy" src="${v.img}" alt="${esc(v.design)}">`:`<div class="ph">${esc(v.img_note||'no preview')}</div>`}</div><div class="vh"><span class="pill ${arm}">${esc(v.design)}</span>${win?' <b class="pos">higher rev / recip.</b>':''}${v.template_name?`<div style="color:var(--muted);font-size:11px;margin-top:3px">Template: ${esc(v.template_name)}</div>`:''}</div><table class="m"><tbody>${mrows.map(m=>`<tr><td class="k">${m[1]}</td><td>${m[2](v[m[0]])}</td></tr>`).join('')}</tbody></table></div>`;}
+function card(c){const s=c.send,dp=c.device_pct;const vs=c.variations;
+ let win=null;if(vs.length>1){const top=[...vs].sort((a,b)=>(b.rpr||0)-(a.rpr||0));if((top[0].rpr||0)>(top[1].rpr||0))win=top[0];}
+ const tot=vs.length>1?`<div class="cnote"><b>Campaign total:</b> ${fmtN(c.total.recipients)} recipients · open ${fmtP(c.total.open_rate)} · click ${fmtP(c.total.click_rate,2)} · ${fmtN(c.total.orders)} conversions · ${fmtM(c.total.revenue)} · ${fmtM2(c.total.rpr)} per recipient · ${fmtN(c.total.unsubs)} unsubscribes</div>`:'';
+ const notes=[];if(s)notes.push('Delivery: '+s.detail+(c.local_time_send?' (Klaviyo local-time send: each person gets it at the set time in their own time zone)':''));
+ if(dp)notes.push(`Device: clicks ${fmtP(dp.click_mobile,0)} mobile / ${fmtP(dp.click_web,0)} web (${fmtN(dp.click_known)} clicks with a known device); opens ${fmtP(dp.open_mobile,0)} mobile / ${fmtP(dp.open_web,0)} web, from only ${fmtN(dp.open_known)} opens (${fmtP(dp.open_known_share,0)}) with a known device`);
+ if(c.audience_ex&&c.audience_ex.length)notes.push('Excluded: '+c.audience_ex.join('; '));
+ if(vs.length>1&&vs.every(v=>v.subject===vs[0].subject))notes.push('Same subject on every version: "'+vs[0].subject+'"');else vs.forEach(v=>notes.push('Subject ('+v.design+'): "'+v.subject+'"'));
+ return `<div class="card"><div class="head"><div class="nm">${esc(c.short)}</div><div class="full">${esc(c.name)}</div><div class="meta"><span>Sent <b>${s?esc(s.day+' '+s.date+', '+s.time):'n/a'}</b></span><span>Cities <b>${esc(c.cities)}</b></span><span>Type <b>${esc(c.type)}</b></span></div><div class="meta"><span>Included: ${esc(c.audience_in.join('; '))}</span></div></div><div class="vars">${vs.map(v=>vcard(v,win===v)).join('')}</div>${tot}<div class="cnote"><ul>${notes.map(n=>'<li>'+esc(n)+'</li>').join('')}</ul></div></div>`;}
+function renderCards(){let l=[...D.campaigns];if(filt!=='all')l=l.filter(c=>c.type===filt);
+ l.sort((a,b)=>csort==='sort'?(val(a,'sort')-val(b,'sort')):(val(b,csort)-val(a,csort)));
+ document.getElementById('cards').innerHTML=l.map(card).join('');}
+renderCards();
+document.getElementById('foot').innerHTML=(D.notes||[]).map(n=>'<p>'+esc(n)+'</p>').join('');
+</script></body></html>

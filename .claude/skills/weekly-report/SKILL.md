@@ -5,7 +5,7 @@ description: Build the Silly Pickles Weekly Marketing Update (blended and paid p
 
 # Silly Pickles: Weekly Marketing Update
 
-The weekly update has **two deliverables**, emailed together to the team ("Marketing Update M/D/YY", see John's sent mail):
+The weekly update has **three deliverables** (the email report was added 11/18/26; see "Email report"), emailed together to the team ("Marketing Update M/D/YY", see John's sent mail):
 
 1. **The weekly update**: the email body / Google Doc described below.
 2. **The creative report**: a standalone HTML file attached to the email, named `fall26_creative_report_MM.DD.html`. See "Creative report (HTML attachment)" at the end. Never substitute a Google Doc or Sheets-style table for it.
@@ -191,6 +191,20 @@ Template: `assets/creative_report_template.html` (a cleaned copy of John's `temp
   - **Same creative, other platform or cut:** when one file is unavailable, reuse the thumbnail of the identical creative (e.g. the Meta and TikTok copies of a video, a TikTok `_static` version of a Meta static, or a `-shortened` cut). Download TikTok `video_thumbnail_url`s for every TikTok video in the same session even when Meta also has the ad.
   4. No spend threshold: low-spend and test ads get thumbnails too. Use Drive when a small file exists. Otherwise use the Meta preview, which is often quicker for test ads.
 - Render it in Chromium before sending and check there are no script errors. Python Playwright isn't preinstalled: `pip install playwright`, then `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')` (never `playwright install`). Collect `pageerror` and console errors, force `loading='eager'` on images, then count `img` elements where `naturalWidth` is 0 and list the `.ph` placeholders with their card names. The `.ph` list must be empty, and the count of `#testsec img.tthumb` must equal the count of `#testsec tr.adrow`.
+
+## Email report (HTML attachment, John 11/18/26)
+
+A third deliverable, attached next to the creative report: `email_report_MM.DD.html`, one card per email campaign sent in the report week (Mon to Sun, Central). Builder in `email_report/`: `report_template.html`, `prep_email_week.py`, `build_email_report.py`, `render_check.py`, `shoot_email_html.py` (fallback), `designs.json` (rules that label Test / Control / Payton's seasonal design from template names; add a rule when a new design starts). Reference build: week of 11/9/26. Klaviyo is read only.
+
+Each card: the email image (both versions side by side for A/B splits, with each version's numbers and design label), when it landed (Central, main hour and share), day of week, cities (from the included list and segment names), audience size, open rate, click rate, conversions (Placed Order `VAQscR`), revenue, revenue per recipient, unsubscribes, excluded segments, subject. Top: KPI cards, 4 to 6 takeaways, a sortable summary table with totals and mobile / web shares, and the pooled Test vs Control z-test (call a winner only at |z| >= 1.96 and not driven by one send).
+
+Recipe (Mon 06:00Z to next Mon 06:00Z; events run to the pull date):
+1. `get_campaign_report`: `conversion_metric_id` `VAQscR`, statistics `recipients, delivered, opens_unique, open_rate, clicks_unique, click_rate, conversions, conversion_uniques, unsubscribes`, value_statistics `conversion_value, revenue_per_recipient`, group_by `campaign_id, campaign_message_id, send_channel, variation, variation_name` (unfiltered; it includes audience names and send time). Save as `raw/report.json`.
+2. `get_campaign_messages` filter `any(id,[...])`, include `campaign-variations`: template ids and subjects.
+3. Device: `query_metric_aggregates` metric `XVE7Yz` (Clicked Email), `unique`, by `["$message","Client Type"]`, interval month; same for `T28ZnX` (Opened Email). "Mobile Browser" = mobile, "Browser" = web; drop "Library" and blank. Clicks are the reliable split; opens mostly carry no device (Apple Mail privacy, Gmail image proxy), so label the open split unreliable. Filtering by `$message` errors: pull unfiltered and filter locally.
+4. Delivery time: `query_metric_aggregates` metric `UNySTs` (Received Email), `count`, by `["$message"]`, interval hour, UTC. Sends use Klaviyo local time, so the Central hour mostly reflects each city's time zone.
+5. Images: `render_email_template` with `fields_template ["screenshot_url","name"]` returns Klaviyo's 800x1000 preview PNG (much cheaper than rendering HTML); curl it the same day (links expire). The preview shows the template's current content.
+6. `python3 prep_email_week.py --report raw/report.json --messages messages_slim.json --device device.json --delivery delivery.json --thumbs shots --week-start <Mon> --tz-label CT --designs email_report/designs.json --template-names template_names.json --out email_data.json`, then `build_email_report.py --data email_data.json --template email_report/report_template.html --take takeaways.html --gen "<date>" --stats-out stats.json --out email_report_MM.DD.html`, write takeaways from `stats.json`, rebuild, `render_check.py`. Keep it under 3 MB; keep week data out of this repo.
 
 ## Creative fatigue check (section of the creative report)
 
