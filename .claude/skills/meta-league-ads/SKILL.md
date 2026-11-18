@@ -62,6 +62,7 @@ Winter 2027 campaigns exist per market (`Winter27_<Market>`, e.g. `Winter27_Caro
 - The ad name is the Drive file name (without extension), exactly the same in every ad set. The creative report matches on it. Don't add a season prefix yourself, but keep one that is already in the file name: season-specific creatives (for example `W27_ALL_Moodyboy-TradingCards_Static_v1`) keep their `W27_` so John can tell which season they belong to.
 - Campaign and ad set names stay evergreen (no season words). Seasonal creatives run only in their season and get swapped out after it; seasonless creatives can keep running.
 - Location-specific creatives (for example the Houston volleyball set) end in `_localized`.
+- Templates localized per venue (John, 2026-11-18): one shared ad name for every venue, containing `_Localized_`, for example `W27_Localized_pb_GetOnTheList_Static_v1`. The weekly creative report sums every version with that name into one card, and the ad set tells you the venue. Drive files and Canva titles add the venue and size after the base name (`W27_Localized_pb_GetOnTheList_Static_v1_Westbury-SPORTIME_9x16.png`) so a Drive search for the ad name still finds them. Never put the city before the concept (`W27_Westbury_pb_...`): that splits the report by city. monday's Meta Ad Name column holds the shared base name.
 - The creative name (inside `creative.name`) can carry a tag, for example `fall_leagues_live_stick_static_LF26NAurora_v1`.
 
 ### Copy
