@@ -1,0 +1,41 @@
+{
+ "_note": "list_id filled in from the Klaviyo build; phoenix-centercourt may use location_lists keyed by the form answer (Glendale / Scottsdale (Shea) / Scottsdale (Mayo))",
+ "forms": {
+  "phoenix-centercourt": {
+   "form_id": "1782719256147984",
+   "list_id": null
+  },
+  "windsor": {
+   "form_id": "1128404803243119",
+   "list_id": null
+  },
+  "millersville": {
+   "form_id": "40256982870615364",
+   "list_id": null
+  },
+  "camas": {
+   "form_id": "1438676275048799",
+   "list_id": null
+  },
+  "chamblee": {
+   "form_id": "969260259275646",
+   "list_id": null
+  },
+  "visalia": {
+   "form_id": "28823294264007968",
+   "list_id": null
+  },
+  "crowley": {
+   "form_id": "1162375469593149",
+   "list_id": null
+  },
+  "westbury": {
+   "form_id": "1121875080657345",
+   "list_id": null
+  },
+  "pinevalley": {
+   "form_id": "2372031993591873",
+   "list_id": null
+  }
+ }
+}
