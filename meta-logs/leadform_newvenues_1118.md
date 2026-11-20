@@ -26,3 +26,8 @@ Ads: 6 per ad set, names shared across venues (`W27_Localized_pb_<Concept>_Stati
 Klaviyo cannot connect Meta forms to lists by API. Plan: once META_ACCESS_TOKEN has `leads_retrieval` (new token on system user "META_ACCESS_TOKEN", id 122106656223536795, app 577513808656072), a scheduled task runs hourly: GET /{form_id}/leads since last run, add each lead (email, first name, phone, answers, `league` param) to that venue's Klaviyo list "W27 Lead Form · <City> (New Venue)", which triggers the flow. Klaviyo list and flow IDs: see the Klaviyo build report (flows built in DRAFT; John approves before live).
 
 First step in the new session: check token scopes (GET /me/permissions), read leads on form 1792764368628802 (Chesterfield) as a test, then build the sync.
+
+## Launch (2026-11-20, John)
+- Klaviyo: footer now `{{ organization.full_address }}` on all 18 templates; Westbury templates use the new `westbury-ny-...` handle (old `wayne-nj-...` URL has a Shopify redirect, kept; Westbury lead form thank-you link still uses it). All 9 flows set live.
+- Meta: 9 ad sets + 54 ads ACTIVE, end_time 2026-12-04 23:59 PT (matches code expiry). Max spend 9 x $20 x 14 = $2,520. Logged Ad Sets rows 114-122, posted #meta-ops.
+- Lead sync: scheduled task trig_018amLmkKRC6LbofBJEXy5dL fires hourly into this session, runs scripts/lead_sync.py --hours 3, imports leads to each venue list with Klaviyo bulk_import_profiles (adds to list, triggers flow; consent not set because the subscribe tool needs per-call approval). Delete after 2026-12-05.
