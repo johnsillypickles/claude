@@ -31,3 +31,8 @@ First step in the new session: check token scopes (GET /me/permissions), read le
 - Klaviyo: footer now `{{ organization.full_address }}` on all 18 templates; Westbury templates use the new `westbury-ny-...` handle (old `wayne-nj-...` URL has a Shopify redirect, kept; Westbury lead form thank-you link still uses it). All 9 flows set live.
 - Meta: 9 ad sets + 54 ads ACTIVE, end_time 2026-12-04 23:59 PT (matches code expiry). Max spend 9 x $20 x 14 = $2,520. Logged Ad Sets rows 114-122, posted #meta-ops.
 - Lead sync: scheduled task trig_018amLmkKRC6LbofBJEXy5dL fires hourly into this session, runs scripts/lead_sync.py --hours 3, imports leads to each venue list with Klaviyo bulk_import_profiles (adds to list, triggers flow; consent not set because the subscribe tool needs per-call approval). Delete after 2026-12-05.
+
+## Native sync (2026-11-23, John)
+- John linked all 9 forms to their lists in Klaviyo's Facebook Lead Ads integration (subscribe to email). Verified: Westbury and Millersville leads at 23:40 and 23:48 UTC landed on their lists within minutes with email, name, phone, league, skill and solo/friend answers, and email consent.
+- Flows trigger on list membership only (no property splits), so the native property names are fine.
+- Hourly sync trig_018amLmkKRC6LbofBJEXy5dL disabled (not deleted). 401 leads were imported by the script before the switch (log in session scratchpad).
