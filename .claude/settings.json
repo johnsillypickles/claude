@@ -23,7 +23,9 @@
       "Agent",
       "SendMessage",
       "ToolSearch",
-      "WebFetch"
+      "WebFetch",
+      "mcp__Klaviyo__bulk_import_profiles",
+      "mcp__Klaviyo__get_bulk_import_profiles_job"
     ]
   }
 }
